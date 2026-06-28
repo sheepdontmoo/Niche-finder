@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>remote1stjobs — News post 1</title>
+<meta name="hz:slide-selector" content=".post" />
+<meta name="hz:canvas-width" content="1080" />
+<meta name="hz:canvas-height" content="1080" />
+<link rel="stylesheet" href="https://use.typekit.net/acw1gxu.css" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0b0f14; }
+
+  .post {
+    position: relative;
+    width: 1080px;
+    height: 1080px;
+    background: #141b23;
+    overflow: hidden;
+    font-family: "acumin-pro", sans-serif;
+    color: #ffffff;
+  }
+
+  /* ---- background brand system ---- */
+  .bg-rings { position: absolute; right: -260px; bottom: -300px; width: 900px; height: 900px; opacity: 0.5; }
+  .bg-dots  { position: absolute; top: 150px; right: 70px; width: 230px; height: 230px; opacity: 0.5; }
+  .watermark {
+    position: absolute; left: 60px; bottom: 150px;
+    font-family: "industry", sans-serif; font-weight: 900;
+    font-size: 300px; line-height: 0.8; letter-spacing: -6px;
+    color: rgba(255,255,255,0.045);
+    user-select: none; white-space: nowrap;
+  }
+
+  /* ---- top bar ---- */
+  .topbar { position: absolute; top: 64px; left: 80px; right: 80px; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand .mark { width: 44px; height: 44px; }
+  .brand .word { font-family: "acumin-pro", sans-serif; font-weight: 700; font-size: 30px; letter-spacing: -0.5px; color: #ffffff; }
+  .brand .word b { color: #98f83d; font-weight: 700; }
+  .eyebrow {
+    font-family: "acumin-pro", sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 3px;
+    text-transform: uppercase; color: #98f83d;
+    border: 1.5px solid rgba(152,248,61,0.45); border-radius: 100px; padding: 9px 18px;
+  }
+
+  /* ---- headline ---- */
+  .headline {
+    position: absolute; top: 214px; left: 80px; width: 960px;
+    font-family: "industry", sans-serif; font-weight: 900;
+    font-size: 126px; line-height: 0.9; letter-spacing: -2px;
+    text-transform: uppercase; color: #ffffff;
+  }
+  .headline .hl { color: #98f83d; position: relative; display: inline-block; }
+  .headline .hl::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 6px; height: 10px;
+    background: #98f83d; opacity: 0.9; border-radius: 2px;
+  }
+
+  /* ---- stat chip ---- */
+  .stat {
+    position: absolute; top: 772px; left: 80px;
+    display: inline-flex; align-items: center; gap: 14px;
+    background: #98f83d; color: #141b23;
+    font-family: "acumin-pro", sans-serif; font-weight: 700; font-size: 27px; letter-spacing: -0.3px;
+    padding: 16px 26px 16px 22px; border-radius: 100px;
+  }
+  .stat svg { width: 26px; height: 26px; flex: none; }
+
+  /* ---- sub copy ---- */
+  .subcopy {
+    position: absolute; top: 854px; left: 82px; width: 720px;
+    font-family: "acumin-pro", sans-serif; font-weight: 400; font-size: 26px; line-height: 1.35;
+    color: rgba(255,255,255,0.72);
+  }
+  .subcopy b { color: #ffffff; font-weight: 700; }
+
+  /* ---- bottom strip ---- */
+  .footer {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 96px;
+    background: #ffffff; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 80px;
+  }
+  .footer .url { display: flex; align-items: center; gap: 14px; font-family: "acumin-pro", sans-serif; font-weight: 700; font-size: 30px; color: #141b23; letter-spacing: -0.3px; }
+  .footer .url svg { width: 30px; height: 30px; }
+  .footer .region {
+    font-family: "acumin-pro", sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 2px;
+    color: #015af5;
+    background: rgba(1,90,245,0.10); border-radius: 100px; padding: 9px 18px;
+  }
+
+  /* royal-blue accent bar tucked behind footer */
+  .accent-bar { position: absolute; left: 0; bottom: 96px; width: 360px; height: 12px; background: #015af5; }
+</style>
+</head>
+<body>
+  <div class="post" data-canvas-width="1080" data-canvas-height="1080">
+
+    <!-- background geometry -->
+    <svg class="bg-rings" viewBox="0 0 900 900" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="450" cy="450" r="448" stroke="#015af5" stroke-width="2"/>
+      <circle cx="450" cy="450" r="360" stroke="#015af5" stroke-width="2"/>
+      <circle cx="450" cy="450" r="270" stroke="#015af5" stroke-width="2"/>
+      <circle cx="450" cy="450" r="180" stroke="#98f83d" stroke-width="2"/>
+    </svg>
+
+    <svg class="bg-dots" viewBox="0 0 230 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g fill="#ffffff">
+        <circle cx="10" cy="10" r="4"/><circle cx="54" cy="10" r="4"/><circle cx="98" cy="10" r="4"/><circle cx="142" cy="10" r="4"/><circle cx="186" cy="10" r="4"/><circle cx="220" cy="10" r="4"/>
+        <circle cx="10" cy="54" r="4"/><circle cx="54" cy="54" r="4"/><circle cx="98" cy="54" r="4"/><circle cx="142" cy="54" r="4"/><circle cx="186" cy="54" r="4"/><circle cx="220" cy="54" r="4"/>
+        <circle cx="10" cy="98" r="4"/><circle cx="54" cy="98" r="4"/><circle cx="98" cy="98" r="4"/><circle cx="142" cy="98" r="4"/><circle cx="186" cy="98" r="4"/><circle cx="220" cy="98" r="4"/>
+        <circle cx="10" cy="142" r="4"/><circle cx="54" cy="142" r="4"/><circle cx="98" cy="142" r="4"/><circle cx="142" cy="142" r="4"/><circle cx="186" cy="142" r="4"/><circle cx="220" cy="142" r="4"/>
+        <circle cx="10" cy="186" r="4"/><circle cx="54" cy="186" r="4"/><circle cx="98" cy="186" r="4"/><circle cx="142" cy="186" r="4"/><circle cx="186" cy="186" r="4"/><circle cx="220" cy="186" r="4"/>
+        <circle cx="10" cy="220" r="4"/><circle cx="54" cy="220" r="4"/><circle cx="98" cy="220" r="4"/><circle cx="142" cy="220" r="4"/><circle cx="186" cy="220" r="4"/><circle cx="220" cy="220" r="4"/>
+      </g>
+    </svg>
+
+    <div class="watermark">REMOTE</div>
+
+    <!-- top bar -->
+    <div class="topbar">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#ffffff" stroke-width="7" stroke-linecap="round">
+            <line x1="50" y1="8" x2="50" y2="92"/>
+            <line x1="13" y1="29" x2="87" y2="71"/>
+            <line x1="13" y1="71" x2="87" y2="29"/>
+          </g>
+          <g stroke="#98f83d" stroke-width="7" stroke-linecap="round">
+            <line x1="50" y1="22" x2="40" y2="32"/><line x1="50" y1="22" x2="60" y2="32"/>
+            <line x1="50" y1="78" x2="40" y2="68"/><line x1="50" y1="78" x2="60" y2="68"/>
+          </g>
+          <circle cx="50" cy="50" r="9" fill="#98f83d"/>
+        </svg>
+        <span class="word">remote<b>1st</b>jobs</span>
+      </div>
+      <span class="eyebrow">News · Remote Work</span>
+    </div>
+
+    <!-- headline -->
+    <h1 class="headline">The Office<br/>Never<br/><span class="hl">Protected</span><br/>Your Job</h1>
+
+    <!-- stat chip -->
+    <div class="stat">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M3 17l6-6 4 4 8-8" stroke="#141b23" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 7h4v4" stroke="#141b23" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      56% of 2026 layoffs now cite AI
+    </div>
+
+    <!-- sub copy -->
+    <p class="subcopy">ServiceNow just cut hundreds of roles. <b>The remote-capable jobs went first</b> — and the companies still hiring are going remote-first across the UK &amp; Europe.</p>
+
+    <!-- footer -->
+    <div class="accent-bar"></div>
+    <div class="footer">
+      <span class="url">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.5" stroke="#141b23" stroke-width="2"/>
+          <path d="M2.5 12h19M12 2.5c3 3 3 16 0 19M12 2.5c-3 3-3 16 0 19" stroke="#141b23" stroke-width="2"/>
+        </svg>
+        remote1stjobs.com
+      </span>
+      <span class="region">UK &amp; EUROPE</span>
+    </div>
+
+  </div>
+</body>
+</html>
