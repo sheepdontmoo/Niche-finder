@@ -7,11 +7,22 @@ Upload logo to Magnific: https://www.remote1stjobs.com/assets/logo-nav-CQD0ncv2.
 Store the Magnific identifier for use in all 3 graphics.
 Create folder: C:\claude code\remote1stjobs\linkedin\graphics-[TODAY'S DATE]\
 
+HEADLINES: generate every post's hook and graphic headline with the `/headline`
+engine. Rotate a DIFFERENT framework per post (MrBeast / Hormozi / Sabri Suby) so the
+three daily graphics each have a distinct voice — check HEADLINE_PROGRESS.md and never
+repeat a framework twice in a row. Use the chosen ≤6-word line on the graphic; longer
+variants become the post hook.
+
+AUDIENCE: remote1stjobs covers ALL remote roles, not just tech. Vary job categories
+across graphics — Marketing, Sales, Design, Customer Success, Ops, Finance, Data,
+Product, Tech — never a tech-only board.
+
 ## STEP 2 — POST 1: NEWS ANGLE
 Search the web for a company in the news TODAY that is hiring, laying off, expanding remotely, or changing work policy.
 Write a LinkedIn post with remote1stjobs.com's take on what it means for UK + Europe remote workers.
 
 Rules:
+- Headline: generate via `/headline` (news angle) — put the chosen ≤6-word line on the graphic, use a longer variant as the post hook
 - Bold hook line that stops the scroll — never start with "I"
 - 3-4 short punchy paragraphs, max 2 lines each
 - End with a question to drive comments
@@ -33,6 +44,7 @@ Fetch 3-5 of the best live jobs currently on remote1stjobs.com — check the liv
 Write a "jobs worth applying for this week" LinkedIn post.
 
 Rules:
+- Headline: generate via `/headline` (jobs angle) — chosen ≤6-word line on the graphic, longer variant as the post hook
 - Hook line that stops the scroll
 - Job list with emoji per role, title, company, salary if available, direct link to job on remote1stjobs.com
 - CTA to browse all jobs at remote1stjobs.com
@@ -59,6 +71,7 @@ FAMILIAR: Relatable experience every remote job seeker has had — US-only roles
 EDUCATIONAL: Something genuinely useful and specific — how to spot fake remote jobs, how to negotiate remote salary, EU visa rules for remote work.
 
 Rules for all types:
+- Headline: generate via `/headline` (matched to the Priestley type) — chosen ≤6-word line on the graphic, longer variant as the post hook
 - Hook line that stops the scroll — never start with "I"
 - Short punchy paragraphs, max 2 lines each
 - Personal voice — written as Darren, not as a brand
@@ -113,6 +126,8 @@ Report back:
 
 ## GOLDEN RULES
 - Always check LINKEDIN_PROGRESS.md before creating anything — never repeat
+- Headlines come from `/headline` — rotate frameworks (MrBeast/Hormozi/Sabri Suby), never twice in a row, log in HEADLINE_PROGRESS.md
+- All remote roles, NOT just tech — vary job categories across graphics
 - News must be real and from today — web search first
 - Jobs must be real and live — check remote1stjobs.com
 - Graphics use gpt-2 mode always — never default model
