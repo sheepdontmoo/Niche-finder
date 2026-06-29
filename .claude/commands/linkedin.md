@@ -17,6 +17,14 @@ AUDIENCE: remote1stjobs covers ALL remote roles, not just tech. Vary job categor
 across graphics — Marketing, Sales, Design, Customer Success, Ops, Finance, Data,
 Product, Tech — never a tech-only board.
 
+CONTENT VARIETY (read CONTENT_PILLARS.md): do NOT make every post the same focus.
+Rotate the 6 pillars — REAL JOBS, GET HIRED, REMOTE LIFE, REAL TALK, THE DATA, HOT TAKES —
+so each of today's 3 posts pulls a DIFFERENT pillar; check CONTENT_PROGRESS.md and never
+repeat a pillar two posts in a row. Vary format too (single graphic / carousel / stat card /
+text-poll / job cards), and keep the intent mix ~60% value, 30% engagement, 10% sign-up CTA —
+never two hard-sell posts in a row. Log each post's pillar/format/intent/topic in
+CONTENT_PROGRESS.md.
+
 ## STEP 2 — POST 1: NEWS ANGLE
 Search the web for a company in the news TODAY that is hiring, laying off, expanding remotely, or changing work policy.
 Write a LinkedIn post with remote1stjobs.com's take on what it means for UK + Europe remote workers.
@@ -126,6 +134,7 @@ Report back:
 
 ## GOLDEN RULES
 - Always check LINKEDIN_PROGRESS.md before creating anything — never repeat
+- VARY THE FOCUS — rotate the 6 content pillars (see CONTENT_PILLARS.md), never the same pillar twice in a row; vary format and keep ~60/30/10 value/engagement/sign-up. Log in CONTENT_PROGRESS.md
 - Headlines come from `/headline` — rotate frameworks (MrBeast/Hormozi/Sabri Suby), never twice in a row, log in HEADLINE_PROGRESS.md
 - All remote roles, NOT just tech — vary job categories across graphics
 - News must be real and from today — web search first
