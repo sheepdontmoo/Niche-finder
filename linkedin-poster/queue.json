@@ -1,0 +1,61 @@
+{
+  "meta": {
+    "author_urn_env": "LINKEDIN_AUTHOR_URN",
+    "mode": "drip",
+    "drip_interval_minutes": 90,
+    "last_posted_at": null,
+    "_comment": "mode=drip posts the earliest unposted item once per run, at least drip_interval_minutes apart. Set an item's scheduled_at (UTC ISO8601, e.g. 2026-06-29T09:07:00Z) to pin an exact time instead. Drop the downloaded PNGs into images/ (preferred) or rely on image_url."
+  },
+  "posts": [
+    {
+      "id": "data-stat",
+      "pillar": "THE DATA",
+      "image": "images/slot1-data.png",
+      "image_url": "https://www.magnific.com/app/creation/iAUog7k3uK",
+      "scheduled_at": null,
+      "posted": false,
+      "posted_id": null,
+      "commentary": "Remote isn't dying. The opposite, actually.\n\n63% of firms say they plan to hire more this year — and remote-first roles are leading the rebound across the UK and Europe.\n\nThe \"everyone's back in the office\" headline just doesn't match the numbers.\n\nAre you seeing more remote roles open up lately, or fewer?\n\n#remotework #remotejobs #ukjobs #europejobs #hiringtrends"
+    },
+    {
+      "id": "real-talk",
+      "pillar": "REAL TALK",
+      "image": "images/slot2-realtalk.png",
+      "image_url": "https://www.magnific.com/app/creation/J9rV12LOq4",
+      "scheduled_at": null,
+      "posted": false,
+      "posted_id": null,
+      "commentary": "Let's vent for a second.\n\nYou find the perfect role. \"Remote.\" You're halfway through the application before you spot it — \"US only.\"\n\nEvery UK and Europe job seeker knows that exact gut-drop.\n\nWhat's the worst \"remote — US only\" moment you've had? Drop it below 👇\n\n#remotework #remotejobs #ukjobs #europejobs #jobhunting"
+    },
+    {
+      "id": "get-hired",
+      "pillar": "GET HIRED",
+      "image": "images/slot3-gethired.png",
+      "image_url": "https://www.magnific.com/app/creation/y6jDr7wPW9",
+      "scheduled_at": null,
+      "posted": false,
+      "posted_id": null,
+      "commentary": "Most \"remote\" job ads tell you they're fake — if you know where to look.\n\n1. \"Remote\" up top, \"US only\" in the small print\n2. \"Remote-friendly\" = actually hybrid, 3 days in\n3. A timezone clause (EST/CET required)\n4. No salary, no company detail, just urgency\n5. Reposted every few weeks — a CV-harvest, not a real role\n\nWhich red flag catches you out most?\n\n#remotework #remotejobs #jobsearch #europejobs #careeradvice"
+    },
+    {
+      "id": "remote-life",
+      "pillar": "REMOTE LIFE",
+      "image": "images/slot4-remotelife.png",
+      "image_url": "https://www.magnific.com/app/creation/l7qnH70gv9",
+      "scheduled_at": null,
+      "posted": false,
+      "posted_id": null,
+      "commentary": "The desk never made the work. You did.\n\nReal remote means your best day isn't \"off\" — it's a normal Tuesday, laptop open somewhere that makes you feel alive.\n\nSame output. Better life.\n\nIf your office could be anywhere this month, where would you open the laptop?\n\n#remotework #remotejobs #remotelife #europejobs #worklifebalance"
+    },
+    {
+      "id": "real-jobs",
+      "pillar": "REAL JOBS",
+      "image": "images/slot5-realjobs.png",
+      "image_url": "https://www.magnific.com/app/creation/DBAb2F4pcl",
+      "scheduled_at": null,
+      "posted": false,
+      "posted_id": null,
+      "commentary": "Eight genuinely remote roles — open to UK and Europe, live right now.\n\nMarketing. Sales. Design. Finance. Customer Success. Data. Product. Ops. Not a US-only catch in sight.\n\nTurn on free remote job alerts at remote1stjobs.com and they land in your inbox the day they go live.\n\nWhich role are you chasing this week?\n\n#remotework #remotejobs #ukjobs #europejobs #nowhiring"
+    }
+  ]
+}
