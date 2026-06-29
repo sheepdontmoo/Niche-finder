@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{BUSINESS_NAME}} — {{NICHE_LABEL}} in {{CITY}}</title>
+<meta name="description" content="{{BUSINESS_NAME}} — trusted {{NICHE_LOWER}} serving {{CITY}}. {{TAGLINE}} Call {{PHONE}} for a fast, free quote.">
+<style>
+  :root{
+    --brand:{{BRAND}}; --brand-dark:{{BRAND_DARK}}; --ink:#1a1f24; --muted:#5a6671;
+    --bg:#ffffff; --soft:#f5f8fa; --line:#e4eaee; --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  a{color:inherit;text-decoration:none}
+  .btn{display:inline-block;background:var(--brand);color:#fff;font-weight:700;padding:14px 26px;border-radius:999px;transition:.15s}
+  .btn:hover{background:var(--brand-dark);transform:translateY(-1px)}
+  .btn.ghost{background:transparent;border:2px solid #fff}
+
+  header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{font-weight:800;font-size:1.25rem;color:var(--brand-dark);letter-spacing:-.02em}
+  nav .links{display:flex;gap:26px;align-items:center}
+  nav .links a{color:var(--muted);font-weight:600}
+  nav .call{background:var(--brand);color:#fff;padding:9px 18px;border-radius:999px}
+  @media(max-width:720px){nav .links a:not(.call){display:none}}
+
+  .hero{background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;padding:90px 0 100px}
+  .hero h1{font-size:clamp(2rem,5vw,3.3rem);line-height:1.1;letter-spacing:-.02em;max-width:14ch}
+  .hero p{font-size:1.18rem;opacity:.95;margin:20px 0 30px;max-width:48ch}
+  .hero .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .badges{display:flex;gap:22px;flex-wrap:wrap;margin-top:38px;font-weight:600;opacity:.95}
+  .badges span::before{content:"✓ ";font-weight:800}
+
+  section{padding:72px 0}
+  .eyebrow{color:var(--brand);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}
+  h2{font-size:clamp(1.6rem,3.5vw,2.3rem);letter-spacing:-.02em;margin:8px 0 14px}
+  .lead{color:var(--muted);max-width:60ch;margin-bottom:38px}
+  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .card{background:var(--soft);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .card h3{font-size:1.15rem;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.97rem}
+  .ico{width:46px;height:46px;border-radius:12px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:1.3rem;margin-bottom:14px}
+
+  .reviews{background:var(--soft)}
+  .stars{color:#f5a623;font-size:1.1rem}
+  .review p{margin:10px 0;color:var(--ink)}
+  .review .who{color:var(--muted);font-weight:700;font-size:.9rem}
+
+  .cta-band{background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;text-align:center}
+  .cta-band h2{color:#fff}
+  .cta-band p{opacity:.95;margin-bottom:26px}
+
+  footer{background:var(--ink);color:#c7d0d8;padding:46px 0;font-size:.92rem}
+  footer .cols{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+  footer a{color:#fff}
+  .demo-flag{background:#111;color:#ffd34d;text-align:center;padding:9px;font-size:.85rem;font-weight:600}
+</style>
+</head>
+<body>
+<div class="demo-flag">{{DEMO_FLAG}}</div>
+
+<header><div class="wrap"><nav>
+  <div class="logo">{{BUSINESS_NAME}}</div>
+  <div class="links">
+    <a href="#services">Services</a>
+    <a href="#why">Why us</a>
+    <a href="#reviews">Reviews</a>
+    <a class="call" href="tel:{{PHONE_RAW}}">📞 {{PHONE}}</a>
+  </div>
+</nav></div></header>
+
+<section class="hero"><div class="wrap">
+  <h1>{{HERO_HEADLINE}}</h1>
+  <p>{{TAGLINE}} Serving {{CITY}} and nearby — licensed, reliable, and on time.</p>
+  <div class="cta">
+    <a class="btn ghost" href="tel:{{PHONE_RAW}}">Call {{PHONE}}</a>
+    <a class="btn" href="#contact">Get a free quote</a>
+  </div>
+  <div class="badges">
+    <span>Licensed &amp; insured</span><span>Upfront pricing</span>
+    <span>Same-week service</span><span>Locally owned</span>
+  </div>
+</div></section>
+
+<section id="services"><div class="wrap">
+  <div class="eyebrow">What we do</div>
+  <h2>{{NICHE_LABEL}} services in {{CITY}}</h2>
+  <p class="lead">From quick fixes to big jobs, {{BUSINESS_NAME}} gets it done right the first time.</p>
+  <div class="grid">
+    {{SERVICE_CARDS}}
+  </div>
+</div></section>
+
+<section id="why" class="reviews"><div class="wrap">
+  <div class="eyebrow">Why {{CITY}} chooses us</div>
+  <h2>Honest work, fair prices, zero surprises</h2>
+  <div class="grid" style="margin-top:30px">
+    <div class="card"><div class="ico">★</div><h3>Trusted locally</h3><p>Your neighbors already rely on us — and we treat every job like it's for family.</p></div>
+    <div class="card"><div class="ico">$</div><h3>Clear pricing</h3><p>You get a written quote before we start. No hidden fees, ever.</p></div>
+    <div class="card"><div class="ico">⏱</div><h3>Fast response</h3><p>Call today and we'll often be out the same week — emergencies prioritized.</p></div>
+  </div>
+</div></section>
+
+<section id="reviews"><div class="wrap">
+  <div class="eyebrow">Reviews</div>
+  <h2>What customers say</h2>
+  <div class="grid" style="margin-top:30px">
+    {{REVIEW_CARDS}}
+  </div>
+</div></section>
+
+<section id="contact" class="cta-band"><div class="wrap">
+  <h2>Need a {{NICHE_LOWER}} in {{CITY}}?</h2>
+  <p>Call now for a fast, free, no-obligation quote.</p>
+  <a class="btn ghost" href="tel:{{PHONE_RAW}}">📞 {{PHONE}}</a>
+</div></section>
+
+<footer><div class="wrap cols">
+  <div><strong style="color:#fff">{{BUSINESS_NAME}}</strong><br>{{NICHE_LABEL}} · {{CITY}}<br>{{ADDRESS}}</div>
+  <div>📞 <a href="tel:{{PHONE_RAW}}">{{PHONE}}</a><br>Mon–Sat · Emergencies anytime</div>
+  <div style="max-width:30ch">{{FOOTER_NOTE}}</div>
+</div></footer>
+</body>
+</html>

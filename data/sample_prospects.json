@@ -1,0 +1,9 @@
+[
+  {"slug": "lone-star-plumbing", "name": "Lone Star Plumbing", "niche": "plumber", "niche_label": "Plumbers", "address": "1208 S Lamar Blvd, Austin", "phone": "+1 512 555 0142", "email": "", "website": "", "lat": 30.25, "lon": -97.77, "source": "sample"},
+  {"slug": "capital-city-hvac", "name": "Capital City HVAC", "niche": "hvac", "niche_label": "HVAC / Heating & Cooling", "address": "4400 Burnet Rd, Austin", "phone": "+1 512 555 0188", "email": "", "website": "", "lat": 30.31, "lon": -97.74, "source": "sample"},
+  {"slug": "hill-country-roofing", "name": "Hill Country Roofing", "niche": "roofer", "niche_label": "Roofers", "address": "9020 N Capital of Texas Hwy, Austin", "phone": "+1 512 555 0119", "email": "", "website": "", "lat": 30.37, "lon": -97.79, "source": "sample"},
+  {"slug": "bright-spark-electric", "name": "Bright Spark Electric", "niche": "electrician", "niche_label": "Electricians", "address": "606 E 47th St, Austin", "phone": "+1 512 555 0173", "email": "", "website": "", "lat": 30.30, "lon": -97.72, "source": "sample"},
+  {"slug": "smile-bright-dental", "name": "Smile Bright Dental", "niche": "dentist", "niche_label": "Dentists", "address": "3500 Jefferson St, Austin", "phone": "+1 512 555 0155", "email": "", "website": "", "lat": 30.30, "lon": -97.74, "source": "sample"},
+  {"slug": "violet-crown-salon", "name": "Violet Crown Salon", "niche": "salon", "niche_label": "Hair & Beauty Salons", "address": "1111 S Congress Ave, Austin", "phone": "+1 512 555 0166", "email": "", "website": "", "lat": 30.25, "lon": -97.75, "source": "sample"},
+  {"slug": "green-lawn-landscaping", "name": "Green Lawn Landscaping", "niche": "landscaper", "niche_label": "Landscapers / Lawn Care", "address": "7800 Manchaca Rd, Austin", "phone": "+1 512 555 0101", "email": "", "website": "", "lat": 30.21, "lon": -97.83, "source": "sample"}
+]

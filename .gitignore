@@ -1,0 +1,20 @@
+# Generated working data (regenerate with the pipeline)
+data/prospects.json
+data/niches_ranked.json
+# Keep crm.json — it holds your real pipeline + revenue
+!data/crm.json
+
+# Generated artifacts
+demos/*/
+outreach/*.md
+outreach/_ALL.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Secrets / local
+.env
+*.local

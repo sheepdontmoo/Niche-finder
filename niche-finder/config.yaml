@@ -1,0 +1,79 @@
+# ============================================================================
+# Niche-finder configuration
+# Edit this file, then run the pipeline (see ../README.md).
+# Everything the human needs to fill in is marked  # >>> FILL IN
+# ============================================================================
+
+business:
+  name: "BrightLocal Sites"          # >>> FILL IN  your business/brand name
+  owner: "Your Name"                 # >>> FILL IN
+  email: "you@yourbusiness.com"      # >>> FILL IN  business email
+  phone: "+1 555 555 5555"           # >>> FILL IN  business phone (Google Voice ok)
+  calendar_link: ""                  # optional Calendly/booking link
+
+# ----------------------------------------------------------------------------
+# WHERE to hunt. Use a city/area name OR an explicit bounding box.
+# Find a bbox quickly at https://boundingbox.klokantech.com (CSV: W,S,E,N).
+# ----------------------------------------------------------------------------
+area:
+  label: "Austin, TX"                # human-readable, used in copy
+  # bbox order: south, west, north, east  (decimal degrees)
+  bbox: [30.10, -97.95, 30.52, -97.56]
+
+# ----------------------------------------------------------------------------
+# WHICH local business types to target. Each niche maps to OpenStreetMap tags
+# and carries an estimated customer lifetime value (drives niche ranking).
+# Add/remove freely. Tag reference: https://wiki.openstreetmap.org/wiki/Map_features
+# ----------------------------------------------------------------------------
+niches:
+  - key: "plumber"
+    label: "Plumbers"
+    osm_filters: ['craft=plumber', 'shop=plumber']
+    avg_customer_value: 450          # $ per job — used to score the niche
+  - key: "hvac"
+    label: "HVAC / Heating & Cooling"
+    osm_filters: ['craft=hvac', 'office=hvac']
+    avg_customer_value: 600
+  - key: "electrician"
+    label: "Electricians"
+    osm_filters: ['craft=electrician']
+    avg_customer_value: 400
+  - key: "roofer"
+    label: "Roofers"
+    osm_filters: ['craft=roofer']
+    avg_customer_value: 1200
+  - key: "dentist"
+    label: "Dentists"
+    osm_filters: ['amenity=dentist', 'healthcare=dentist']
+    avg_customer_value: 900
+  - key: "salon"
+    label: "Hair & Beauty Salons"
+    osm_filters: ['shop=hairdresser', 'shop=beauty']
+    avg_customer_value: 120
+  - key: "landscaper"
+    label: "Landscapers / Lawn Care"
+    osm_filters: ['craft=gardener', 'shop=garden_centre']
+    avg_customer_value: 300
+
+# ----------------------------------------------------------------------------
+# THE OFFER (used in generated outreach + demo footers)
+# ----------------------------------------------------------------------------
+offer:
+  build_price: 899
+  care_plan_monthly: 59
+  premium_price: 1500
+  turnaround_days: 3
+  # Where prospect demos will live, e.g. https://demos.yourbusiness.com/<slug>
+  # or a free host root like https://yourname.netlify.app
+  demo_base_url: "https://your-demos.netlify.app"
+
+# ----------------------------------------------------------------------------
+# Pipeline knobs
+# ----------------------------------------------------------------------------
+pipeline:
+  overpass_url: "https://overpass-api.de/api/interpreter"
+  request_timeout: 60
+  audit_timeout: 12          # seconds per prospect website check
+  min_pain_score: 50         # only build demos/outreach for prospects >= this
+  max_demos_per_run: 25      # protect your time + free-host limits
+  user_agent: "niche-finder/1.0 (local SMB web-presence prospecting; contact: you@yourbusiness.com)"
