@@ -1,0 +1,18 @@
+# Scoring weights for the composite opportunity score. MUST sum to 1.0.
+# This file is intentionally split from settings.yaml so re-scoring with
+# different weights is a one-file edit + `niche-finder score`, with no rescrape.
+#
+#   opportunity_score =
+#       commercial_intent * 0.25
+#     + monetisation_fit  * 0.20
+#     + seo_winnability   * 0.20
+#     + aieo_gap          * 0.15
+#     + pain_density      * 0.10
+#     + trend_direction   * 0.10
+
+commercial_intent: 0.25
+monetisation_fit: 0.20
+seo_winnability: 0.20
+aieo_gap: 0.15
+pain_density: 0.10
+trend_direction: 0.10

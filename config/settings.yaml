@@ -1,0 +1,57 @@
+# Default runtime configuration. Override any value via environment variables
+# prefixed with NF_ (e.g. NF_MODE=live) or by passing --mode on the CLI.
+
+# Global client mode: live | record | fixture | auto
+#   live    — always hit the network (requires keys)
+#   record  — live, and persist every response as a fixture for replay
+#   fixture — never touch the network; replay fixtures, synthesise on miss
+#   auto    — per source: live if its key is present, else fixture
+mode: auto
+
+paths:
+  db: data/niche_finder.db
+  fixtures: data/fixtures
+  output: out
+
+# Model ids for the Anthropic client. Bulk pain scoring uses the cheaper
+# model; AIEO answer grading uses the stronger one. Confirm current ids via
+# the claude-api reference before a live run.
+models:
+  pain_scoring: claude-haiku-4-5-20251001
+  aieo_grading: claude-sonnet-4-6
+  monetisation: claude-haiku-4-5-20251001
+  temperature: 0.0
+
+# Per-host rate limits (requests per second) and retry policy.
+rate_limits:
+  autocomplete: 2.0
+  reddit: 1.0
+  ahrefs: 5.0
+  trends: 0.5
+  default: 2.0
+retry:
+  attempts: 4
+  base_delay_seconds: 2.0
+
+# Step 1 — seed expansion.
+expansion:
+  max_phrases_per_niche: 200
+  autocomplete_depth: 2          # recursion depth of the autocomplete tree
+  cluster_similarity: 85         # rapidfuzz token-set ratio threshold (0-100)
+
+# Step 3 — pain mining.
+pain:
+  subreddits_per_niche: 4
+  posts_per_subreddit: 25
+
+# Step 5 — AIEO gap.
+aieo:
+  questions_per_niche: 8
+
+# Cost control: hard cap on total LLM calls per run. 0 = unlimited.
+max_llm_calls: 0
+
+# Normalisation tunables (see scoring/normalize.py).
+normalize:
+  cpc_cap: 20.0                  # CPC ($) mapping to a perfect commercial score
+  pain_saturation_k: 8.0         # pain count giving ~63% of max pain_density

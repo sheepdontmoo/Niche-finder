@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Secrets
+.env
+
+# Data — raw scrapes and DB are reproducible; do not commit
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# Generated reports
+out/
+
+# OS
+.DS_Store
