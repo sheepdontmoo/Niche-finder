@@ -3,7 +3,7 @@
 Tracks which copywriting framework (MrBeast / Hormozi / Sabri Suby) was used so the
 feed stays varied. Never use the same framework twice in a row.
 
-Last framework used: **HORMOZI** (2026-06-28)
+Last framework used: **HORMOZI** (2026-06-29 — Remote Life)
 
 ---
 

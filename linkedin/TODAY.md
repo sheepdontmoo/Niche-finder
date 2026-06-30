@@ -1,77 +1,94 @@
-# TODAY'S CONTENT — remote1stjobs (ready to post)
+# TODAY'S CONTENT — remote1stjobs · 2026-06-29
 
-5 posts, 5 pillars, 5 graphics. Copy + graphic link together. Open the link → download → paste copy.
-These are also queued in `linkedin-poster/queue.json` (drip-posts automatically once LinkedIn is connected).
-
----
-
-## 1 · THE DATA  →  graphic: https://www.magnific.com/app/creation/iAUog7k3uK
-Remote isn't dying. The opposite, actually.
-
-63% of firms say they plan to hire more this year — and remote-first roles are leading the rebound across the UK and Europe.
-
-The "everyone's back in the office" headline just doesn't match the numbers.
-
-Are you seeing more remote roles open up lately, or fewer?
-
-#remotework #remotejobs #ukjobs #europejobs #hiringtrends
+Fresh daily set: 3 posts, 3 different pillars, 3 graphics. Real news angle, verified.
+Queued in `linkedin-poster/queue.json` (slots 6–8) — auto-posts once LinkedIn is connected.
 
 ---
 
-## 2 · REAL TALK  →  graphic: https://www.magnific.com/app/creation/J9rV12LOq4
-Let's vent for a second.
+## 1 · THE DATA (Sabri Suby hook · value)
+Graphic: https://www.magnific.com/app/creation/jSQH8SzLD0
 
-You find the perfect role. "Remote." You're halfway through the application before you spot it — "US only."
+The deadline that was meant to kill secret salaries in Europe just passed.
 
-Every UK and Europe job seeker knows that exact gut-drop.
+And most of the continent ignored it.
 
-What's the worst "remote — US only" moment you've had? Drop it below 👇
+The EU Pay Transparency Directive was due in national law by 7 June 2026. It forces employers to put a real pay range in the job ad, bans questions about your salary history, and outlaws pay-secrecy clauses.
 
-#remotework #remotejobs #ukjobs #europejobs #jobhunting
+Here's the data:
 
----
+Only a handful of countries had the law fully in force — Italy, Slovakia, Lithuania and Malta.
 
-## 3 · GET HIRED  →  graphic: https://www.magnific.com/app/creation/y6jDr7wPW9
-Most "remote" job ads tell you they're fake — if you know where to look.
+Germany. France. Spain. The Netherlands. All missed the deadline outright.
 
-1. "Remote" up top, "US only" in the small print
-2. "Remote-friendly" = actually hybrid, 3 days in
-3. A timezone clause (EST/CET required)
-4. No salary, no company detail, just urgency
-5. Reposted every few weeks — a CV-harvest, not a real role
+So if you're applying remote across Europe, the rule that protects you depends entirely on where the employer is based.
 
-Which red flag catches you out most?
+Apply to a role run out of Italy and you should see the salary up front. Apply to one run out of Germany and you might still get the old "what are your expectations?" game.
 
-#remotework #remotejobs #jobsearch #europejobs #careeradvice
+The fix is simple: check where the company is legally based before you apply, not just where the role is "remote from."
 
----
+Transparency is coming. It's just arriving country by country, and the map is messier than the headlines suggest.
 
-## 4 · REMOTE LIFE  →  graphic: https://www.magnific.com/app/creation/l7qnH70gv9
-The desk never made the work. You did.
+When you apply to a remote role in Europe, do you check which country the employer is actually based in?
 
-Real remote means your best day isn't "off" — it's a normal Tuesday, laptop open somewhere that makes you feel alive.
-
-Same output. Better life.
-
-If your office could be anywhere this month, where would you open the laptop?
-
-#remotework #remotejobs #remotelife #europejobs #worklifebalance
+#remotework #remotejobs #europejobs #paytransparency #jobsearch
 
 ---
 
-## 5 · REAL JOBS  →  graphic: https://www.magnific.com/app/creation/DBAb2F4pcl
-Eight genuinely remote roles — open to UK and Europe, live right now.
+## 2 · GET HIRED (MrBeast hook · value · carousel)
+Graphic: https://www.magnific.com/app/creation/KjaCeJVkqp
 
-Marketing. Sales. Design. Finance. Customer Success. Data. Product. Ops. Not a US-only catch in sight.
+Most people bomb async interviews before they even hit record.
 
-Turn on free remote job alerts at remote1stjobs.com and they land in your inbox the day they go live.
+You know the one. No live call. Just a link, a few questions, and a webcam staring back at you.
 
-Which role are you chasing this week?
+Companies love them because they scale. Candidates hate them because they feel like talking to a wall.
 
-#remotework #remotejobs #ukjobs #europejobs #nowhiring
+But here's the truth: the async interview is the easiest round to win. You get to control everything. Most people just don't.
+
+Swipe through. Here's exactly how to crush it.
+
+1. Read the question, then close the tab. Write your answer first — bullet points, not a script.
+2. Frame yourself like a human, not a hostage. Eyes level with the lens, light in front of you, tidy background.
+3. Talk to the camera, not the screen. Stick a note next to the lens and talk to that.
+4. Answer the question in the first ten seconds. Hook, point, proof, done.
+5. Use STAR, but keep it tight. One real example with a number beats three vague ones.
+6. Do one take, watch it once, move on. The fifth take is always worse than the second.
+7. End every answer with momentum. Land on the result, don't trail off.
+
+The async interview rewards preparation more than charisma. That's great news if you prepare.
+
+What's the format that's tripped you up most in a remote hiring process?
+
+#remotework #remotejobs #jobsearch #interviewtips #careeradvice
 
 ---
 
-### Also available (earlier today)
+## 3 · REMOTE LIFE (Hormozi hook · engagement)
+Graphic: https://www.magnific.com/app/creation/fFdBnSbCDY
+
+Remote work was never really about where you sit.
+
+It's about who owns the hours.
+
+The commute that ate two hours a day? Yours now.
+The 3pm school run you used to lie about? Just life.
+The gym at lunch, the walk to clear your head, dinner you actually cook.
+
+None of it is on the calendar. All of it is the point.
+
+Nobody designs a life around a desk. They design it around the people and moments that don't fit a 9-to-5 box.
+
+Remote done right isn't "work from anywhere." It's build your day, then slot the work in.
+
+The role pays the bills. The design pays you back.
+
+What's the one thing you do on a normal Tuesday now that the office would never have let you?
+
+#remotework #remotejobs #worklifebalance #flexiblework #remotelife
+
+---
+
+### Content bank (earlier sets, still usable)
+- 5-piece variety sample → `linkedin/posts-variety-sample-2026-06-28.md`
 - 10 clickbait single-graphic posts → `linkedin/posts-batch-2026-06-28.md`
-- Original News + Priestley posts → `linkedin/posts-2026-06-28.md`
+- News + Priestley originals → `linkedin/posts-2026-06-28.md`
