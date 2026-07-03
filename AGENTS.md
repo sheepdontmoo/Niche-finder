@@ -9,7 +9,7 @@ protocol core are done — read this file, then continue from Step 1 below.
 |---|---|---|
 | `research/` | Market research: why this app, feature priorities, pricing | Done — treat as product requirements |
 | `obd2-core/` | Pure-JVM Kotlin protocol library (ELM327 driver, J1979 PIDs, DTC parsing) | **Done, 16/16 tests pass.** Run `gradle test` inside it after any change |
-| `android-app/` | Android app (Kotlin + Compose) wrapping obd2-core | Code written but **never compiled** (authored in an environment without Google Maven access). Expect minor compile fixes |
+| `android-app/` | Android app (Kotlin + Compose) wrapping obd2-core | **Compiles clean** (`gradle assembleDebug` → APK, zero errors). Not yet runtime-tested: verify demo mode on an emulator/device first |
 | `ROADMAP.md` | Ordered build plan to Play Store launch | Follow it |
 
 ## Hard product rules (from the research — do not violate)
