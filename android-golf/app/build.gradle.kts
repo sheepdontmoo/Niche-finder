@@ -13,13 +13,32 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = "1.0.0"
+    }
+
+    // Upload signing: supplied via environment so no secret ever enters the
+    // repo. Set ANDROID_KEYSTORE (path), ANDROID_KEYSTORE_PASS to enable.
+    val ksPath = System.getenv("ANDROID_KEYSTORE")
+    val ksPass = System.getenv("ANDROID_KEYSTORE_PASS")
+    if (ksPath != null && ksPass != null) {
+        signingConfigs {
+            create("release") {
+                storeFile = file(ksPath)
+                storePassword = ksPass
+                keyAlias = "upload"
+                keyPassword = ksPass
+            }
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            // Minification off for the first release: no runtime surprises
+            // from R8 on serialization/Compose. Revisit with tested rules.
+            isMinifyEnabled = false
+            if (ksPath != null && ksPass != null) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 
