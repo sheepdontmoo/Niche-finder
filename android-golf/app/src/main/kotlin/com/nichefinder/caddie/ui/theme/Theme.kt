@@ -3,7 +3,7 @@ package com.nichefinder.caddie.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -15,31 +15,35 @@ import androidx.compose.ui.unit.sp
 import com.nichefinder.caddie.R
 
 /**
- * "Clubhouse at dusk" — a deliberate single look. Deep pine greens, cream
- * text, one gold accent. Anton (OFL) carries every big number; it stays
- * readable at arm's length in sunlight, which is the whole job.
+ * "Scorecard white" — a deliberate single light look, the way golf apps are
+ * read on sunny fairways: near-white surfaces, near-black ink, fairway green
+ * and one gold accent. Anton (OFL) carries every big number.
+ *
+ * Property names kept from the original dark palette so every screen retheme
+ * is one file: pineDeep = page background, pine = cards, cream = primary ink,
+ * creamDim = secondary ink.
  */
 object Caddie {
-    val pineDeep = Color(0xFF07130C)     // page background
-    val pine = Color(0xFF0D2115)         // cards
-    val pineEdge = Color(0xFF1B3A28)     // card borders / dividers
-    val fairway = Color(0xFF35D07F)      // the green — primary accent
-    val fairwaySoft = Color(0xFF9BE7BF)
-    val cream = Color(0xFFF4F1E6)        // primary text
-    val creamDim = Color(0xFFA9B3A6)     // secondary text
-    val gold = Color(0xFFE8C468)         // score/accent moments
-    val under = Color(0xFFFF6B6B)        // golf tradition: red = under par
-    val over = Color(0xFF7EA8FF)
+    val pineDeep = Color(0xFFFAFAF6)     // page background — warm off-white
+    val pine = Color(0xFFFFFFFF)         // cards
+    val pineEdge = Color(0xFFE3E8E0)     // card borders / dividers
+    val fairway = Color(0xFF17914F)      // the green — primary accent
+    val fairwaySoft = Color(0xFF0E6B3C)  // caption green, darker for contrast on white
+    val cream = Color(0xFF16211A)        // primary ink — near-black green
+    val creamDim = Color(0xFF66736A)     // secondary ink
+    val gold = Color(0xFFA87A1F)         // score/accent moments, darkened for white
+    val under = Color(0xFFC93A3A)        // golf tradition: red = under par
+    val over = Color(0xFF2F6BD8)
 
-    val heroBrush = Brush.verticalGradient(listOf(Color(0xFF0F2B1B), pineDeep))
-    val greenGlow = Brush.radialGradient(listOf(Color(0x3335D07F), Color(0x0035D07F)))
+    val heroBrush = Brush.verticalGradient(listOf(Color(0xFFF1F6EF), pineDeep))
+    val greenGlow = Brush.radialGradient(listOf(Color(0x2117914F), Color(0x0017914F)))
 }
 
 val Anton = FontFamily(Font(R.font.anton))
 
-private val colors = darkColorScheme(
+private val colors = lightColorScheme(
     primary = Caddie.fairway,
-    onPrimary = Color(0xFF03130A),
+    onPrimary = Color(0xFFFFFFFF),
     secondary = Caddie.gold,
     background = Caddie.pineDeep,
     onBackground = Caddie.cream,
