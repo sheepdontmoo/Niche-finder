@@ -1,5 +1,10 @@
 package com.nichefinder.caddie.ui
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,26 +14,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.FilterChip
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.nichefinder.caddie.GolfUiState
+import com.nichefinder.caddie.ui.theme.Anton
+import com.nichefinder.caddie.ui.theme.Caddie
 import com.nichefinder.golf.geo.Geo
 
-/**
- * The on-course screen: three big numbers. Front / MIDDLE / back,
- * exactly what a golfer glances at before pulling a club.
- */
+/** On-course screen: the number, the green, nothing else fighting for attention. */
 @Composable
 fun PlayScreen(
     state: GolfUiState,
@@ -38,85 +45,146 @@ fun PlayScreen(
 ) {
     val course = state.course
     if (course == null) {
-        Box(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Pick a course first (or start a demo round)", textAlign = TextAlign.Center)
-        }
+        EmptyState(modifier, "No round yet", "Pick a course — or start a demo round and watch this screen come alive.")
         return
     }
     val hole = course.hole(state.currentHole) ?: return
 
     Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
+        modifier = modifier.fillMaxSize().background(Caddie.heroBrush).padding(horizontal = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // Hole selector
+        Spacer(Modifier.height(12.dp))
+
+        // Hole strip
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             items(course.holes) { h ->
-                FilterChip(
-                    selected = h.number == state.currentHole,
-                    onClick = { onSelectHole(h.number) },
-                    label = { Text("${h.number}") },
-                )
+                val selected = h.number == state.currentHole
+                Box(
+                    Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(if (selected) Caddie.fairway else Caddie.pine)
+                        .border(1.dp, if (selected) Caddie.fairway else Caddie.pineEdge, CircleShape)
+                        .clickable { onSelectHole(h.number) },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        "${h.number}",
+                        fontFamily = Anton,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if (selected) Caddie.pineDeep else Caddie.creamDim,
+                    )
+                }
             }
         }
 
-        Spacer(Modifier.height(12.dp))
-        Text("Hole ${hole.number} · Par ${hole.par}", style = MaterialTheme.typography.titleLarge)
-        if (state.demoMode) {
-            Text("Demo round — you're walking down the fairway", style = MaterialTheme.typography.bodySmall)
-        }
-
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(10.dp))
+        Text(
+            "HOLE ${hole.number}   ·   PAR ${hole.par}" + if (state.demoMode) "   ·   DEMO" else "",
+            style = MaterialTheme.typography.labelSmall,
+            color = Caddie.creamDim,
+        )
 
         val d = state.distances
         if (d == null) {
+            Spacer(Modifier.height(80.dp))
             Text(
-                if (state.gpsActive) "Waiting for GPS…" else "No position yet",
-                style = MaterialTheme.typography.titleMedium,
+                if (state.gpsActive) "Locking onto satellites…" else "No position yet",
+                style = MaterialTheme.typography.titleMedium, color = Caddie.creamDim,
             )
         } else {
-            fun fmt(yards: Double): String {
-                val v = if (state.useMeters) yards * Geo.METERS_PER_YARD else yards
-                return v.toInt().toString()
+            fun show(yards: Double): Int =
+                (if (state.useMeters) yards * Geo.METERS_PER_YARD else yards).toInt()
+            val unit = if (state.useMeters) "M" else "YDS"
+
+            // The green itself, drawn from its real outline, approach-up
+            state.position?.let { pos ->
+                Spacer(Modifier.height(6.dp))
+                GreenShape(
+                    player = pos,
+                    green = hole.green,
+                    modifier = Modifier.fillMaxWidth(0.72f).height(170.dp),
+                )
             }
-            val unit = if (state.useMeters) "m" else "yds"
 
-            // THE number — middle of the green, huge.
-            Text(fmt(d.middleYards), fontSize = 112.sp, lineHeight = 112.sp,
-                color = MaterialTheme.colorScheme.primary)
-            Text("middle · $unit", style = MaterialTheme.typography.titleMedium)
+            // THE number — animated so demo mode visibly ticks down
+            val animated by animateFloatAsState(
+                targetValue = show(d.middleYards).toFloat(),
+                animationSpec = tween(600), label = "middle",
+            )
+            Text(
+                "${animated.toInt()}",
+                style = MaterialTheme.typography.displayLarge,
+                color = Caddie.cream,
+                modifier = Modifier.graphicsLayer { translationY = -8f },
+            )
+            Text("MIDDLE · $unit", style = MaterialTheme.typography.labelSmall, color = Caddie.fairwaySoft)
 
-            Spacer(Modifier.height(20.dp))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-                Card {
-                    Column(Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(fmt(d.frontYards), style = MaterialTheme.typography.headlineMedium)
-                        Text("front", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
-                Card {
-                    Column(Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(fmt(d.backYards), style = MaterialTheme.typography.headlineMedium)
-                        Text("back", style = MaterialTheme.typography.bodySmall)
-                    }
-                }
+            Spacer(Modifier.height(18.dp))
+            Row(Modifier.fillMaxWidth(0.9f), horizontalArrangement = Arrangement.SpaceEvenly) {
+                FlankNumber("FRONT", show(d.frontYards), gold = true)
+                FlankNumber("BACK", show(d.backYards))
             }
         }
 
         Spacer(Modifier.weight(1f))
 
-        // Quick score entry for this hole
+        // Score stepper
         val current = state.strokesByHole[hole.number] ?: 0
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            OutlinedButton(onClick = { if (current > 0) onStrokes(hole.number, current - 1) }) { Text("−") }
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+            StepButton("−") { if (current > 0) onStrokes(hole.number, current - 1) }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(if (current == 0) "—" else "$current", style = MaterialTheme.typography.headlineMedium)
-                Text("strokes", style = MaterialTheme.typography.bodySmall)
+                Text(
+                    if (current == 0) "–" else "$current",
+                    style = MaterialTheme.typography.displayMedium,
+                    color = if (current == 0) Caddie.creamDim else Caddie.cream,
+                )
+                Text("STROKES", style = MaterialTheme.typography.labelSmall, color = Caddie.creamDim)
             }
-            OutlinedButton(onClick = { onStrokes(hole.number, current + 1) }) { Text("+") }
+            StepButton("+") { onStrokes(hole.number, current + 1) }
         }
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(20.dp))
+    }
+}
+
+@Composable
+private fun FlankNumber(label: String, value: Int, gold: Boolean = false) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            "$value",
+            style = MaterialTheme.typography.displayMedium,
+            color = if (gold) Caddie.gold else Caddie.cream.copy(alpha = 0.9f),
+        )
+        Text(label, style = MaterialTheme.typography.labelSmall, color = Caddie.creamDim)
+    }
+}
+
+@Composable
+private fun StepButton(glyph: String, onClick: () -> Unit) {
+    Box(
+        Modifier
+            .size(56.dp)
+            .clip(CircleShape)
+            .background(Caddie.pine)
+            .border(1.dp, Caddie.pineEdge, CircleShape)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(glyph, style = MaterialTheme.typography.displaySmall, color = Caddie.fairway)
+    }
+}
+
+@Composable
+internal fun EmptyState(modifier: Modifier, title: String, body: String) {
+    Column(
+        modifier.fillMaxSize().background(Caddie.heroBrush).padding(40.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(title, style = MaterialTheme.typography.displaySmall, color = Caddie.cream, textAlign = TextAlign.Center)
+        Spacer(Modifier.height(10.dp))
+        Text(body, style = MaterialTheme.typography.bodyMedium, color = Caddie.creamDim, textAlign = TextAlign.Center)
+        Spacer(Modifier.height(4.dp).alpha(0f))
     }
 }

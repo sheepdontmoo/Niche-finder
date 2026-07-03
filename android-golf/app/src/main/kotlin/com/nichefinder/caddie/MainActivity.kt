@@ -12,12 +12,11 @@ import androidx.compose.material.icons.filled.GolfCourse
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SportsGolf
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,12 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nichefinder.caddie.ui.CoursesScreen
 import com.nichefinder.caddie.ui.PlayScreen
 import com.nichefinder.caddie.ui.ScorecardScreen
 import com.nichefinder.caddie.ui.SettingsScreen
+import com.nichefinder.caddie.ui.theme.Caddie
+import com.nichefinder.caddie.ui.theme.CaddieTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -43,13 +43,7 @@ class MainActivity : ComponentActivity() {
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
         )
         setContent {
-            MaterialTheme(
-                colorScheme = lightColorScheme(
-                    primary = Color(0xFF1B5E20),
-                    secondary = Color(0xFF388E3C),
-                    surfaceVariant = Color(0xFFE8F5E9),
-                )
-            ) {
+            CaddieTheme {
                 CaddieApp()
             }
         }
@@ -66,13 +60,21 @@ private fun CaddieApp(vm: GolfViewModel = viewModel()) {
     var screen by remember { mutableStateOf(Screen.Courses) }
 
     Scaffold(
+        containerColor = Caddie.pineDeep,
         bottomBar = {
-            NavigationBar {
+            NavigationBar(containerColor = Caddie.pine) {
                 Screen.entries.forEach { s ->
                     NavigationBarItem(
                         selected = screen == s,
                         onClick = { screen = s },
                         label = { Text(s.label) },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = Caddie.pineDeep,
+                            indicatorColor = Caddie.fairway,
+                            selectedTextColor = Caddie.cream,
+                            unselectedIconColor = Caddie.creamDim,
+                            unselectedTextColor = Caddie.creamDim,
+                        ),
                         icon = {
                             Icon(
                                 when (s) {

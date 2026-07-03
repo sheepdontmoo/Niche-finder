@@ -1,21 +1,27 @@
 package com.nichefinder.caddie.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.nichefinder.caddie.GolfUiState
+import com.nichefinder.caddie.ui.theme.Caddie
 
 @Composable
 fun SettingsScreen(
@@ -23,37 +29,60 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     onUseMeters: (Boolean) -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        Text("Settings", style = MaterialTheme.typography.titleLarge)
+    Column(modifier.fillMaxSize().background(Caddie.pineDeep).padding(24.dp)) {
+        Spacer(Modifier.height(12.dp))
+        Text("SETTINGS", style = MaterialTheme.typography.displaySmall, color = Caddie.cream)
+        Spacer(Modifier.height(20.dp))
 
         Row(
-            Modifier.fillMaxWidth(),
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Caddie.pine)
+                .border(1.dp, Caddie.pineEdge, RoundedCornerShape(16.dp))
+                .padding(horizontal = 18.dp, vertical = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text("Meters instead of yards")
-            Switch(checked = state.useMeters, onCheckedChange = onUseMeters)
-        }
-
-        HorizontalDivider()
-
-        Card {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Pro — one-time purchase", style = MaterialTheme.typography.titleMedium)
-                Text(
-                    "Pay once, keep forever. No subscription, ever. Coming in the beta: " +
-                        "shot tracking, club distances, and round history."
-                )
+            Column {
+                Text("Meters", style = MaterialTheme.typography.titleMedium, color = Caddie.cream)
+                Text("Show distances in meters instead of yards",
+                    style = MaterialTheme.typography.bodySmall, color = Caddie.creamDim)
             }
+            Switch(
+                checked = state.useMeters,
+                onCheckedChange = onUseMeters,
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = Caddie.fairway,
+                    checkedThumbColor = Caddie.pineDeep,
+                ),
+            )
         }
 
+        Spacer(Modifier.height(14.dp))
+
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Caddie.pine)
+                .border(1.dp, Caddie.gold.copy(alpha = 0.45f), RoundedCornerShape(16.dp))
+                .padding(18.dp),
+        ) {
+            Text("PRO — PAY ONCE, KEEP FOREVER", style = MaterialTheme.typography.labelLarge, color = Caddie.gold)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                "No subscription, ever. Coming in the beta: shot tracking, club distances, round history.",
+                style = MaterialTheme.typography.bodySmall, color = Caddie.creamDim,
+            )
+        }
+
+        Spacer(Modifier.weight(1f))
         Text(
-            "Course data © OpenStreetMap contributors. Distances are to the green outline " +
-                "and centre; always verify locally.",
-            style = MaterialTheme.typography.bodySmall,
+            "Course data © OpenStreetMap contributors. Distances are measured to the mapped " +
+                "green outline and its centre — always sanity-check locally.",
+            style = MaterialTheme.typography.bodySmall, color = Caddie.creamDim,
         )
+        Spacer(Modifier.height(12.dp))
     }
 }
