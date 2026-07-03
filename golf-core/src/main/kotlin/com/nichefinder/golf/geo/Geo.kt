@@ -5,6 +5,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+@kotlinx.serialization.Serializable
 data class LatLng(val lat: Double, val lon: Double)
 
 object Geo {

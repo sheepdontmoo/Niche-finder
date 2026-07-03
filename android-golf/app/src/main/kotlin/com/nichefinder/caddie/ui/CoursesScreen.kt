@@ -32,6 +32,7 @@ fun CoursesScreen(
     modifier: Modifier = Modifier,
     onDemo: () -> Unit,
     onGpsCourse: () -> Unit,
+    onResumeCached: () -> Unit = {},
     onDismissMessage: () -> Unit,
 ) {
     Column(
@@ -46,7 +47,7 @@ fun CoursesScreen(
         Text("CADDIE", style = MaterialTheme.typography.displayMedium, color = Caddie.fairway)
         Spacer(Modifier.height(10.dp))
         Text(
-            "Front · middle · back to every green.\nPay once. No subscription. Ever.",
+            "Front · middle · back to every green.\nYour caddie, every round.",
             style = MaterialTheme.typography.bodyMedium, color = Caddie.creamDim,
         )
 
@@ -70,6 +71,17 @@ fun CoursesScreen(
             loading = state.loading,
             onClick = { if (!state.loading) onGpsCourse() },
         )
+
+        state.cachedCourseName?.let { name ->
+            Spacer(Modifier.height(14.dp))
+            ActionCard(
+                title = "Resume $name",
+                body = "Saved on this phone — starts instantly, no signal needed.",
+                cta = "PLAY OFFLINE",
+                highlight = false,
+                onClick = onResumeCached,
+            )
+        }
 
         state.course?.let {
             Spacer(Modifier.height(20.dp))

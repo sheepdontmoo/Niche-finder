@@ -171,3 +171,14 @@ class OsmParserTest {
         assertTrue("golf" in q)
     }
 }
+
+class SerializationTest {
+    @Test fun `course survives JSON round-trip for offline caching`() {
+        val json = kotlinx.serialization.json.Json.encodeToString(
+            com.nichefinder.golf.course.Course.serializer(), DemoCourse.course)
+        val back = kotlinx.serialization.json.Json.decodeFromString(
+            com.nichefinder.golf.course.Course.serializer(), json)
+        assertEquals(DemoCourse.course, back)
+        assertEquals(12, back.totalPar)
+    }
+}

@@ -28,6 +28,7 @@ fun SettingsScreen(
     state: GolfUiState,
     modifier: Modifier = Modifier,
     onUseMeters: (Boolean) -> Unit,
+    onAutoAdvance: (Boolean) -> Unit = {},
 ) {
     Column(modifier.fillMaxSize().background(Caddie.pineDeep).padding(24.dp)) {
         Spacer(Modifier.height(12.dp))
@@ -61,6 +62,33 @@ fun SettingsScreen(
 
         Spacer(Modifier.height(14.dp))
 
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .background(Caddie.pine)
+                .border(1.dp, Caddie.pineEdge, RoundedCornerShape(16.dp))
+                .padding(horizontal = 18.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column {
+                Text("Auto-advance holes", style = MaterialTheme.typography.titleMedium, color = Caddie.cream)
+                Text("Switch to the next hole when you walk to its tee",
+                    style = MaterialTheme.typography.bodySmall, color = Caddie.creamDim)
+            }
+            Switch(
+                checked = state.autoAdvance,
+                onCheckedChange = onAutoAdvance,
+                colors = SwitchDefaults.colors(
+                    checkedTrackColor = Caddie.fairway,
+                    checkedThumbColor = Caddie.pineDeep,
+                ),
+            )
+        }
+
+        Spacer(Modifier.height(14.dp))
+
         Column(
             Modifier
                 .fillMaxWidth()
@@ -69,10 +97,11 @@ fun SettingsScreen(
                 .border(1.dp, Caddie.gold.copy(alpha = 0.45f), RoundedCornerShape(16.dp))
                 .padding(18.dp),
         ) {
-            Text("PRO — PAY ONCE, KEEP FOREVER", style = MaterialTheme.typography.labelLarge, color = Caddie.gold)
+            Text("CADDIE PLUS", style = MaterialTheme.typography.labelLarge, color = Caddie.gold)
             Spacer(Modifier.height(6.dp))
             Text(
-                "No subscription, ever. Coming in the beta: shot tracking, club distances, round history.",
+                "Everything, every round: offline courses, shot measuring, club distances and " +
+                    "round history. Free trial in the beta, then a simple yearly or monthly plan.",
                 style = MaterialTheme.typography.bodySmall, color = Caddie.creamDim,
             )
         }

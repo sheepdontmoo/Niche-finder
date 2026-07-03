@@ -42,6 +42,7 @@ fun PlayScreen(
     modifier: Modifier = Modifier,
     onSelectHole: (Int) -> Unit,
     onStrokes: (hole: Int, strokes: Int) -> Unit,
+    onToggleMeasure: () -> Unit = {},
 ) {
     val course = state.course
     if (course == null) {
@@ -126,6 +127,27 @@ fun PlayScreen(
                 FlankNumber("FRONT", show(d.frontYards), gold = true)
                 FlankNumber("BACK", show(d.backYards))
             }
+        }
+
+        Spacer(Modifier.height(14.dp))
+
+        // Shot measure: mark the ball, walk, learn your club distances
+        val measuring = state.markPosition != null
+        Box(
+            Modifier
+                .clip(RoundedCornerShape(999.dp))
+                .background(if (measuring) Caddie.gold.copy(alpha = 0.16f) else Caddie.pine)
+                .border(1.dp, if (measuring) Caddie.gold else Caddie.pineEdge, RoundedCornerShape(999.dp))
+                .clickable { onToggleMeasure() }
+                .padding(horizontal = 18.dp, vertical = 8.dp),
+        ) {
+            Text(
+                if (measuring)
+                    "SHOT: ${state.measuredYards?.let { m -> (if (state.useMeters) m * Geo.METERS_PER_YARD else m).toInt() } ?: 0} ${if (state.useMeters) "M" else "YDS"} · TAP TO CLEAR"
+                else "MARK BALL · MEASURE SHOT",
+                style = MaterialTheme.typography.labelSmall,
+                color = if (measuring) Caddie.gold else Caddie.creamDim,
+            )
         }
 
         Spacer(Modifier.weight(1f))

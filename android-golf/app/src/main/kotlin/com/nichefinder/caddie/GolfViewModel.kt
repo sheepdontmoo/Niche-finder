@@ -38,6 +38,11 @@ data class GolfUiState(
     val stableford: Int = 0,
     val loading: Boolean = false,
     val message: String? = null,
+    /** Shot measure: where the mark was dropped and live distance from it. */
+    val markPosition: LatLng? = null,
+    val measuredYards: Double? = null,
+    val autoAdvance: Boolean = true,
+    val cachedCourseName: String? = null,
 )
 
 class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener {
@@ -50,6 +55,39 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
 
     // Rounds survive app restarts: strokes stored per course name.
     private val prefs = app.getSharedPreferences("rounds", Context.MODE_PRIVATE)
+    private val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+
+    init {
+        // Offline rounds: surface the last downloaded course immediately.
+        _state.update { it.copy(cachedCourseName = prefs.getString("cache/name", null)) }
+    }
+
+    private fun cacheCourse(course: Course) {
+        prefs.edit()
+            .putString("cache/name", course.name)
+            .putString("cache/json", json.encodeToString(Course.serializer(), course))
+            .apply()
+        _state.update { it.copy(cachedCourseName = course.name) }
+    }
+
+    /** Start the last downloaded course with no network at all. */
+    fun resumeCachedCourse() {
+        val raw = prefs.getString("cache/json", null) ?: return
+        val course = runCatching { json.decodeFromString(Course.serializer(), raw) }.getOrNull()
+        if (course == null || course.holes.isEmpty()) {
+            _state.update { it.copy(message = "Saved course couldn't be loaded — find it again once online.") }
+            return
+        }
+        demoJob?.cancel()
+        val card = Scorecard(course)
+        restoreStrokes(course, card)
+        scorecard = card
+        _state.update {
+            it.copy(course = course, demoMode = false, currentHole = course.holes.first().number)
+        }
+        publishScore(course, card)
+        startGps()
+    }
 
     private fun persistStrokes(course: Course, card: Scorecard) {
         val encoded = course.holes
@@ -111,6 +149,7 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
                 if (course.holes.isEmpty()) {
                     _state.update { it.copy(loading = false, message = "No mapped golf holes found within 2 km. (Course mapping improves weekly.)") }
                 } else {
+                    cacheCourse(course)
                     val card = Scorecard(course)
                     restoreStrokes(course, card)
                     scorecard = card
@@ -151,11 +190,44 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
     }
 
     private fun updatePosition(pos: LatLng) {
-        val course = _state.value.course
-        val hole = course?.hole(_state.value.currentHole)
+        val s = _state.value
+        val course = s.course
+
+        // Auto-advance: when the player is clearly nearer another hole's green
+        // (walked to the next tee), switch for them. 40 m hysteresis avoids
+        // flapping beside adjacent greens.
+        var holeNumber = s.currentHole
+        if (s.autoAdvance && course != null && course.holes.size > 1) {
+            val current = course.hole(holeNumber)
+            val nearest = Rangefinder.nearestHole(pos, course)
+            if (current != null && nearest.number != holeNumber) {
+                val dCurrent = Geo.distanceMeters(pos, Geo.centroid(current.green))
+                val dNearest = Geo.distanceMeters(pos, Geo.centroid(nearest.green))
+                if (dCurrent - dNearest > 40) holeNumber = nearest.number
+            }
+        }
+
+        val hole = course?.hole(holeNumber)
         val d = if (hole != null) Rangefinder.distances(pos, hole) else null
-        _state.update { it.copy(position = pos, distances = d) }
+        _state.update {
+            it.copy(
+                position = pos,
+                distances = d,
+                currentHole = holeNumber,
+                measuredYards = it.markPosition?.let { m -> Geo.distanceYards(m, pos) },
+            )
+        }
     }
+
+    /** Shot measure: first tap drops the mark at the ball, second tap clears. */
+    fun toggleMeasure() {
+        _state.update {
+            if (it.markPosition == null) it.copy(markPosition = it.position, measuredYards = 0.0)
+            else it.copy(markPosition = null, measuredYards = null)
+        }
+    }
+
+    fun setAutoAdvance(enabled: Boolean) = _state.update { it.copy(autoAdvance = enabled) }
 
     // ---- Hole & score ----
 

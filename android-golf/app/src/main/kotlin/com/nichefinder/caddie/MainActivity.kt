@@ -100,6 +100,7 @@ private fun CaddieApp(vm: GolfViewModel = viewModel()) {
                 modifier = mod,
                 onDemo = { vm.startDemoRound(); screen = Screen.Play },
                 onGpsCourse = { vm.startGps(); vm.loadCourseNearMe() },
+                onResumeCached = { vm.resumeCachedCourse(); screen = Screen.Play },
                 onDismissMessage = vm::dismissMessage,
             )
             Screen.Play -> PlayScreen(
@@ -107,6 +108,7 @@ private fun CaddieApp(vm: GolfViewModel = viewModel()) {
                 modifier = mod,
                 onSelectHole = vm::selectHole,
                 onStrokes = vm::setStrokes,
+                onToggleMeasure = vm::toggleMeasure,
             )
             Screen.Card -> ScorecardScreen(
                 state = state,
@@ -118,6 +120,7 @@ private fun CaddieApp(vm: GolfViewModel = viewModel()) {
                 state = state,
                 modifier = mod,
                 onUseMeters = vm::setUseMeters,
+                onAutoAdvance = vm::setAutoAdvance,
             )
         }
     }

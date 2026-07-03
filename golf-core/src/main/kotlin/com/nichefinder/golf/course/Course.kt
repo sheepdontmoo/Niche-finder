@@ -3,6 +3,7 @@ package com.nichefinder.golf.course
 import com.nichefinder.golf.geo.Geo
 import com.nichefinder.golf.geo.LatLng
 
+@kotlinx.serialization.Serializable
 data class Hole(
     val number: Int,
     val par: Int,
@@ -16,6 +17,7 @@ data class Hole(
     }
 }
 
+@kotlinx.serialization.Serializable
 data class Course(
     val name: String,
     val holes: List<Hole>,
