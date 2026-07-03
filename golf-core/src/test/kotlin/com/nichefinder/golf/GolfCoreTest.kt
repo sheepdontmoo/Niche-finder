@@ -139,6 +139,32 @@ class OsmParserTest {
         assertTrue(course.hole(2)!!.green.all { it.lon > -6.1977 })
     }
 
+    @Test fun `overlapping courses dedupe by tee proximity`() {
+        // Two "hole 1" ways (St Andrews scenario). Player is near the first tee.
+        val json = """
+        {"elements":[
+          {"type":"node","id":1,"lat":53.3000,"lon":-6.2000},
+          {"type":"node","id":2,"lat":53.3030,"lon":-6.2000},
+          {"type":"node","id":10,"lat":53.30310,"lon":-6.20010},
+          {"type":"node","id":11,"lat":53.30320,"lon":-6.19990},
+          {"type":"node","id":12,"lat":53.30300,"lon":-6.19985},
+          {"type":"node","id":5,"lat":53.3200,"lon":-6.2200},
+          {"type":"node","id":6,"lat":53.3230,"lon":-6.2200},
+          {"type":"node","id":20,"lat":53.32310,"lon":-6.22010},
+          {"type":"node","id":21,"lat":53.32320,"lon":-6.21990},
+          {"type":"node","id":22,"lat":53.32300,"lon":-6.21985},
+          {"type":"way","id":100,"nodes":[1,2],"tags":{"golf":"hole","ref":"1","par":"4"}},
+          {"type":"way","id":101,"nodes":[10,11,12],"tags":{"golf":"green"}},
+          {"type":"way","id":102,"nodes":[5,6],"tags":{"golf":"hole","ref":"1","par":"5"}},
+          {"type":"way","id":103,"nodes":[20,21,22],"tags":{"golf":"green"}}
+        ]}
+        """
+        val nearFirstTee = LatLng(53.3001, -6.2001)
+        val course = OsmGolfParser.parse(json, "Overlap GC", near = nearFirstTee)
+        assertEquals(1, course.holes.size)
+        assertEquals(4, course.hole(1)!!.par)   // kept the nearer course's par-4, not the far par-5
+    }
+
     @Test fun `query builder embeds coordinates`() {
         val q = OsmGolfParser.overpassQuery(LatLng(53.3, -6.2), 1500)
         assertTrue("around:1500,53.3,-6.2" in q)

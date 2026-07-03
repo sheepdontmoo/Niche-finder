@@ -48,15 +48,36 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
     private var scorecard: Scorecard? = null
     private var demoJob: Job? = null
 
+    // Rounds survive app restarts: strokes stored per course name.
+    private val prefs = app.getSharedPreferences("rounds", Context.MODE_PRIVATE)
+
+    private fun persistStrokes(course: Course, card: Scorecard) {
+        val encoded = course.holes
+            .filter { card.strokes(it.number) > 0 }
+            .joinToString(",") { "${it.number}:${card.strokes(it.number)}" }
+        prefs.edit().putString("strokes/${course.name}", encoded).apply()
+    }
+
+    private fun restoreStrokes(course: Course, card: Scorecard) {
+        val encoded = prefs.getString("strokes/${course.name}", null) ?: return
+        encoded.split(",").filter { it.contains(':') }.forEach { pair ->
+            val (hole, strokes) = pair.split(":")
+            runCatching { card.setStrokes(hole.toInt(), strokes.toInt()) }
+        }
+    }
+
     // ---- Course selection ----
 
     fun startDemoRound() {
         stopGps()
         val course = DemoCourse.course
-        scorecard = Scorecard(course)
+        val card = Scorecard(course)
+        restoreStrokes(course, card)
+        scorecard = card
         _state.update {
             GolfUiState(course = course, demoMode = true, useMeters = it.useMeters, currentHole = 1)
         }
+        publishScore(course, card)
         // Simulate walking toward the green: distance ticks down like a real approach.
         demoJob?.cancel()
         demoJob = viewModelScope.launch {
@@ -90,10 +111,13 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
                 if (course.holes.isEmpty()) {
                     _state.update { it.copy(loading = false, message = "No mapped golf holes found within 2 km. (Course mapping improves weekly.)") }
                 } else {
-                    scorecard = Scorecard(course)
+                    val card = Scorecard(course)
+                    restoreStrokes(course, card)
+                    scorecard = card
                     _state.update {
-                        it.copy(course = course, demoMode = false, loading = false, currentHole = course.holes.first().number, strokesByHole = emptyMap(), totalStrokes = 0, toPar = 0, stableford = 0)
+                        it.copy(course = course, demoMode = false, loading = false, currentHole = course.holes.first().number)
                     }
+                    publishScore(course, card)
                     demoJob?.cancel()
                 }
             } catch (e: Exception) {
@@ -142,10 +166,16 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
 
     fun setStrokes(hole: Int, strokes: Int) {
         val card = scorecard ?: return
+        val course = _state.value.course ?: return
         card.setStrokes(hole, strokes)
+        persistStrokes(course, card)
+        publishScore(course, card)
+    }
+
+    private fun publishScore(course: Course, card: Scorecard) {
         _state.update {
             it.copy(
-                strokesByHole = it.course?.holes?.associate { h -> h.number to card.strokes(h.number) } ?: emptyMap(),
+                strokesByHole = course.holes.associate { h -> h.number to card.strokes(h.number) },
                 totalStrokes = card.totalStrokes,
                 toPar = card.toPar,
                 stableford = card.stablefordPoints,

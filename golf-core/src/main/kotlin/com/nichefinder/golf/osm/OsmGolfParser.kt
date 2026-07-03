@@ -27,7 +27,13 @@ import kotlinx.serialization.json.jsonPrimitive
  */
 object OsmGolfParser {
 
-    fun parse(overpassJson: String, courseName: String): Course {
+    /**
+     * @param near When several courses share the land (St Andrews has seven —
+     * a real case found in live testing), multiple ways carry the same hole
+     * ref. Passing the player/query position keeps, per hole number, only the
+     * hole whose tee is nearest — i.e. the course you're standing on.
+     */
+    fun parse(overpassJson: String, courseName: String, near: LatLng? = null): Course {
         val root = Json.parseToJsonElement(overpassJson).jsonObject
         val elements = root["elements"]?.jsonArray ?: return Course(courseName, emptyList())
 
@@ -63,8 +69,16 @@ object OsmGolfParser {
             }
         }
 
+        // Overlapping courses: per hole number keep the path whose tee is
+        // nearest the query point, so "hole 1" means THIS course's hole 1.
+        val dedupedPaths = if (near != null) {
+            holePaths.groupBy { it.number }.map { (_, candidates) ->
+                candidates.minBy { Geo.distanceMeters(near, it.path.first()) }
+            }
+        } else holePaths
+
         // Match each hole to the green nearest the end of its path (tee is the start).
-        val holes = holePaths.sortedBy { it.number }.mapNotNull { hp ->
+        val holes = dedupedPaths.sortedBy { it.number }.mapNotNull { hp ->
             val pin = hp.path.last()
             val green = greens.minByOrNull { g -> Geo.distanceMeters(pin, Geo.centroid(g)) }
                 ?: return@mapNotNull null
@@ -76,5 +90,5 @@ object OsmGolfParser {
 
     /** The Overpass query the app sends for a course near a coordinate. */
     fun overpassQuery(center: LatLng, radiusMeters: Int = 2000): String =
-        "[out:json];way(around:$radiusMeters,${center.lat},${center.lon})[\"golf\"~\"green|hole\"];(._;>;);out body;"
+        "[out:json][timeout:30];way(around:$radiusMeters,${center.lat},${center.lon})[\"golf\"~\"green|hole\"];(._;>;);out body;"
 }
