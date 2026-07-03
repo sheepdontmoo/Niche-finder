@@ -103,7 +103,7 @@ class ObdResponseTest {
 
 class ObdSessionIntegrationTest {
     @Test fun `full session against simulated clone adapter`() = runTest {
-        val sim = SimulatedElm327()
+        val sim = com.nichefinder.obd2.sim.DemoElm327()
         val session = ObdSession(sim)
 
         session.connect()
