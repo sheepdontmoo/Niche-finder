@@ -152,19 +152,47 @@ fun PlayScreen(
 
         Spacer(Modifier.weight(1f))
 
-        // Score stepper
+        // One-tap scoring: chips centered on par (par pre-emphasized), because
+        // anything over ~3 taps per hole generates review complaints.
         val current = state.strokesByHole[hole.number] ?: 0
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-            StepButton("−") { if (current > 0) onStrokes(hole.number, current - 1) }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    if (current == 0) "–" else "$current",
-                    style = MaterialTheme.typography.displayMedium,
-                    color = if (current == 0) Caddie.creamDim else Caddie.cream,
-                )
-                Text("STROKES", style = MaterialTheme.typography.labelSmall, color = Caddie.creamDim)
+        Text("SCORE THIS HOLE", style = MaterialTheme.typography.labelSmall, color = Caddie.creamDim)
+        Spacer(Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            val range = (hole.par - 2).coerceAtLeast(1)..(hole.par + 4)
+            for (s in range) {
+                val chosen = current == s
+                val isPar = s == hole.par
+                Box(
+                    Modifier
+                        .size(42.dp)
+                        .clip(CircleShape)
+                        .background(
+                            when {
+                                chosen -> Caddie.fairway
+                                isPar -> Caddie.fairway.copy(alpha = 0.10f)
+                                else -> Caddie.pine
+                            }
+                        )
+                        .border(
+                            width = if (isPar && !chosen) 2.dp else 1.dp,
+                            color = when {
+                                chosen -> Caddie.fairway
+                                isPar -> Caddie.fairway
+                                else -> Caddie.pineEdge
+                            },
+                            shape = CircleShape,
+                        )
+                        .clickable { onStrokes(hole.number, if (chosen) 0 else s) },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        "$s",
+                        fontFamily = Anton,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = if (chosen) Caddie.pineDeep else Caddie.cream,
+                    )
+                }
             }
-            StepButton("+") { onStrokes(hole.number, current + 1) }
         }
         Spacer(Modifier.height(20.dp))
     }

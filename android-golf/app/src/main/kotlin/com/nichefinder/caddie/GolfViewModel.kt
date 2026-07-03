@@ -242,6 +242,13 @@ class GolfViewModel(app: Application) : AndroidViewModel(app), LocationListener 
         card.setStrokes(hole, strokes)
         persistStrokes(course, card)
         publishScore(course, card)
+        // Scoring a hole means you're walking off its green: move the card to
+        // the next hole (GPS auto-advance will agree once you reach the tee).
+        if (strokes > 0 && hole == _state.value.currentHole) {
+            course.holes.map { it.number }.sorted()
+                .firstOrNull { it > hole }
+                ?.let { next -> selectHole(next) }
+        }
     }
 
     private fun publishScore(course: Course, card: Scorecard) {
