@@ -1,5 +1,6 @@
 package com.nichefinder.caddie.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import com.nichefinder.caddie.GolfUiState
+import com.nichefinder.caddie.R
 import com.nichefinder.caddie.ui.theme.Caddie
 
 @Composable
@@ -42,7 +45,13 @@ fun CoursesScreen(
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
     ) {
-        Spacer(Modifier.height(28.dp))
+        Spacer(Modifier.height(24.dp))
+        Image(
+            painter = painterResource(R.drawable.brand_mark),
+            contentDescription = "Fairway Caddie",
+            modifier = Modifier.height(64.dp),
+        )
+        Spacer(Modifier.height(14.dp))
         Text("FAIRWAY", style = MaterialTheme.typography.displayMedium, color = Caddie.cream)
         Text("CADDIE", style = MaterialTheme.typography.displayMedium, color = Caddie.fairway)
         Spacer(Modifier.height(10.dp))

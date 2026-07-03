@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="70dp" android:height="84dp"
+    android:viewportWidth="70" android:viewportHeight="84">
+    <!-- The green -->
+    <path
+        android:pathData="M36,4 C52,2 66,12 65,27 C64,42 54,52 40,54 C25,56 6,50 5,34 C4,18 20,6 36,4 Z"
+        android:fillColor="#1A17914F"
+        android:strokeColor="#17914F"
+        android:strokeWidth="3.5"/>
+    <!-- Front marker -->
+    <path
+        android:pathData="M27,54 m-5.5,0 a5.5,5.5 0 1,1 11,0 a5.5,5.5 0 1,1 -11,0"
+        android:fillColor="#A87A1F"/>
+    <!-- Approach dots -->
+    <path
+        android:pathData="M25,66 m-2.3,0 a2.3,2.3 0 1,1 4.6,0 a2.3,2.3 0 1,1 -4.6,0"
+        android:fillColor="#66736A"/>
+    <path
+        android:pathData="M23,76 m-2.3,0 a2.3,2.3 0 1,1 4.6,0 a2.3,2.3 0 1,1 -4.6,0"
+        android:fillColor="#66736A"/>
+</vector>

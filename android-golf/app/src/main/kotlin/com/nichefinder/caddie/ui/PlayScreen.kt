@@ -232,6 +232,12 @@ internal fun EmptyState(modifier: Modifier, title: String, body: String) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        androidx.compose.foundation.Image(
+            painter = androidx.compose.ui.res.painterResource(com.nichefinder.caddie.R.drawable.brand_mark),
+            contentDescription = null,
+            modifier = Modifier.height(56.dp).alpha(0.9f),
+        )
+        Spacer(Modifier.height(16.dp))
         Text(title, style = MaterialTheme.typography.displaySmall, color = Caddie.cream, textAlign = TextAlign.Center)
         Spacer(Modifier.height(10.dp))
         Text(body, style = MaterialTheme.typography.bodyMedium, color = Caddie.creamDim, textAlign = TextAlign.Center)

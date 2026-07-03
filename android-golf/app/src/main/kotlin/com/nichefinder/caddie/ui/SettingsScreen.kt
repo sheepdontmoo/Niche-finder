@@ -1,5 +1,6 @@
 package com.nichefinder.caddie.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.painterResource
 import com.nichefinder.caddie.GolfUiState
+import com.nichefinder.caddie.R
 import com.nichefinder.caddie.ui.theme.Caddie
 
 @Composable
@@ -107,6 +110,16 @@ fun SettingsScreen(
         }
 
         Spacer(Modifier.weight(1f))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.brand_mark),
+                contentDescription = null,
+                modifier = Modifier.height(30.dp),
+            )
+            Spacer(Modifier.height(0.dp))
+            Text("  FAIRWAY CADDIE", style = MaterialTheme.typography.labelLarge, color = Caddie.creamDim)
+        }
+        Spacer(Modifier.height(10.dp))
         Text(
             "Course data © OpenStreetMap contributors. Distances are measured to the mapped " +
                 "green outline and its centre — always sanity-check locally.",
