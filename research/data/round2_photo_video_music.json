@@ -1,0 +1,132 @@
+[
+  {
+    "name": "Guitar Pro (mobile)",
+    "appId": "com.arobasmusic.guitarpro",
+    "price": "$5.49-$6.99 one-time",
+    "installs": "100,000+",
+    "rating": "~3.4 (Play; grand-screen review aggregate shows 2.3/5)",
+    "ratingsCount": "~12,000 reviews aggregated",
+    "complaints": [
+      "No Android update since ~2022 (last major update May 2020, v1.6.3); users asking if abandoned",
+      "Very crashy — 'open a tab from a popular website? crash'; lacks compatibility with modern phones",
+      "Soundbanks 'like from GP5', clunky menus, can't write multi-track, file corruption in NotePad",
+      "Paid app treated as 'a second thought' vs desktop Guitar Pro; users say it should cost $1-2 for what it does"
+    ],
+    "failureMode": "mix (abandonment + broken-modern)",
+    "freeIncumbentRisk": "Low-medium: Songsterr/UG cover tab playback but nothing free properly renders/plays .gp files offline; guitarists demonstrably pay for this job",
+    "moatNotes": "The .gp file-format player/practice niche is captive: huge existing libraries of GP files, desktop users need a mobile companion. Arobas showed a new-app prototype at NAMM 2025 but nothing shipped — clone window open but time-limited",
+    "sources": [
+      "https://apkcombo.com/guitar-pro/com.arobasmusic.guitarpro/",
+      "https://grand-screen.com/apps/guitar-pro/reviews/",
+      "https://www.guitar-pro.com/blog/p/48507-namm-show-2025-the-prototype-of-the-new-guitar-pro-mobile-app-unveiled"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "FL Studio Mobile",
+    "appId": "com.imageline.FLM",
+    "price": "$14.99 one-time + IAP content packs",
+    "installs": "1,000,000+",
+    "rating": 4.01,
+    "ratingsCount": "37,000",
+    "complaints": [
+      "Crashes constantly on Android — on opening projects, tapping Overview, mid-song, losing work",
+      "Compatibility problems with newer Android versions acknowledged in Image-Line's own troubleshooting docs/forums",
+      "Perceived neglect: Image-Line's attention is on desktop FL Studio; mobile UI/engine felt frozen for years"
+    ],
+    "failureMode": "mix (semi-abandonment + broken-modern)",
+    "freeIncumbentRisk": "Medium: BandLab is free and strong for beginners, but a serious offline one-time-purchase pocket DAW (the thing people paid $15 for) has no healthy incumbent; Caustic is abandoned, Audio Evolution is niche",
+    "moatNotes": "1M+ people paid $15 up front for a mobile DAW — proven willingness to pay in a category where the leader ships crashes. Brand is the moat to beat; win on stability + modern-Android audio latency",
+    "sources": [
+      "https://www.appbrain.com/app/fl-studio-mobile/com.imageline.FLM",
+      "https://forum.image-line.com/viewtopic.php?t=270009",
+      "http://support.image-line.com/redirect/flmobile_android_troubleshooting"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "Alight Motion",
+    "appId": "com.alightcreative.motion",
+    "price": "Free, paid-gated (watermark + core features behind ~$30-60/yr subscription)",
+    "installs": "100,000,000+",
+    "rating": 3.59,
+    "ratingsCount": "1,200,000",
+    "complaints": [
+      "Trial/subscription traps: 'trial still takes money even when you press X to decline'; charges after unsubscribing",
+      "Paywall screens users can't close without purchasing; must start a trial to even use the app",
+      "Bending Spoons acquisition amplified aggressive monetization resentment; refund friction"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "HIGH: CapCut covers casual editing free. But Alight's niche is keyframe/vector motion graphics + shareable project presets, which CapCut doesn't really serve — a fair one-time-purchase motion-graphics editor targets the angry 3.59-star base",
+    "moatNotes": "Massive community of 'AM preset' creators (XML project sharing) locked into a hated pricing model; import-compat or preset ecosystem would be the wedge",
+    "sources": [
+      "https://www.appbrain.com/app/alight-motion/com.alightcreative.motion",
+      "https://support.google.com/googleplay/thread/281363426",
+      "https://justuseapp.com/en/app/1459833443/alight-motion/reviews"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "VSCO: Photo & Video Editor",
+    "appId": "com.vsco.cam",
+    "price": "Free, paid-gated (VSCO Plus $29.99-39.99/yr, Pro $59.99/yr)",
+    "installs": "100,000,000+ (160M per AppBrain)",
+    "rating": 3.56,
+    "ratingsCount": "~1,000,000",
+    "complaints": [
+      "Bait-and-switch: presets bought as one-time purchases pre-2017 went gray and now require a subscription — purchases converted into rentals",
+      "7-day trial 'falsely claimed' — users report immediate charges and 'not our problem' support responses",
+      "Plus tier price roughly doubled from the old $19.99/yr model; stability complaints on Android"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "Medium: Snapseed/Lightroom free tier edit photos free, but the film-emulation preset aesthetic is exactly what people paid VSCO for; a one-time-purchase film-preset editor directly answers the top complaint",
+    "moatNotes": "Angriest large install base in mobile photo editing; the winning pitch is literally 'buy your film presets once, keep them forever' — the promise VSCO broke",
+    "sources": [
+      "https://www.appbrain.com/app/vsco-photo-editor/com.vsco.cam",
+      "https://www.trustpilot.com/review/vsco.co",
+      "https://theeditingstudio.co/blog/vsco-app-review-2026"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Adobe Premiere Rush",
+    "appId": "com.adobe.premiererush.videoeditor",
+    "price": "Freemium, paid-gated (premium sub via Creative Cloud)",
+    "installs": "5,000,000+",
+    "rating": 3.2,
+    "ratingsCount": "36,000",
+    "complaints": [
+      "Officially abandoned: delisted from stores Sept 30 2025, app killed Sept 30 2026; last Android update Sept 2024",
+      "Android users stranded — replacement 'Premiere on iPhone' is iOS-only, Premiere for Android has no release date",
+      "Users who reinstalled phones can no longer download an app they paid Creative Cloud money to use"
+    ],
+    "failureMode": "abandonment",
+    "freeIncumbentRisk": "HIGH: CapCut/YouTube Create serve casual users free. The residual demand is 'prosumer timeline editor with desktop-class export, no watermark, no TikTok data concerns', which is narrower but pays",
+    "moatNotes": "5M Android installs of a pro-brand editor with the vendor publicly exiting and telling Android users to wait indefinitely; a stable one-time-purchase prosumer editor can harvest the diaspora — but must clearly beat free CapCut on trust/watermark/ownership",
+    "sources": [
+      "https://www.appbrain.com/app/adobe-premiere-rush/com.adobe.premiererush.videoeditor",
+      "https://helpx.adobe.com/premiere-rush/kb/end-of-life.html",
+      "https://community.adobe.com/questions-105/mobile-options-after-premier-rush-ends-1531735"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Photo Mate R3 (RAW editor)",
+    "appId": "com.tssystems.photomate3",
+    "price": "Free, paid-gated (IAP to unlock full features/ad-free)",
+    "installs": "190,000",
+    "rating": 3.53,
+    "ratingsCount": "1,100",
+    "complaints": [
+      "Solo-dev app dating to 2016 with long dormant stretches; users experienced years-stale RAW camera profiles and modern-device breakage before sporadic revivals (latest update Dec 2025)",
+      "Rating decayed to 3.53 while remaining one of the only full RAW workflow (Lightroom-style) editors on Android"
+    ],
+    "failureMode": "mix (abandonment + broken-modern)",
+    "freeIncumbentRisk": "HIGH: Lightroom Mobile's free tier edits RAW. The payable gap is offline/no-account/one-time-purchase RAW culling+editing for photographers who refuse Adobe subscriptions",
+    "moatNotes": "Small but real: desktop-class RAW batch workflow on Android tablets has no healthy paid incumbent; smallest install base on this list, treat as niche bet",
+    "sources": [
+      "https://www.appbrain.com/app/photo-mate-r3/com.tssystems.photomate3"
+    ],
+    "confidence": "low"
+  }
+]

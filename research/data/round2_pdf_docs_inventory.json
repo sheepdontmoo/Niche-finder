@@ -1,0 +1,118 @@
+[
+  {
+    "name": "ezPDF Reader PDF Annotate Form",
+    "appId": "udk.android.reader",
+    "price": "$3.99 one-time (paid app)",
+    "installs": "500,000+",
+    "rating": 2.8,
+    "ratingsCount": "~20,000-25,700 (AppBrain 20k; chrome-stats mirror shows 3.12 from 25,743)",
+    "complaints": [
+      "Developer repeatedly abandoned the app ('abandoned it at the height of its glory, revived it when everyone had moved on, then abandoned it again for a couple of years')",
+      "Frequent crashes and performance problems on modern devices; confusing UI overhaul after long-dormant updates",
+      "Suspicious new phone/microphone permission requirements drove paying owners to uninstall",
+      "Once 'best selling, best rated' multimedia PDF annotator/form-filler — large paid install base now stranded"
+    ],
+    "failureMode": "abandonment",
+    "freeIncumbentRisk": "High for plain reading (Google Drive/Xodo free), but its niche — multimedia PDF, TTS read-aloud, form filling, annotation on a one-time-purchase model — has few maintained one-time-price competitors",
+    "moatNotes": "Its ratings base proves people paid $4 for offline annotate+forms+TTS. A maintained, modern-Android, one-time-purchase PDF annotator with no telemetry directly harvests this abandoned paid audience.",
+    "sources": [
+      "https://www.appbrain.com/app/ezpdf-reader-pdf-annotate-form/udk.android.reader",
+      "https://chrome-stats.com/d/udk.android.reader/reviews",
+      "https://play.google.com/store/apps/details?id=udk.android.reader"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Sortly: Inventory Simplified",
+    "appId": "com.sortly.mythings",
+    "price": "Paid-gated: free tier capped (~100 items); subscriptions ~$29-$59+/mo, users report $299/mo and $468→$1,467/yr jumps",
+    "installs": "310,000+ (AppBrain)",
+    "rating": 3.77,
+    "ratingsCount": "~960 (Play/AppBrain; thousands more across Capterra/Trustpilot/App Store)",
+    "complaints": [
+      "Bait-and-switch pricing: users build large inventories on cheap plans, then face drastic renewal hikes ('held hostage' — $468 to $1,467 in 30 days after 3 years; non-profit hit with ~$4,000 increase)",
+      "Legacy subscriptions discontinued, forcing ~$500/yr or a free tier limited to 100 entries",
+      "Per-item pricing punishes home/collection users with big inventories but few transactions",
+      "Items disappearing after updates; sync bugs on larger datasets; inconsistent support"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "Low-moderate: spreadsheets are the 'free' alternative but lack photos/barcode/folders; no dominant free visual-inventory app exists",
+    "moatNotes": "Data-hostage resentment is the wedge: a photo-first inventory app with flat one-time or cheap capped pricing and full local export kills the exact fear driving 1-star reviews. Small-biz + insurance-documentation users demonstrably pay.",
+    "sources": [
+      "https://www.appbrain.com/app/sortly-inventory-simplified/com.sortly.mythings",
+      "https://www.trustpilot.com/review/sortly.com",
+      "https://www.capterra.com/p/169199/Sortly-Pro/reviews/"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "SwiftScan (formerly Scanbot Pro)",
+    "appId": "net.doo.snap",
+    "price": "Paid-gated: free scans watermark-limited features; VIP subscription $22.49/yr (was $7 one-time as Scanbot Pro)",
+    "installs": "6,800,000+",
+    "rating": 3.86,
+    "ratingsCount": "~61,000",
+    "complaints": [
+      "Classic forced paid→subscription migration: users who bought Scanbot Pro one-time were told to pay $4/mo subscription — 'a ludicrous money grab'",
+      "Rebrand doo→SwiftScan→Maple Media ownership churn eroded trust",
+      "Cloud upload (Drive/Dropbox), OCR and other formerly-owned features moved behind VIP paywall",
+      "Longtime pro-mode users locked out of features they had paid for"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "High: Google Drive scan, Microsoft Lens, Adobe Scan are free and good — differentiation must be privacy/on-device OCR/one-time price, not basic scanning",
+    "moatNotes": "The 61k-rating base at 3.86 shows churn-ready paying scanners; winning angle is 'buy once, offline OCR, no account, no watermark' — precisely what Scanbot originally sold before the rug-pull.",
+    "sources": [
+      "https://www.appbrain.com/app/swiftscan-scan-pdf-documents/net.doo.snap",
+      "https://mjtsai.com/blog/2019/09/19/scanbot-goes-freemium/",
+      "https://appgrooves.com/app/scanbot-pro-scanner-app-and-fax-by-doo-gmbh/negative"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "PDF Editor & Reader | Xodo (Apryse)",
+    "appId": "com.xodo.pdf.reader",
+    "price": "Paid-gated: formerly fully free; core editing/annotation features now behind subscription (~$10-12/mo tiers) after Apryse acquisition",
+    "installs": "29,000,000",
+    "rating": 4.14,
+    "ratingsCount": "~340,000",
+    "complaints": [
+      "Features that were free for nearly a decade (editing, annotation depth, e-sign volume) moved behind an aggressive subscription after Apryse/PDFTron acquisition",
+      "Subscription priced for business but pitched at everyone — 'too expensive for non-business users'",
+      "Free tier progressively shrunk (e.g. Xodo Sign document limits cut 5→3/month)",
+      "Beloved-free-app betrayal dynamic: enormous legacy user base actively hunting replacements"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "Moderate: many free PDF viewers exist, but full-fidelity annotate/edit/fill-sign offline without account or watermark is still scarce on Android",
+    "moatNotes": "Rating sits right at the 4.1 threshold but the volume is enormous (340k ratings, 130k installs/30d). A one-time-purchase 'what Xodo used to be' annotator targets a huge, articulate, already-searching audience. Biggest TAM of this list.",
+    "sources": [
+      "https://www.appbrain.com/app/xodo-pdf-reader-editor/com.xodo.pdf.reader",
+      "https://www.capterra.com/p/210439/Xodo/reviews/",
+      "https://www.g2.com/products/xodo/reviews?qs=pros-and-cons"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "eFax App - Fax from Phone",
+    "appId": "com.j2.efax",
+    "price": "Paid-gated: app useless without eFax subscription (~$16.95+/mo, setup fees)",
+    "installs": "3,000,000",
+    "rating": 4.08,
+    "ratingsCount": "~15,000",
+    "complaints": [
+      "Cancellation is deliberately convoluted: cancel button doesn't work, chat loops back to broken email link, phone cancellations 'processed' yet card keeps getting charged month after month",
+      "Continued billing after confirmed cancellation with refunds refused (2.1 stars on Sitejabber; Trustpilot/ConsumerAffairs full of identical stories)",
+      "Pricing structure perceived as misleading and exploitative for low-volume users",
+      "Customers put on indefinite hold or hung up on when requesting cancellation"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "Low: faxing is inherently paid (telco costs); no viable free incumbent — competitors (iFax etc.) show similar billing resentment",
+    "moatNotes": "Occasional-fax users (medical/legal/government forms) are massively overserved by monthly subs. Pay-per-fax with transparent pricing and instant self-serve cancellation attacks the exact 1-star driver. J2/Consensus is a legacy conglomerate slow to respond.",
+    "sources": [
+      "https://www.appbrain.com/app/efax-app-fax-from-phone/com.j2.efax",
+      "https://www.trustpilot.com/review/www.efax.com",
+      "https://www.sitejabber.com/reviews/efax.com",
+      "https://www.consumeraffairs.com/cell_phones/efax.html"
+    ],
+    "confidence": "medium"
+  }
+]

@@ -1,0 +1,120 @@
+[
+  {
+    "name": "Gaia GPS: Offline Trail Maps",
+    "appId": "com.trailbehind.android.gaiagps.pro",
+    "price": "Free download, core value (offline maps, most layers) gated behind Premium/Outside+ subscription (~$40-90/yr, rising)",
+    "installs": "4.1M (AppBrain)",
+    "rating": 3.36,
+    "ratingsCount": "21,000 (Google Play, via AppBrain); Trustpilot 2.3/5 'Poor'",
+    "complaints": [
+      "App refuses to open / demands internet login in remote areas, locking users out of paid offline maps exactly when needed",
+      "Cannot search maps offline despite offline-map selling point",
+      "Post-Outside-acquisition price hikes (~$20/yr jump) and bundling into Outside+ resented by long-time users",
+      "Predatory billing: charged $64 for 'free trial', refusal to prorate cancellations, refunds denied",
+      "Poor/hostile customer support; reports of accounts terminated after critical reviews"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium: AllTrails free tier, CalTopo, Organic Maps/OsmAnd cover casual use, but serious offline topo + layer stacking + track management is under-served free; Gaia's angry base are power users who already pay",
+    "moatNotes": "No hardware moat. Map-tile licensing (USGS/USFS/OSM) is open; main build cost is layer catalog and offline tile engine. Users explicitly hunting alternatives after Outside acquisition.",
+    "sources": [
+      "https://www.appbrain.com/app/gaia-gps-offline-trail-maps/com.trailbehind.android.gaiagps.pro",
+      "https://www.trustpilot.com/review/gaiagps.com"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Sports Tracker: Run Bike Hike",
+    "appId": "com.stt.android",
+    "price": "Free download; ~3 years ago all key stats (route comparison, progress, workout maps) moved behind Premium subscription",
+    "installs": "16M (AppBrain)",
+    "rating": 3.12,
+    "ratingsCount": "230,000 (Google Play, via AppBrain)",
+    "complaints": [
+      "Formerly-free core stats (compare workouts on same route, progress, maps) paywalled retroactively — classic paywall creep on a 15-year-old install base",
+      "Stop button unresponsive for 30+ seconds — workouts can't be ended reliably",
+      "Crashes on wearable sync; workouts lost/not saved",
+      "Buggy updates: manual-entry dates off by a day, wrong start times",
+      "Export features broken even for paying pro users; Suunto/Amer treats it as legacy — Suunto forum users called it 'a complete joke' vs Movescount"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High-ish: Strava free tier, adidas Running, and phone-native tracking exist — but Strava itself paywalled analytics, which is exactly the displaced-user pool. A one-time-purchase tracker with reliable local stats targets the resentful segment directly.",
+    "moatNotes": "No hardware moat (works with phone GPS). 16M installs at 3.12 stars is an enormous proven-demand pool. Endomondo/Runtastic refugees already churned here once and got burned again.",
+    "sources": [
+      "https://www.appbrain.com/app/sports-tracker-run-bike-hike/com.stt.android",
+      "https://play.google.com/store/apps/details?id=com.stt.android&hl=en",
+      "https://forum.suunto.com/topic/3482/future-of-suunto-app-and-web-based-service-sports-tracker-movescount"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "BackCountry Navigator GPS PRO (TOPO GPS)",
+    "appId": "com.crittermap.backcountrynavigator.license",
+    "price": "$11.99 one-time paid (some map sources need extra subscription)",
+    "installs": "250,000 (AppBrain)",
+    "rating": 3.54,
+    "ratingsCount": "6,300 (Google Play, via AppBrain)",
+    "complaints": [
+      "Developer (CritterMap) shifted all real development to subscription-based successor 'BackCountry Navigator XE'; PRO now gets only Google Play compliance/billing patches",
+      "Long-standing bugs unfixed: track recording fails, app crashes when recording",
+      "Paid $11.99 owners pushed toward XE membership to stay current — and XE itself rates only 3.44 (470 ratings), so the migration path is also broken",
+      "Dated UI/feature set vs modern trail apps"
+    ],
+    "failureMode": "abandonment",
+    "freeIncumbentRisk": "Medium: OsmAnd, Locus Map (freemium), AlpineQuest Lite serve hobbyists free, but the buyer profile here (hunters, snowmobilers, offline backcountry users per SnoWest forum) demonstrably pays $10+ for offline topo; onX charges $30-100/yr in this exact niche",
+    "moatNotes": "No hardware moat. Public map sources. The 250k paid installs prove a one-time-purchase offline topo app sells; incumbent abandoned the one-time model, leaving that positioning vacant.",
+    "sources": [
+      "https://www.appbrain.com/app/backcountry-navigator-topo-gps-pro/com.crittermap.backcountrynavigator.license",
+      "https://www.backcountrynavigator.com/backcountry-navigator-pro3",
+      "https://www.snowest.com/forum/threads/backcountry-navigator-pro.434000/"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "11pets: Pet care",
+    "appId": "com.m11pets.elevenpets",
+    "price": "Free download; recent rewrite force-migrated users to subscription to access their own existing pet health records",
+    "installs": "530,000 (AppBrain)",
+    "rating": 2.12,
+    "ratingsCount": "5,300 (Google Play, via AppBrain)",
+    "complaints": [
+      "Update forced subscriptions and blocked long-time users from their previously-entered pet data",
+      "Migration lost or scrambled most user data (vaccination records, medical history, photos)",
+      "Login broken: users logged out, password-reset emails never arrive",
+      "In-app contact/support form literally cannot send messages",
+      "New version 'barely functional'; users locked out of countless records and images"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Low: no dominant free pet-health-record app exists; competitors (PetDesk etc.) are vet-clinic-tethered. Users' #1 need is data safety — local-first storage with export is a direct counter-position to the exact betrayal that tanked this app to 2.1 stars",
+    "moatNotes": "No hardware moat, no proprietary data. Pure CRUD app (records, reminders, weight charts, multi-pet). The 530k installs prove demand for comprehensive pet care tracking; incumbent destroyed its own trust asset.",
+    "sources": [
+      "https://www.appbrain.com/app/11pets-pet-care/com.m11pets.elevenpets",
+      "https://kimola.com/reports/insightful-customer-feedback-report-on-11pets-app-google-play-en-141201",
+      "https://justuseapp.com/en/app/1232470530/11pets-pet-care/reviews"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Zombies, Run! (ZRX)",
+    "appId": "com.sixtostart.zombiesrunclient",
+    "price": "Was $3.99 paid app; since 2015 free-to-play with subscription ($5.99/mo or $39.99/yr) for missions; legacy-buyer perks eroded over successive rebrands (ZRX)",
+    "installs": "1,000,000+ (AppBrain)",
+    "rating": 4.04,
+    "ratingsCount": "26,000 (Google Play, via AppBrain)",
+    "complaints": [
+      "Original paid buyers migrated to subscription model (2015, v4.0) and perks eroded through later ZRX rebrand — betrayal sentiment among legacy owners",
+      "Tracking fails when screen is off (Android battery optimization) — an hour of running logs 30 minutes",
+      "Music won't resume after story clips; zombie chases unwinnable even at dead sprint",
+      "Subscription demanded mid-way through 8-week training program without warning",
+      "Users say devs 'aren't putting in effort' to fix long-standing bugs"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium: generic run trackers are free, but story-driven/gamified audio running has essentially no free incumbent — the moat is content. Clone needs narrative audio production (AI-assisted TTS/story generation now makes this cheap).",
+    "moatNotes": "No hardware moat. Content library is the incumbent's moat, but its tech debt (background tracking broken on modern Android) is the wedge. Rating sits right at the 4.1 threshold — weakest candidate on rating, strongest on category emptiness.",
+    "sources": [
+      "https://www.appbrain.com/app/zombies-run/com.sixtostart.zombiesrunclient",
+      "https://www.androidpolice.com/2015/05/15/new-zombies-run-v4-0-shifts-to-free-to-play-subscription-model-offers-legacy-users-some-perks/",
+      "https://play.google.com/store/apps/details?id=com.sixtostart.zombiesrunclient&hl=en"
+    ],
+    "confidence": "medium"
+  }
+]
