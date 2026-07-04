@@ -72,6 +72,10 @@ private fun DocStashApp(vm: DocStashViewModel = viewModel()) {
 
     val selectedDocument = state.documents.find { it.id == state.selectedDocumentId }
 
+    // An if/else here (rather than an early return from the document branch) matters: it's the
+    // only way the shared error dialog below reliably runs no matter which screen is showing --
+    // scan/OCR errors from "Add more pages" happen while a document is open, and previously went
+    // straight to state.message with nothing ever rendering it.
     if (selectedDocument != null) {
         val pageFiles = remember(selectedDocument.id, selectedDocument.pages.size) {
             vm.pageFiles(selectedDocument.id)
@@ -103,46 +107,45 @@ private fun DocStashApp(vm: DocStashViewModel = viewModel()) {
                 }
             },
         )
-        return
-    }
-
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                Tab.entries.forEach { t ->
-                    NavigationBarItem(
-                        selected = tab == t,
-                        onClick = { tab = t },
-                        label = { Text(t.label) },
-                        icon = {
-                            Icon(
-                                when (t) {
-                                    Tab.Library -> Icons.AutoMirrored.Filled.List
-                                    Tab.Settings -> Icons.Default.Settings
-                                },
-                                contentDescription = t.label,
-                            )
-                        },
-                    )
+    } else {
+        Scaffold(
+            bottomBar = {
+                NavigationBar {
+                    Tab.entries.forEach { t ->
+                        NavigationBarItem(
+                            selected = tab == t,
+                            onClick = { tab = t },
+                            label = { Text(t.label) },
+                            icon = {
+                                Icon(
+                                    when (t) {
+                                        Tab.Library -> Icons.AutoMirrored.Filled.List
+                                        Tab.Settings -> Icons.Default.Settings
+                                    },
+                                    contentDescription = t.label,
+                                )
+                            },
+                        )
+                    }
                 }
+            },
+        ) { padding ->
+            val mod = Modifier.padding(padding)
+            when (tab) {
+                Tab.Library -> LibraryScreen(
+                    state = state,
+                    modifier = mod,
+                    onSearchQueryChange = vm::setSearchQuery,
+                    onOpenDocument = vm::openDocument,
+                    onScan = { vm.beginNewScan(); startScan() },
+                )
+                Tab.Settings -> SettingsScreen(
+                    proUnlocked = state.proUnlocked,
+                    priceLabel = state.proPriceLabel,
+                    modifier = mod,
+                    onUnlockClick = { vm.purchasePro(activity) },
+                )
             }
-        },
-    ) { padding ->
-        val mod = Modifier.padding(padding)
-        when (tab) {
-            Tab.Library -> LibraryScreen(
-                state = state,
-                modifier = mod,
-                onSearchQueryChange = vm::setSearchQuery,
-                onOpenDocument = vm::openDocument,
-                onScan = { vm.beginNewScan(); startScan() },
-            )
-            Tab.Settings -> SettingsScreen(
-                proUnlocked = state.proUnlocked,
-                priceLabel = state.proPriceLabel,
-                modifier = mod,
-                onUnlockClick = { vm.purchasePro(activity) },
-            )
         }
     }
 

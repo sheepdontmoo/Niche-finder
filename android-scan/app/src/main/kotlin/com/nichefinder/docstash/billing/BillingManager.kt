@@ -92,7 +92,12 @@ class BillingManager(context: Context) : PurchasesUpdatedListener {
     suspend fun refreshPurchases() {
         val params = QueryPurchasesParams.newBuilder().setProductType(ProductType.INAPP).build()
         val result = client.queryPurchasesAsync(params)
-        applyPurchases(result.purchasesList)
+        // A failed query (billing disconnected, transient error, ...) must never look like "the
+        // user owns nothing" -- that's precisely the "charged but shows not purchased" bug this
+        // app exists to not repeat. Only trust an OK response; leave entitlement untouched otherwise.
+        if (result.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            applyPurchases(result.purchasesList)
+        }
     }
 
     private fun applyPurchases(purchases: List<Purchase>) {

@@ -44,12 +44,18 @@ class OcrProcessor {
             .flatMap { it.elements }
             .mapNotNull { element ->
                 val box = element.boundingBox ?: return@mapNotNull null
+                val width = (box.right - box.left).toDouble()
+                val height = (box.bottom - box.top).toDouble()
+                // OcrWord requires non-blank text and a positive-area box; ML Kit can hand back
+                // degenerate elements at the edges of a page. Skip them rather than let one bad
+                // word crash OCR for the entire page (and, via the scan batch, every other page).
+                if (element.text.isBlank() || width <= 0.0 || height <= 0.0) return@mapNotNull null
                 OcrWord(
                     text = element.text,
                     left = box.left.toDouble(),
                     top = box.top.toDouble(),
-                    width = (box.right - box.left).toDouble(),
-                    height = (box.bottom - box.top).toDouble(),
+                    width = width,
+                    height = height,
                 )
             }
 

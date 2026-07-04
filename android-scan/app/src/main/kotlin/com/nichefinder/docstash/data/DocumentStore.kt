@@ -18,23 +18,37 @@ import java.util.UUID
  * directly answering CamScanner users' biggest complaint about forced cloud upload.
  *
  * Blocking file I/O throughout by design: every call here is dispatched from the ViewModel on
- * `Dispatchers.IO`, so there's no value in this class managing its own threading.
+ * `Dispatchers.IO`, so there's no value in this class managing its own threading. Every public
+ * method that touches the manifest is fully serialized on [lock] — read-modify-write across two
+ * separate synchronized calls (the original shape of this class) can interleave when two
+ * mutations land on `Dispatchers.IO`'s thread pool at once, silently dropping whichever wrote
+ * second.
  */
 class DocumentStore(private val context: Context) {
 
+    private val lock = Any()
     private val json = Json { ignoreUnknownKeys = true }
     private val documentsDir: File get() = File(context.filesDir, "documents").apply { mkdirs() }
     private val manifestFile: File get() = File(documentsDir, "manifest.json")
     private val exportsDir: File get() = File(context.cacheDir, "exports").apply { mkdirs() }
 
-    @Volatile private var cached: LibraryManifest? = null
+    private var cached: LibraryManifest? = null
 
-    @Synchronized
+    /** Must only be called while holding [lock]. */
     private fun load(): LibraryManifest {
         cached?.let { return it }
         val manifest = if (manifestFile.exists()) {
-            runCatching { json.decodeFromString(LibraryManifest.serializer(), manifestFile.readText()) }
-                .getOrDefault(LibraryManifest())
+            val raw = manifestFile.readText()
+            runCatching { json.decodeFromString(LibraryManifest.serializer(), raw) }
+                .getOrElse {
+                    // A library the parser can't read must never be silently replaced with an
+                    // empty one -- keep the raw bytes so a corrupt manifest is at least
+                    // recoverable by hand, instead of quietly discarding every saved document.
+                    runCatching {
+                        File(documentsDir, "manifest-corrupt-${System.currentTimeMillis()}.json").writeText(raw)
+                    }
+                    LibraryManifest()
+                }
         } else {
             LibraryManifest()
         }
@@ -42,47 +56,74 @@ class DocumentStore(private val context: Context) {
         return manifest
     }
 
-    @Synchronized
+    /** Must only be called while holding [lock]. Writes via a temp file + rename to avoid a half-written manifest. */
     private fun save(manifest: LibraryManifest) {
         cached = manifest
-        manifestFile.writeText(json.encodeToString(LibraryManifest.serializer(), manifest))
+        val tmp = File(documentsDir, "manifest.json.tmp")
+        tmp.writeText(json.encodeToString(LibraryManifest.serializer(), manifest))
+        if (!tmp.renameTo(manifestFile)) {
+            // Some filesystems refuse an atomic rename over an existing file; fall back to a
+            // plain copy rather than leaving the manifest unwritten.
+            manifestFile.writeText(tmp.readText())
+            tmp.delete()
+        }
     }
 
     /** All saved documents, newest first. */
-    fun all(): List<DocumentRecord> = load().documents.sortedByDescending { it.createdAtEpochMillis }
+    fun all(): List<DocumentRecord> = synchronized(lock) {
+        load().documents.sortedByDescending { it.createdAtEpochMillis }
+    }
 
-    fun get(documentId: String): DocumentRecord? = load().documents.find { it.id == documentId }
+    fun get(documentId: String): DocumentRecord? = synchronized(lock) {
+        load().documents.find { it.id == documentId }
+    }
 
-    fun asSearchDocuments(): List<ScanDocument> =
-        all().map { doc -> ScanDocument(doc.id, doc.title, doc.createdAtEpochMillis, doc.pages.map { it.text }) }
+    fun asSearchDocuments(): List<ScanDocument> = synchronized(lock) {
+        load().documents.map { doc -> ScanDocument(doc.id, doc.title, doc.createdAtEpochMillis, doc.pages.map { it.text }) }
+    }
 
     fun createDocument(pages: List<ScannedPage>): DocumentRecord {
         require(pages.isNotEmpty()) { "Cannot create a document with zero scanned pages" }
-        val id = UUID.randomUUID().toString()
-        val now = System.currentTimeMillis()
-        val folder = File(documentsDir, id).apply { mkdirs() }
-        val pageRecords = pages.mapIndexed { index, page -> writePage(folder, index, page) }
-        val record = DocumentRecord(
-            id = id,
-            title = DocumentNaming.defaultTitle(now),
-            createdAtEpochMillis = now,
-            pages = pageRecords,
-        )
-        save(LibraryManifest(load().documents + record))
-        return record
+        return synchronized(lock) {
+            val id = UUID.randomUUID().toString()
+            val now = System.currentTimeMillis()
+            val folder = File(documentsDir, id).apply { mkdirs() }
+            val pageRecords = pages.mapIndexed { index, page -> writePage(folder, index, page) }
+            val record = DocumentRecord(
+                id = id,
+                title = DocumentNaming.defaultTitle(now),
+                createdAtEpochMillis = now,
+                pages = pageRecords,
+            )
+            save(LibraryManifest(load().documents + record))
+            record
+        }
     }
 
     fun appendPages(documentId: String, morePages: List<ScannedPage>): DocumentRecord {
         require(morePages.isNotEmpty()) { "No pages to append" }
-        val manifest = load()
-        val existing = manifest.documents.find { it.id == documentId } ?: error("Document $documentId not found")
-        val folder = File(documentsDir, documentId).apply { mkdirs() }
-        val startIndex = existing.pages.size
-        val newRecords = morePages.mapIndexed { i, page -> writePage(folder, startIndex + i, page) }
-        val updated = existing.copy(pages = existing.pages + newRecords)
-        save(LibraryManifest(manifest.documents.map { if (it.id == documentId) updated else it }))
-        return updated
+        return synchronized(lock) {
+            val manifest = load()
+            val existing = manifest.documents.find { it.id == documentId } ?: error("Document $documentId not found")
+            val folder = File(documentsDir, documentId).apply { mkdirs() }
+            // Page count alone isn't a safe "next index": deleting a page never renumbers the
+            // survivors, so after a delete, count-based naming can collide with and overwrite an
+            // existing page's file. Continue after the highest index actually still in use.
+            val startIndex = nextPageIndex(existing.pages)
+            val newRecords = morePages.mapIndexed { i, page -> writePage(folder, startIndex + i, page) }
+            val updated = existing.copy(pages = existing.pages + newRecords)
+            save(LibraryManifest(manifest.documents.map { if (it.id == documentId) updated else it }))
+            updated
+        }
     }
+
+    private fun nextPageIndex(existingPages: List<PageRecord>): Int {
+        val usedIndices = existingPages.mapNotNull { pageIndexOf(it.fileName) }
+        return (usedIndices.maxOrNull() ?: -1) + 1
+    }
+
+    private fun pageIndexOf(fileName: String): Int? =
+        PAGE_FILE_NAME_PATTERN.find(fileName)?.groupValues?.get(1)?.toIntOrNull()?.minus(1)
 
     private fun writePage(folder: File, pageIndex: Int, page: ScannedPage): PageRecord {
         val fileName = DocumentNaming.pageFileName(pageIndex)
@@ -96,36 +137,40 @@ class DocumentStore(private val context: Context) {
         )
     }
 
-    fun rename(documentId: String, newTitle: String) {
+    fun rename(documentId: String, newTitle: String): Unit = synchronized(lock) {
         val manifest = load()
         val sanitized = DocumentNaming.sanitize(newTitle)
         save(LibraryManifest(manifest.documents.map { if (it.id == documentId) it.copy(title = sanitized) else it }))
     }
 
-    fun deletePage(documentId: String, pageIndex: Int) {
+    fun deletePage(documentId: String, pageIndex: Int): Unit = synchronized(lock) {
         val manifest = load()
-        val existing = manifest.documents.find { it.id == documentId } ?: return
-        val removed = existing.pages.getOrNull(pageIndex) ?: return
+        val existing = manifest.documents.find { it.id == documentId } ?: return@synchronized
+        val removed = existing.pages.getOrNull(pageIndex) ?: return@synchronized
         File(File(documentsDir, documentId), removed.fileName).delete()
         val updated = existing.copy(pages = existing.pages.filterIndexed { i, _ -> i != pageIndex })
         if (updated.pages.isEmpty()) {
-            delete(documentId)
+            deleteLocked(documentId, manifest)
         } else {
             save(LibraryManifest(manifest.documents.map { if (it.id == documentId) updated else it }))
         }
     }
 
-    fun delete(documentId: String) {
-        val manifest = load()
+    fun delete(documentId: String): Unit = synchronized(lock) {
+        deleteLocked(documentId, load())
+    }
+
+    /** Must only be called while holding [lock]. */
+    private fun deleteLocked(documentId: String, manifest: LibraryManifest) {
         File(documentsDir, documentId).deleteRecursively()
         save(LibraryManifest(manifest.documents.filterNot { it.id == documentId }))
     }
 
     /** The saved JPEG files for a document's pages, in order — used to render previews/thumbnails. */
-    fun pageFiles(documentId: String): List<File> {
-        val doc = get(documentId) ?: return emptyList()
+    fun pageFiles(documentId: String): List<File> = synchronized(lock) {
+        val doc = load().documents.find { it.id == documentId } ?: return@synchronized emptyList()
         val folder = File(documentsDir, documentId)
-        return doc.pages.map { File(folder, it.fileName) }
+        doc.pages.map { File(folder, it.fileName) }
     }
 
     /**
@@ -163,5 +208,9 @@ class DocumentStore(private val context: Context) {
         val outFile = File(exportsDir, "${DocumentNaming.sanitize(doc.title)}.pdf")
         outFile.writeBytes(pdfBytes)
         return outFile
+    }
+
+    private companion object {
+        val PAGE_FILE_NAME_PATTERN = Regex("""^page_(\d{4,})\.jpg$""")
     }
 }
