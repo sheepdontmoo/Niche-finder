@@ -1,0 +1,9 @@
+[
+  {"name":"SkyDroid Golf GPS","appId":"com.goldsteintech.android","price":"$1.99","installs":"100k+","rating":4.06,"ratingsCount":"4.6k","complaints":["Abandoned since Nov 2017","Course maps broken/reverting","GPS 13-34 yards off","Scorecards won't save, no support"],"confidence":"high"},
+  {"name":"Toca Life: City","appId":"com.tocaboca.tocacity","price":"$3.99","installs":"650k","rating":4.05,"ratingsCount":"21k","complaints":["Unpublished Dec 2023, paid users stranded","Crashes on newer Android","Paid buyers funneled to IAP-based Toca Life World"],"confidence":"high"},
+  {"name":"Toca Life: Hospital","appId":"com.tocaboca.tocahospital","price":"$3.99","installs":"620k","rating":3.99,"ratingsCount":"4.7k","complaints":["Crashes/freezes, no updates","Paid line wound down for IAP app"],"confidence":"high"},
+  {"name":"Toca Life: Vacation","appId":"com.tocaboca.tocavacation","price":"$3.99","installs":"410k","rating":3.98,"ratingsCount":"5.1k","complaints":["Same abandonment pattern","Funneled to free+IAP app"],"confidence":"high"},
+  {"name":"Cleartune Chromatic Tuner","appId":"com.bitcount.cleartune","price":"$3.99","installs":"220k","rating":3.69,"ratingsCount":"2.9k","complaints":["Abandoned 2014, delisted","Mic/pitch problems on modern Android","iOS port with no Android support"],"confidence":"high"},
+  {"name":"Golfshot Plus Golf GPS","appId":"com.shotzoom.golfshotgps","price":"$79.99 + IAP","installs":"50k+","rating":3.94,"ratingsCount":"3.4k","complaints":["Handicap broken 2+ years on Android","$79.99 upfront plus IAP","Stale since Apr 2023, lag/crashes"],"confidence":"medium"},
+  {"name":"SkySafari 8 Pro","appId":"com.simulationcurriculum.skysafari8pro","price":"$49.99","installs":"2.2k (franchise 3.7M)","rating":3.33,"ratingsCount":"64","complaints":["Crashes constantly, black screens","DB update bricked installs","Night-vision search unusable","$49.99 for this stability; ads pushed into paid app"],"confidence":"medium"}
+]
