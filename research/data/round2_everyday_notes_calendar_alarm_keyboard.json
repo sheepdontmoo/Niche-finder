@@ -1,0 +1,144 @@
+[
+  {
+    "name": "Evernote",
+    "appId": "com.evernote",
+    "price": "Free download, core value gated behind subscription (free tier capped at ~50 notes / 1 device; Personal ~$130+/yr after repeated price hikes up to ~2x)",
+    "installs": "100,000,000+",
+    "rating": "~3.4",
+    "ratingsCount": "~1.7 million",
+    "complaints": [
+      "Price increases described as up to ~1000% over original plans; UK users cite £79.99 -> £154.90 jump after Bending Spoons acquisition",
+      "v10 Electron rewrite tanked Play reviews to waves of 1-star ('they've been 1 star ever since v10 was released' — official Evernote forum thread)",
+      "Buggy/slow/clunky app, sync failures between devices, notes not saving, repeated forced logins",
+      "Billing problems and support taking nearly a month to respond; longtime free/legacy users feel squeezed into subscription",
+      "Trustpilot 2.4/5 ('Poor'), with recent pages trending 1.6/5"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High: Google Keep, OneNote, Notion, Obsidian, Simplenote are free and actively developed; but the fleeing user base is actively shopping for a home, and none nail 'simple longtime-notes archive with painless import'",
+    "moatNotes": "Massive install base of angry paying users with 10+ years of data; the job-to-be-done (reliable cross-device notes with local-feeling speed, one-time or cheap pricing, easy Evernote import) is well-defined; incumbents keep failing on trust, not features",
+    "sources": [
+      "https://www.appbrain.com/app/evernote-note-organizer/com.evernote",
+      "https://www.trustpilot.com/review/www.evernote.com",
+      "https://discussion.evernote.com/forums/topic/137546-would-yall-please-read-your-android-play-store-reviews-for-gods-sake-theyve-been-1-star-ever-since-v10-was-released/",
+      "https://talk.macpowerusers.com/t/evernote-plan-changes-price-increases/43433"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Chrooma Keyboard - RGB & Emoji",
+    "appId": "com.gamelounge.chroomakeyboard",
+    "price": "Free with paid-gated premium: $2.49 one-time 'unlock all forever' IAP plus per-feature IAPs (resizing, customization)",
+    "installs": "5,600,000 (AppBrain)",
+    "rating": 3.39,
+    "ratingsCount": "~180,000",
+    "complaints": [
+      "Last updated June 3, 2020 — over 6 years abandoned while still listed and still selling lifetime-unlock IAPs",
+      "Lifetime 'Pro/Premium' buyers left with a dead app; developer (GameLounge/Loopsie SRL) pivoted to other apps",
+      "Aging codebase increasingly incompatible/buggy on modern Android versions; features paywalled then never maintained"
+    ],
+    "failureMode": "abandonment",
+    "freeIncumbentRisk": "High: Gboard and SwiftKey are free and excellent; Chrooma's differentiator (app-adaptive color theming, compact one-hand modes) is cosmetic-plus-UX, which Gboard only partially copies (dynamic color arrived with Material You)",
+    "moatNotes": "Proves people pay one-time for a stylish, adaptive, lightweight keyboard; a maintained privacy-respecting clone with lifetime pricing inherits 5M+ orphaned installs; keyboard switching cost is low, but trust/maintenance is the moat",
+    "sources": [
+      "https://www.appbrain.com/app/chrooma-keyboard-rgb-emoji/com.gamelounge.chroomakeyboard",
+      "https://www.androidpure.com/chrooma-keyboard-free-version/"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "ai.type keyboard Plus + Emoji",
+    "appId": "com.aitype.android.p",
+    "price": "$2.99 one-time (paid app)",
+    "installs": "500,000+",
+    "rating": 3.87,
+    "ratingsCount": "~56,000",
+    "complaints": [
+      "Last updated May 14, 2020 — paid app abandoned 6+ years while remaining purchasable",
+      "2017 breach leaked personal data of 31 million users incl. unencrypted passwords and contacts",
+      "Upstream/Secure-D caught the app generating 14M+ fraudulent premium-purchase requests from 110,000+ devices (~$18M in attempted unwanted charges)",
+      "Users speculate their typing data is still being monetized; paid buyers got neither updates nor trust remediation"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High: Gboard/SwiftKey free; but ai.type's paying niche wanted deep customization (layouts, long-press behaviors, themes) that Gboard refuses to offer",
+    "moatNotes": "The angle is trust: 500K+ people paid $3 for a customizable keyboard whose vendor became a privacy scandal; a verifiably-offline, no-network-permission paid keyboard with ai.type-level customization directly converts this base; also inherits Swype refugees (Swype delisted 2018, users still complaining no swipe keyboard matches it)",
+    "sources": [
+      "https://www.appbrain.com/app/ai-type-keyboard-plus-emoji/com.aitype.android.p",
+      "https://www.cbsnews.com/news/ai-type-virtual-keyboard-app-leaks-31-million-users-personal-data/",
+      "https://www.upstreamsystems.com/secure-d-uncovers-suspicious-mobile-transactions-from-android-keyboard-app-ai-type-generating-non-human-clicks-and-making-unwanted-purchases/"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Jorte Calendar & Organizer",
+    "appId": "jp.co.johospace.jorte",
+    "price": "Free with paid-gated Jorte Premium subscription (~$2.99/mo) plus paid icon/theme packs",
+    "installs": "29,000,000 (AppBrain; 35M+ claimed by dev)",
+    "rating": 3.4,
+    "ratingsCount": "~200,000",
+    "complaints": [
+      "Chronic 'Failed to sync' errors reported virtually daily; events silently fail to propagate to Google Calendar",
+      "Error reports and support requests go unanswered — users report never hearing back",
+      "Premium features (and even continuity across devices) tied to Jorte ID/cloud account that users distrust; paywall creep over a decade",
+      "Long-time users on forums actively asking 'any good calendar app?' to escape"
+    ],
+    "failureMode": "broken-modern",
+    "freeIncumbentRisk": "Very high: Google Calendar is free and default; Jorte's paying base is the 'paper-planner feel' niche (diary view, stickers, agenda aesthetics) that Google Calendar does not serve",
+    "moatNotes": "29M installs at 3.4 stars is a huge dissatisfied base; the winning clone is a planner-style calendar with rock-solid native Google Calendar sync (no proprietary cloud) and one-time pricing; still actively updated by vendor, so failure is reliability/support, not abandonment — sharpest complaint to attack is sync trust",
+    "sources": [
+      "https://www.appbrain.com/app/jorte-calendar-organizer/jp.co.johospace.jorte",
+      "https://forum.earlybird.club/threads/jorte-problems-any-good-calendar-app.484246/",
+      "https://forum.earlybird.club/threads/jorte-calendar-not-synching.320997/"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "Alarm Clock Plus",
+    "appId": "com.vp.alarmClockPlusDock",
+    "price": "Free ad-supported with paid one-time NoAds companion app (com.vp.alarmClockPlusV2, ~$2 on Play/Amazon) — paid-gating is ad-removal, weakest of the set",
+    "installs": "5,000,000+",
+    "rating": "~3.1",
+    "ratingsCount": "tens of thousands (exact count not captured; app live since May 2010)",
+    "complaints": [
+      "Effectively abandoned: went ~5 years between updates; last meaningful update reported March 16, 2021",
+      "On modern Android the alarm fires but snooze/dismiss screen never appears, forcing users to power off the phone — catastrophic for an alarm app",
+      "Intermittent alarms that simply fail to go off after OS updates (Doze/background restrictions never adapted to)",
+      "Developer support email bounces — no way to get help; NoAds buyers stranded"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High: Google Clock is free and reliable; the paid niche is power features (dock/nightstand mode, math-to-dismiss, per-alarm volume ramp) that stock clocks skip; Alarmy owns this space now but via resented subscription (its own legacy paid app was unpublished Oct 2023)",
+    "moatNotes": "Alarm apps are trust products — 'it must fire on Android 14+' is the whole pitch; a one-time-purchase, modern-API alarm with nightstand dock mode targets both Alarm Clock Plus refugees and Alarmy legacy-Pro buyers angry about the subscription pivot",
+    "sources": [
+      "https://www.appbrain.com/app/alarm-clock-plus/com.vp.alarmClockPlusDock",
+      "https://apkcombo.com/alarm-clock-plus/com.vp.alarmClockPlusDock/",
+      "https://play.google.com/store/apps/dev?id=8512326010604554125&hl=en_US&gl=US"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "_note": "Investigated and rejected",
+    "rejected": [
+      {"lead": "CalenGoo ($5.99)", "reason": "Rating 4.47 (8.7K ratings, 240K installs) — users happy, no failure mode"},
+      {"lead": "Business Calendar 2 Pro ($13.99)", "reason": "Actively updated (June 2026), top-100 productivity — healthy"},
+      {"lead": "DigiCal+ ($5.49)", "reason": "Rating 4.45 — no dissatisfaction signal"},
+      {"lead": "aCalendar+", "reason": "Rating 4.82 — healthy"},
+      {"lead": "Touch Calendar ($3.38, 3.65 stars, abandoned Aug 2022)", "reason": "Paid app unpublished from Play Oct 30, 2024 — no longer purchasable; free version 1M+/3.76 also dead. Demand signal only"},
+      {"lead": "Sleep as Android", "reason": "Rating 4.60 free / 4.80 paid unlock, actively maintained; lifetime option still offered — no sub-trap anger found"},
+      {"lead": "Sleep Cycle (Android)", "reason": "Rating 4.34 — above threshold"},
+      {"lead": "Alarmy", "reason": "Rating 4.61 despite subscription; its legacy paid Pro (droom.sleepIfUCan.pro, 3.76) was unpublished Oct 2023 — resentment exists but no live low-rated listing"},
+      {"lead": "Alarm Clock Xtreme", "reason": "Free version 4.50; paid version removed from Play June 2019"},
+      {"lead": "Timely (Google/Bitspin)", "reason": "3.52 at 270K ratings, 10M+ installs — perfect profile but unpublished from Play June 2021; was free anyway"},
+      {"lead": "Gentle Alarm ($1.99)", "reason": "Unpublished July 2019"},
+      {"lead": "Sleepzy (Apalon)", "reason": "3.65 but unpublished from Play Aug 2024"},
+      {"lead": "Minuum ($3.99, 3.82 stars, abandoned since Feb 2017)", "reason": "Removed from Play May 5, 2024 — no longer listed; only 70K paid installs"},
+      {"lead": "Swype", "reason": "Discontinued/delisted Feb 2018; huge refugee demand signal (users still miss gesture details) but no Play listing to clone against"},
+      {"lead": "Fleksy", "reason": "Consumer app removed from Play and App Store by late 2024; ThingThing pivoted to B2B SDK"},
+      {"lead": "SwiftKey", "reason": "Free since 2014, actively maintained by Microsoft"},
+      {"lead": "ColorNote", "reason": "Fully free — no paid gate found"},
+      {"lead": "Pure Calendar widget", "reason": "Paid, abandoned 2016, but unpublished Dec 2021 and rating was 4.41"},
+      {"lead": "Pocket Informant/Informant 5", "reason": "Rating 3.25 fits but only 10K+ installs — below threshold"},
+      {"lead": "I Can't Wake Up! Alarm Clock", "reason": "Rating 4.14 (borderline above cutoff), free core; abandonment (July 2023) not yet reflected in rating"},
+      {"lead": "Smart Alarm (TanyuSoft, paid $)", "reason": "Rating 4.26, updated May 2025 — healthy"},
+      {"lead": "AMdroid", "reason": "5.5M installs but no low-rating evidence found; appears maintained"}
+    ]
+  }
+]

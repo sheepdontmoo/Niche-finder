@@ -91,6 +91,50 @@ A 2.12★ rating on 530k installs is the angriest user base found in either roun
 
 **Suggested validation (same playbook as round 1):** land pages for #1 and #3 in a weekend waitlist A/B; for #2, mine the newest 500 Gaia reviews for feature-level demand ranking before committing to the tile-engine build.
 
+## 🔄 Follow-up: the everyday-tools lens (same day)
+
+Direction change after the first pass: prefer **simple tools a normal person uses daily or weekly** — small feature surface, no enthusiast gear, no content pipelines. That drops the backcountry GPS (enthusiast), Sortly (leans small-business), Guitar Pro (hobbyist), VSCO and the kids sandbox (content-heavy) down the priority list, and it triggered a supplemental two-agent sweep of the everyday-utility categories neither round had covered: notes, calendars, alarm clocks, keyboards, weather, calculators, QR/price scanners, timers, and shopping lists. Raw data: [`data/round2_everyday_notes_calendar_alarm_keyboard.json`](data/round2_everyday_notes_calendar_alarm_keyboard.json) and [`data/round2_everyday_weather_scanner_lists.json`](data/round2_everyday_weather_scanner_lists.json).
+
+New rubric-passing finds from that sweep:
+
+| App | Price | Installs | Rating | Core failure | Clonable? |
+|---|---|---|---|---|---|
+| Storm Shield | $1.49→$5.99/mo | 460k | 3.0★ | Alerts failed during actual tornadoes; support email bounces | ✅ NWS data is free |
+| Alarm Clock Plus | ~$2 NoAds app | 5M | ~3.1★ | Abandoned; dismiss screen never appears on modern Android | ✅ but weak paid gate |
+| Chrooma Keyboard | $2.49 lifetime IAP | 5.6M | 3.39★ | Abandoned 6+ yrs while still selling lifetime unlocks | ⚠️ Gboard is free |
+| Evernote | ~$130+/yr | 100M+ | ~3.4★ | v10 rewrite + Bending Spoons price hikes; sync failures | ⚠️ Keep/Obsidian free |
+| Jorte Calendar | $2.99/mo + packs | 29M | 3.4★ | Daily sync failures to Google Calendar; support silent | ⚠️ Google Calendar free |
+| WeatherPro | was $2.99, now sub | 2M | 3.49★ | Paid buyers re-charged via Premium sub (DTN) | ⚠️ forecast-data licensing |
+| ai.type keyboard Plus | $2.99 | 500k | 3.87★ | Abandoned + 31M-user data breach + ad fraud | ⚠️ Gboard is free |
+| ShopSavvy | $4.99/mo Pro | 17M | 4.09★ | Paying users still see ads; price data wrong | ⚠️ price-data ops |
+
+*(Also notable: the alarm/calendar/keyboard categories are full of dead paid apps that were **unpublished** — Timely, Swype, Minuum, Touch Calendar, Grocery IQ — demand signals with no live listing to position against. Shopping lists and calculators are healthy: every incumbent rates 4.4+.)*
+
+### Everyday re-rank (same 1–5 rubric)
+
+| # | Candidate niche | Failing incumbent(s) | Demand | Pain | Build | Moat | Total |
+|---|---|---|---|---|---|---|---|
+| 1 | **Pet health records** | 11pets (530k, 2.12★) | 3 | 5 | 5 | 4 | **17** |
+| 2 | **Manual family budget ledger** | Expense IQ (1.3M, 3.49★) + Home Budget w/ Sync (175k, 3.75★) | 3 | 4 | 5 | 3 | **15** |
+| 3 | **Pay-per-use mobile fax** | eFax (3M, 4.08★) | 4 | 4 | 4 | 3 | **15** |
+| 4 | **One-time-price document scanner** | SwiftScan (6.8M, 3.86★) | 4 | 4 | 4 | 2 | **14** |
+| 5 | **One-time-price PDF annotator** | ezPDF (500k, 2.8★) + Xodo exodus | 4 | 4 | 3 | 3 | **14** |
+| 6 | **Simple notes with painless Evernote import** | Evernote (100M+, ~3.4★) | 5 | 4 | 3 | 2 | **14** |
+| 7 | **Planner-style calendar with trustworthy Google sync** | Jorte (29M, 3.4★) | 4 | 4 | 4 | 2 | **14** |
+| 8 | **Buy-once weather app** | WeatherPro (2M, 3.49★) + round-1 dead-widgets gap | 3 | 4 | 4 | 3 | **14** |
+| 9 | **Severe-weather alerts that actually fire** | Storm Shield (460k, 3.0★) | 2 | 5 | 3 | 3 | **13** |
+| 10 | **Ad-free price-comparison scanner** | ShopSavvy (17M, 4.09★) | 4 | 3 | 2 | 2 | **11** |
+
+### Revised top-3 (everyday lens)
+
+**1. Pet health records — the "11pets betrayal" (17/20).** Unchanged from the main board and now the leader: it's the simplest build of anything found in two rounds (multi-pet profiles, vaccine/medication reminders, weight charts, document photos — all local-first with one-tap PDF/CSV export), the pain is the most severe (2.12★ after users' records were lost/held hostage), and pet care is a routine weekly-use category in most households. Validation need: price-point smoke test, since 11pets was free for years.
+
+**2. Manual family budget ledger (15/20).** The most "everyday" job on the board — people open a spending tracker daily. Two incumbents failed in the classic round-1 double pattern: Expense IQ (1.3M installs) abandoned in 2023 with lifetime buyers locked out and data lost, Home Budget with Sync decaying with broken family sync. No bank feeds needed — the paying base is *manual-entry* users, which kills the Plaid-cost moat problem that disqualifies most finance apps. Wedge: import their old backups (Expense IQ CSV, HomeBudget exports), reliable local backup, one-time price, family sync as the paid tier.
+
+**3. One-time-price document scanner (14/20).** Scan-to-PDF is a weekly chore for most adults, and the incumbent story is pure rug-pull: Scanbot sold for $7 one-time, then re-paywalled owned features behind a $22.49/yr sub as SwiftScan (6.8M installs, 3.86★), on top of CamScanner's license drama. Build is commodity (CameraX + ML Kit on-device OCR). The honest risk — and why it's #3 despite the biggest audience: Google Drive, Microsoft Lens, and Adobe Scan are free and good, so the wedge is strictly "buy once, offline OCR, no account, no watermark, no cloud" privacy positioning.
+
+*(The fax candidate scores 15 but drops out of the top-3 on the everyday test — it's an occasional-need tool. Evernote refugees are the biggest prize numerically, but a notes app faces the harshest free competition (Keep, Obsidian, OneNote) and sync infrastructure makes it a bigger build than anything above it.)*
+
 ## Legal note
 
 Same as round 1: "clone" = build a competing app for the same job-to-be-done with original code, assets, name, and branding. Do **not** copy app names, icons, UI assets, or proprietary databases (Sortly's templates, Gaia's curated layers, Guitar Pro's soundbanks); trademark/copyright applies even when the functionality is fair game.
