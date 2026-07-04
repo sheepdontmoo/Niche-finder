@@ -1,0 +1,94 @@
+[
+  {
+    "name": "WeatherPro: Forecast & Radar (ex-MeteoGroup, now DTN)",
+    "appId": "com.mg.android",
+    "price": "Originally ~€2.99/$2.99 one-time paid app; now free download with Premium subscription required for core features (maps layers, long-range forecast, ad-free)",
+    "installs": "2,000,000+ (AppBrain)",
+    "rating": 3.49,
+    "ratingsCount": "~91,000 (AppBrain)",
+    "complaints": [
+      "Bought the app outright, then MeteoGroup/DTN moved key features behind an additional Premium subscription — 'paid for the app but still can't see cloud layers without paying again'",
+      "Long-time loyal users (10+ year Europeans, it was THE premium Euro weather app) leaving angry reviews saying they feel milked; 'useless and waste of money', 'support is useless'",
+      "DTN also killed sibling app MeteoEarth, feeding abandonment distrust",
+      "Cluttered redesign; paying subscribers say the interface got worse while the price structure got more aggressive"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "High-ish: Google feed weather, Weawow, and free national-met-service apps cover casual use. But WeatherPro's payers are weather enthusiasts who already proved willingness to pay for premium Euro model data. A fair one-time-price, no-sub, data-rich weather app for that cohort is exactly the gap.",
+    "moatNotes": "Real moat problem is forecast-data licensing cost (why every incumbent went subscription). Cloneable if built on free/cheap sources (Open-Meteo, MET Norway, NWS) with premium UX; the 3.49-star incumbent proves 91k raters care enough to be angry rather than silently leave.",
+    "sources": [
+      "https://www.appbrain.com/app/weatherpro-forecast-radar/com.mg.android",
+      "https://justuseapp.com/en/app/294631159/weatherpro/reviews",
+      "https://appgrooves.com/app/weatherpro-by-meteogroup-deutschland-gmbh/negative"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Storm Shield (E.W. Scripps / WDT severe-weather alerts)",
+    "appId": "com.wdtinc.android.stormshield",
+    "price": "Historically paid (~$2.99) + alert add-ons; now subscription — users report $1.49/mo silently raised to $5.99/mo",
+    "installs": "460,000+ (AppBrain)",
+    "rating": 3.0,
+    "ratingsCount": "~3,300 (AppBrain)",
+    "complaints": [
+      "Subscription price raised from $1.49/mo to $5.99/mo with no warning",
+      "Support email listed on the store bounces — 'address doesn't exist' — classic corporate abandonment (Scripps media conglomerate side project)",
+      "App failed to deliver alerts during actual tornado warnings — the one job it exists for",
+      "Android version rated 3.0 while iOS sits at 4.76: Android build is the neglected one"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium: WEA government alerts, FEMA app, and local-TV-station apps are free, but they are county-based/noisy. Storm Shield's pitch (polygon/storm-based, voice-read alerts for exact GPS location) is a genuine paid JTBD — people pay for life-safety reliability. NWS polygon data is free to consume.",
+    "moatNotes": "Underlying NWS CAP/polygon data is free; the product is reliable push infrastructure + battery-safe location. Small feature surface, safety-critical reliability is the whole product — an actively maintained clone with working alerts wins on trust alone. Push-delivery SLA is the hard part.",
+    "sources": [
+      "https://www.appbrain.com/app/storm-shield/com.wdtinc.android.stormshield",
+      "https://play.google.com/store/apps/details?id=com.wdtinc.android.stormshield&hl=en",
+      "https://storm-shield.updatestar.com/"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "ShopSavvy - Barcode & QR Scanner (price comparison)",
+    "appId": "com.biggu.shopsavvy",
+    "price": "Free download, paid-gated: ShopSavvy Pro subscription (~$4.99/mo, lifetime option) to remove ads / unlock price-history features",
+    "installs": "17,000,000 (AppBrain)",
+    "rating": 4.09,
+    "ratingsCount": "~110,000 (AppBrain)",
+    "complaints": [
+      "30-second ad after every scan — users say Googling the UPC by hand is now faster than the app's core function",
+      "Users who paid the Pro subscription to disable ads report ads still showing across Search/Saved/More tabs, with support not responding",
+      "Price data wrong or missing best offers (showed $9.45 'best price' when Walmart had $4.48)",
+      "Reviews explicitly blame ownership change / recent updates for the downfall of 'what early on seemed a really useful app'; frequent crash-to-home when tapping items"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High: Google Lens, the Amazon/Walmart apps, and OS-level scanners do free scan-to-search. Clone viability rests on one-scan multi-retailer price comparison + price-history alerts, which the free incumbents deliberately silo. Ad-free one-time-purchase positioning directly attacks the resentment.",
+    "moatNotes": "Barcode scanning is commodity (ML Kit); the moat/cost is retailer price-data aggregation (scraping/affiliate feeds). 17M installs with a sub-4.1 rating and paying-but-still-ad-served users is a large aggrieved base, but data ops make this the heaviest lift of the three.",
+    "sources": [
+      "https://www.appbrain.com/app/shopsavvy-barcode-scanner/com.biggu.shopsavvy",
+      "https://appgrooves.com/app/shopsavvy-barcode-and-qr-scanner-by-shopsavvy-inc/negative",
+      "https://justuseapp.com/en/app/338828953/shopsavvy-barcode-scanner/reviews"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "_note": "Investigated and rejected",
+    "rejected": [
+      {"lead": "1Weather", "reason": "Real sub/ads anger and widget breakage, but AppBrain rating 4.32 with 1.1M ratings — above the ≤4.1 bar. Watchlist: trending down."},
+      {"lead": "Weather Underground", "reason": "IBM enshittification + $2/mo ad-free anger, but current rating 4.76 (570k ratings) — recovered; fails rubric."},
+      {"lead": "Weather Live / NOAA Radar (Apalon)", "reason": "Textbook sub-trap complaints ($12→$60/yr) but rating 4.46 on 890k — fails bar."},
+      {"lead": "WeatherBug Elite", "reason": "Paid app killed 2014; successor rates 4.39 — anger a decade stale."},
+      {"lead": "Weather Timeline", "reason": "Unpublished from Play — no current listing to clone against."},
+      {"lead": "RealCalc Plus", "reason": "$3.99, 560k installs but 4.83 stars, updated Aug 2025 — healthy."},
+      {"lead": "10bii Financial Calculator", "reason": "4.41 stars, responsive dev — healthy."},
+      {"lead": "Vicinno 12C Financial Calculator", "reason": "Abandoned since 2013 but 4.56 stars and <100k installs — too small, users not angry."},
+      {"lead": "CalcTape / MyScript Calculator 2 / Construction Master Pro", "reason": "All above rating bar or actively updated."},
+      {"lead": "OurGroceries / AnyList / Out of Milk / Bring! / Listonic / Cozi", "reason": "Ratings 4.5-4.84 across the board; no live low-rated incumbent in shopping lists."},
+      {"lead": "Grocery IQ (Coupons.com)", "reason": "Hard-abandoned and unpublished Feb 2019 — demand signal only, no listing to clone against."},
+      {"lead": "Mighty Grocery / Grocery Gadget / Stopwatch & Timer+", "reason": "All unpublished from Play — dead listings."},
+      {"lead": "Buy Me a Pie", "reason": "Still updated; crash complaints not abandonment-grade."},
+      {"lead": "Alarm Clock Xtreme (Avast)", "reason": "'Paid users forced to re-buy no-ads version' resentment documented but rating 4.50 on 1.2M — fails bar."},
+      {"lead": "MultiTimer", "reason": "Paywall friction but 4.38 — fails bar."},
+      {"lead": "Ultrachron Stopwatch & Timer", "reason": "$9.99 at 3.63 fits the anger profile but installs well under 100k — too small."},
+      {"lead": "QR Droid / weekly-sub QR scam apps", "reason": "QR Droid free and maintained; no verifiable ≥100k ≤4.1 paid target. ShopSavvy is the vertical's real candidate."},
+      {"lead": "MyRadar", "reason": "Diffuse battery/crash complaints only; no verified rating below ~4.1."}
+    ]
+  }
+]

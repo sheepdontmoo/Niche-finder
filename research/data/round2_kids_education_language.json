@@ -1,0 +1,145 @@
+[
+  {
+    "name": "ABCmouse / ABCmouse Classic (Age of Learning)",
+    "appId": "mobi.abcmouse.academy_goo",
+    "price": "Free install, core value gated behind ~$12.99/mo subscription",
+    "installs": "23-24M (AppBrain: 'downloaded 23 million times'; Classic listing 24M)",
+    "rating": 3.67,
+    "ratingsCount": "~58,000",
+    "complaints": [
+      "FTC action: auto-renewal not clearly disclosed, cancellation deliberately difficult — 'hundreds of thousands of consumers who attempted cancellation nevertheless remained subscribed and billed' (2015-2018); $10M settlement in 2020, refunds mailed 2021",
+      "Cancellation only possible via one hard-to-find online link; 100,000+ users tried to cancel via Contact Us and stayed billed",
+      "Age of Learning migrated users to a new 'reimagined' app while the 23M-install Classic app decays at ~3.67 stars",
+      "Ongoing billing/renewal complaints post-settlement on review platforms"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "High: Khan Academy Kids is free, ad-free, and excellent — but ABCmouse still pulls ~29-33K installs/month on the Classic app alone, proving parents still pay for a structured curriculum path",
+    "moatNotes": "Massive brand-driven demand ('learning path' curriculum for 2-8). A one-time-purchase or honest-billing full-curriculum app directly attacks the #1 documented pain (billing dark patterns). Content volume is the incumbent moat — narrow wedge (e.g., phonics-to-reading path) advisable",
+    "sources": [
+      "https://www.appbrain.com/app/abcmouse-kids-learning-games/mobi.abcmouse.academy_goo",
+      "https://www.ftc.gov/business-guidance/blog/2020/09/10-million-abcmouse-settlement-avoiding-auto-renewal-traps",
+      "https://www.ftc.gov/news-events/news/press-releases/2021/04/ftc-sends-refunds-consumers-unfairly-billed-abcmouse-memberships"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Sago Mini World: Kids Games",
+    "appId": "com.sagosago.World.googleplay",
+    "price": "Free install, gated behind Piknik subscription (~$8-10/mo); replaced $2.99-3.99 standalone paid apps that were removed from sale",
+    "installs": "18M (AppBrain)",
+    "rating": 3.8,
+    "ratingsCount": "Android count not captured; iOS 65K at 4.33 (Android markedly lower)",
+    "complaints": [
+      "Standalone paid Sago Mini apps removed from sale; owners pushed toward the subscription hub",
+      "App update dropped standalone-app support inside World — previously purchased games no longer recognized in-app",
+      "'Restore purchases' doesn't work; 'I shouldn't have to purchase a subscription since I started buying apps before World was a thing'",
+      "Cancelled subscriptions reactivated and charged again the following month; subscription doesn't work across devices as advertised"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "Medium: free toddler sandbox competitors are ad-stuffed/IAP-bait; parents explicitly pay for safe ad-free open-ended play — same demand pool as Toca Life (round 1)",
+    "moatNotes": "Exact Toca pattern replay (Piknik bundles Sago Mini + Toca Boca + Originator). A one-time-purchase toddler sandbox with permanent ownership is the direct counter-position; art/animation quality is the main build cost",
+    "sources": [
+      "https://www.appbrain.com/app/sago-mini-world-kids-games/com.sagosago.World.googleplay",
+      "https://help.sagomini.com/article/418-sago-mini-standalone-apps-removed-from-sale",
+      "https://justuseapp.com/en/app/874425722/sago-mini-world-kids-games/reviews",
+      "https://www.complaintsboard.com/sago-mini-world-b148986"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "My PlayHome Plus",
+    "appId": "com.playhome.plus",
+    "price": "Free install, paid-gated: areas (school, stores, hospital, houses) sold as IAP; original standalone apps were $3.99 paid purchases",
+    "installs": "49M (AppBrain)",
+    "rating": 3.85,
+    "ratingsCount": "~120,000",
+    "complaints": [
+      "Owners of the original paid My PlayHome apps report Plus fails to recognize prior ownership — 'rip off to people who already have the my PlayHome apps'",
+      "Forced sign-in to access areas already paid for; ownership-detection feature broken in practice",
+      "Locked areas visible-but-untouchable to kids, driving purchase pressure complaints",
+      "Original paid apps effectively frozen while dev pushes Plus (originals: 350K installs, still $3.99)"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium: dollhouse/sandbox genre has free ad-laden clones; the paying audience (parents of 3-6yo) prioritizes ad-free + offline, which free rivals fail",
+    "moatNotes": "49M installs at 3.85 is a huge dissatisfied base in a mechanically simple genre (2D dollhouse with physics-lite interactions). Small indie dev (PlayHome Software) — low counter-response capacity. One-time-price 'own it forever' dollhouse is a clean wedge",
+    "sources": [
+      "https://www.appbrain.com/app/my-playhome-plus/com.playhome.plus",
+      "https://justuseapp.com/en/app/1489812608/my-playhome-plus/reviews",
+      "https://www.appbrain.com/app/my-playhome/com.playhome"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Teach Your Monster to Read",
+    "appId": "com.teachyourmonstertoread.tmapp",
+    "price": "$4.99-8.99 one-time purchase (paid app)",
+    "installs": "1.2M (AppBrain), ~1.6K/month current",
+    "rating": 3.96,
+    "ratingsCount": "~3,000 (Android; iOS is 4.51 from 27K — Android build specifically underperforms)",
+    "complaints": [
+      "Frequent freezes/crashes on Android after specific mini-games (duck game, rocket game); crashes in Practice mode and 10 Minute Adventure acknowledged by dev",
+      "App closes on entering birth year (gate screen broken on some devices)",
+      "Users report previously purchased versions no longer available to play once new versions went live",
+      "Charity-run developer, slow update cadence (last update ~July 2025)"
+    ],
+    "failureMode": "broken-modern",
+    "freeIncumbentRisk": "High: the same product is free on desktop web (teachyourmonster.org) and Khan Academy Kids covers phonics free — yet 1M+ paid for the mobile-native version, proving willingness to pay for tablet-native phonics",
+    "moatNotes": "Systematic-synthetic-phonics game with real pedagogy is the moat; the Android build quality gap (3.96 vs 4.51 iOS) is the opening. A technically solid, offline, one-time-purchase phonics adventure wins on execution alone",
+    "sources": [
+      "https://www.appbrain.com/app/teach-your-monster-to-read/com.teachyourmonstertoread.tmapp",
+      "https://probleme.app/en/teach-your-monster-to-read-crashes/",
+      "https://justuseapp.com/en/app/828392046/teach-your-monster-to-read/reviews"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "FluentU",
+    "appId": "com.fluentflix.fluentu",
+    "price": "Free install, gated behind $29.99/mo or $240/yr subscription",
+    "installs": "~1M (AppBrain developer total)",
+    "rating": 3.49,
+    "ratingsCount": "~4,200",
+    "complaints": [
+      "Charged $33/month without clear notification; auto-billing complaints recur across review platforms",
+      "Android app bugs: subtitles/translations fail to display in landscape on phones and tablets — core feature broken on mobile",
+      "Paying $15-30/mo for a 'small handful of videos' in some languages; flashcards gated behind an additional fee",
+      "Consensus even among affiliate reviewers: 'more expensive than the competition' and 'won't be worth the price for most'"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High: YouTube + Language Reactor / free comprehensible-input channels replicate the core loop for $0; buyer must be sold on curation + integrated SRS convenience",
+    "moatNotes": "Video-immersion + clickable-subtitle + SRS niche has no well-executed mid-price player; incumbent is priced at ~$240/yr with a 3.49-star app. Content licensing is the real moat/cost — public-domain and creator-partnership content is the workaround",
+    "sources": [
+      "https://www.appbrain.com/app/fluentu-learn-language-videos/com.fluentflix.fluentu",
+      "https://www.alllanguageresources.com/fluentu/",
+      "https://justuseapp.com/en/app/917892175/fluentu-language-learning-app/reviews",
+      "https://www.smartlanguagelearner.com/fluentu-review/"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "Hooked on Phonics Learning",
+    "appId": "com.BigYellowTaxi.HookedPhonics",
+    "price": "Free 7-day trial, then ~$12.99/mo subscription (plus physical 'Practice Pack' upsell)",
+    "installs": "1M+ (Google Play tier via prioridata/apkpure)",
+    "rating": "~4.1",
+    "ratingsCount": "not precisely captured (prioridata score 6.6/10)",
+    "complaints": [
+      "BBB: 50+ complaints in 3 years citing incorrect billing amounts and difficult cancellation",
+      "Trustpilot: charged even after cancelling; charged immediately after trial ends",
+      "Cannot cancel from inside the app; subscription + separate Practice Pack billing confuses parents",
+      "No refunds for forgotten renewals"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "High: Khan Academy Kids and free phonics content; but 35-year brand keeps pulling paying parents into a resented billing model — demand signal, not a direct clone economics signal",
+    "moatNotes": "Weakest of the six on verified numbers (rating hovers right at the 4.1 cutoff, ratings count unverified). Treat as secondary validation of the 'parents pay for structured learn-to-read' thesis behind ABCmouse/Teach Your Monster rather than a primary target",
+    "sources": [
+      "https://prioridata.com/app/hooked-on-phonics-learning/",
+      "https://www.19pine.ai/cancel-subscription/newspaper-magazine-and-online-learning/how-to-cancel-hooked-on-phonics",
+      "https://hooked-on-phonics.pissedconsumer.com/review.html"
+    ],
+    "confidence": "low"
+  },
+  {
+    "_note": "Investigated but rejected (failed rubric): Rosetta Stone (Trustpilot anger real but Play apps rate 4.6-4.76), Memrise/Pimsleur/LingQ/HiNative/Drops/Beelinguapp/LingoDeer/Innovative Language (all 4.2+ on Play), Endless Alphabet (license-loss complaints but 4.46), LetterSchool (paid-to-sub betrayal real but 4.25), Reading Eggs (4.48), Stack the States (healthy), Montessorium (no Android abandonment evidence), Dr. Panda (actively updated)."
+  }
+]
