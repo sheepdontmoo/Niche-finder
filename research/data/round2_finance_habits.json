@@ -1,0 +1,129 @@
+[
+  {
+    "name": "Mobills: Budget Planner",
+    "appId": "br.com.gerenciadorfinanceiro.controller",
+    "price": "Free + subscription paywall (Premium required for core features: unlimited transactions/categories, bank sync, web access)",
+    "installs": "10-11 million (AppBrain)",
+    "rating": 3.5,
+    "ratingsCount": "~280,000-290,000",
+    "complaints": [
+      "Cloud sync silently loses entries — users report losing ALL transactions despite app reporting successful sync; support admits 'sync process can get stuck sometimes'",
+      "Subscription resentment — users dock stars for sub-only pricing, want one-time fee",
+      "Refunds refused for subscribers whose banks turned out to be incompatible (past 7-day window)",
+      "Feature parity gaps between Android/iOS (custom recurring expenses missing on iOS)",
+      "JustUseApp safety score 10.7/100 across 4,082 analyzed reviews"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium — many free expense trackers exist, but Mobills' 10M users are there for full budget + bill management + sync; free rivals don't cover that. Its Brazilian home market has fewer polished alternatives.",
+    "moatNotes": "Bank-feed features depend on aggregators (Plaid-equivalents, esp. Brazilian Open Finance) — costly to replicate. But the top complaints (sync data loss, manual budget workflow) are clonable without bank feeds; a reliable manual+CSV clone attacks the pain directly.",
+    "sources": [
+      "https://www.appbrain.com/app/mobills-budget-planner/br.com.gerenciadorfinanceiro.controller",
+      "https://justuseapp.com/en/app/921838244/mobills-budget-planner/reviews",
+      "https://play.google.com/store/apps/details?id=br.com.gerenciadorfinanceiro.controller&hl=en_US"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Expense IQ Money Manager (Handy Apps)",
+    "appId": "com.handyapps.expenseiq",
+    "price": "Free + premium IAP/subscription ($0.99-$5.99 IAPs; historical lifetime-premium purchases)",
+    "installs": "1.3 million (AppBrain)",
+    "rating": 3.49,
+    "ratingsCount": "~21,000",
+    "complaints": [
+      "Abandoned — last update July 7, 2023; developer unresponsive, broken website/help pages",
+      "Lifetime-premium purchases no longer recognized after reinstall — paid users locked out",
+      "Cloud sync/restore unreliable, causing outright data loss",
+      "Recurring transactions and bill reminders broken; crashes on new devices/Android versions",
+      "10-year users report app simply will not open anymore; support emails ignored"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium — free manual trackers exist, but Expense IQ's base wanted bill reminders + accounts + budgets in one (former EasyMoney users, long-tenure data). Migration pain is the wedge: import their backups.",
+    "moatNotes": "Pure manual-entry app — no bank-feed/Plaid dependency at all. Cheap to clone; the JTBD (all-in-one ledger + bills + budgets with reliable local backup) is proven by 1.3M installs and paid conversions.",
+    "sources": [
+      "https://www.appbrain.com/app/expense-iq-money-manager/com.handyapps.expenseiq",
+      "https://play.google.com/store/apps/details?id=com.handyapps.expenseiq&hl=en_US",
+      "https://www.slant.co/options/18584/~expense-iq-review"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Quicken Classic: Companion App",
+    "appId": "com.quicken.qm2014",
+    "price": "Free app, paid-gated — useless without a Quicken Classic desktop subscription (~$60-110/yr)",
+    "installs": "680,000 (AppBrain; Quicken Inc. ~1M total)",
+    "rating": 3.01,
+    "ratingsCount": "~3,900",
+    "complaints": [
+      "Desktop-to-mobile sync chronically broken — 'half of the accounts will not sync', balances don't match desktop",
+      "Users report the app lost all their data and stopped syncing entirely",
+      "Support unable to fix sync after 1.5-hour sessions",
+      "Paying subscribers ($60+/yr) get a companion app rated ~3.0 — strong subscription resentment"
+    ],
+    "failureMode": "broken-modern",
+    "freeIncumbentRisk": "Low — these are entrenched desktop Quicken users with decades of data; no free product serves 'mobile window into my Quicken file'. Risk is Quicken itself pushing users to its cloud-native Simplifi instead.",
+    "moatNotes": "Cloning requires reading/syncing Quicken data files (proprietary QDF; QIF/QXF export exists) — a real technical moat but no Plaid cost if you piggyback on Quicken's own downloaded data. Alternative wedge: full local-first Quicken replacement for abandoned desktop-ledger users.",
+    "sources": [
+      "https://www.appbrain.com/dev/Quicken+Inc./",
+      "https://www.appbrain.com/app/quicken/com.quicken.qm2014",
+      "https://play.google.com/store/apps/details?id=com.quicken.qm2014&hl=en_US"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Home Budget with Sync (Anishu)",
+    "appId": "com.anishu.homebudget.full",
+    "price": "$5.99 one-time (full); Lite version free with paywalled limits",
+    "installs": "75,000 paid (full) + 100,000+ Lite; below 100K on the paid SKU alone but ~175K+ combined plus large iOS base",
+    "rating": 3.75,
+    "ratingsCount": "~2,100 (full) + ~1,300 (Lite, rated 3.33)",
+    "complaints": [
+      "No bug fixes or feature enhancements 'in the last 3 years' per long-time users; developer stopped responding",
+      "Notifications never worked on Android",
+      "Recurring expense/income features broken on Android",
+      "Backup/restore causes data loss; Family Sync between devices unreliable",
+      "Household users trapped: multi-device family expense sharing is the core feature and it's decaying"
+    ],
+    "failureMode": "abandonment",
+    "freeIncumbentRisk": "Medium-low — 'family/household shared envelope budget with device sync' is poorly served by free apps (Goodbudget paywalls envelopes at 10). Older-user demographic pays one-time gladly.",
+    "moatNotes": "Manual entry + peer sync — no bank-feed/Plaid cost. Family-sync backend is the only infrastructure needed. Rubric caveat: paid SKU is 75K installs, slightly under the 100K bar; JTBD payment-proof is strong ($5.99 x 75K Android alone).",
+    "sources": [
+      "https://www.appbrain.com/app/home-budget-with-sync/com.anishu.homebudget.full",
+      "https://www.appbrain.com/app/home-budget-with-sync-lite/com.anishu.homebudget.lite",
+      "https://play.google.com/store/apps/details?id=com.anishu.homebudget.full&hl=en",
+      "https://www.anishu.com/homebudget.html"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "Penzu (journal/diary)",
+    "appId": "com.penzu.android",
+    "price": "Free + Pro subscription $4.99/mo or $19.99/yr (core features paid-gated)",
+    "installs": "790,000 (AppBrain)",
+    "rating": 4.11,
+    "ratingsCount": "~10,000",
+    "complaints": [
+      "Paid Pro subscribers not receiving Pro features; only automated support responses",
+      "Journal entries lost to app malfunctions; entries not saving even with manual save button",
+      "Constant crashes kicking users back to homepage",
+      "Double charges, difficulty cancelling subscription, refunds refused",
+      "Account recovery/support essentially nonfunctional — users locked out of their own private journals"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium — free journal apps abound (Daybook, Journey free tier), but Penzu's draw is private, password-locked, cloud-synced long-form journaling with email reminders; reliability + data ownership (easy export) is the differentiator users are begging for.",
+    "moatNotes": "No bank feeds, no third-party data dependency — just solid encrypted sync and export. Low infra cost to clone; trust/data-safety is the sale. Rating sits right at the ~4.1 rubric boundary (AppBrain lifetime 4.11) with recent sentiment worse than lifetime average.",
+    "sources": [
+      "https://www.appbrain.com/app/penzu/com.penzu.android",
+      "https://penzu.pissedconsumer.com/review.html",
+      "https://appgrooves.com/app/penzu-free-diary-and-private-journal-by-penzu-inc/negative"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "_note": "Investigated but rejected (failed rubric): HabitBull (3.6M installs, abandoned Aug 2023, lifetime rating 4.39 — fails ≤4.1 bar), HabitHub (1.3M, abandoned June 2021, 4.30), EveryDollar (4.3), PocketGuard (4.3), AndroMoney (4.6), Spendee (actively maintained), Money Lover/Toshl/YNAB/Journey (no verifiable sub-4.1 Play rating), My Budget Book (~100K dev-wide, healthy ratings).",
+    "rejectedSources": [
+      "https://www.appbrain.com/app/habitbull-habit-goal-tracker/com.oristats.habitbull",
+      "https://www.appbrain.com/app/habithub-habit-goal-trackr/com.rstudioz.habits"
+    ]
+  }
+]

@@ -1,0 +1,99 @@
+[
+  {
+    "name": "Home Design 3D Outdoor/Garden (Anuman/Microids)",
+    "appId": "fr.anuman.HomeDesign3DOutdoorGarden",
+    "price": "Free download but paid-gated: $4.99 'Full' unlock plus IAPs; users report being told to also buy the $6.99 base Home Design 3D app to get save/multi-level after already paying for Gold",
+    "installs": "3,600,000+ (free listing) + 15,000 (paid Full listing)",
+    "rating": 2.29,
+    "ratingsCount": "33,000 (free listing); 320 at 3.56 stars (paid Full listing)",
+    "complaints": [
+      "Paid Gold users asked to purchase the separate base app to unlock save and multi-level functions",
+      "Items randomly move or delete themselves; no way to lock an item or layer",
+      "No support for sloped land, raised/sunken gardens, paths, driveways, or roofs in a garden design app; 'pitiful' plant/element selection",
+      "App recently started crashing once or twice a day; effectively abandoned by Anuman/Microids (~90 downloads/day residual)"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "Medium: free AI garden-design apps and Planner 5D exist, but none combine offline 2D/3D garden planning with real plant libraries and one-time pricing; most competitors are subscription AI-photo gimmicks",
+    "moatNotes": "Low moat — pure client-side 3D editor, no network infrastructure needed. Content moat is the 3D asset/plant library, which is buildable. The 33k ratings at 2.29 stars prove a large paying audience the incumbent actively burned",
+    "sources": [
+      "https://www.appbrain.com/app/home-design-3d-outdoor-garden/fr.anuman.HomeDesign3DOutdoorGarden",
+      "https://www.appbrain.com/app/home-design-3d-outdoor-garden/fr.anuman.HomeDesign3DOutdoorGarden.Full",
+      "https://justuseapp.com/en/app/978726175/home-design-3d-outdoor-garden/reviews"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "Home Design 3D (main app, Anuman/Microids)",
+    "appId": "fr.anuman.HomeDesign3D",
+    "price": "Free demo, paid-gated: Gold/Gold Plus IAP unlocks (~$7-$10) required to save projects and access floors",
+    "installs": "10,000,000+ (23-24M total downloads)",
+    "rating": 4.12,
+    "ratingsCount": "39,000",
+    "complaints": [
+      "Last Android update January 11, 2024 (~2.5 years stale as of mid-2026); users call it 'abandonware' with feature requests years old and no action",
+      "Crashes during long sessions destroy unsaved work — fatal in a design tool whose save function is itself paywalled",
+      "High battery drain on older devices, pricey stacked IAPs on top of the original paid unlock",
+      "Developer support slow and sometimes not in English"
+    ],
+    "failureMode": "abandonment",
+    "freeIncumbentRisk": "Medium-high: Planner 5D and Room Planner are large freemium incumbents, but both are aggressive subscription paywalls that users equally resent; a one-time-purchase, offline, reliable-save clone directly counters both failure modes",
+    "moatNotes": "Moat is the furniture/asset catalog and 3D engine polish — months of asset work, no server moat. Still ~52k downloads/30 days on a dead app = proven ongoing demand",
+    "sources": [
+      "https://www.appbrain.com/app/home-design-3d/fr.anuman.HomeDesign3D",
+      "https://reviewed.app/app/home-design-3d/",
+      "https://justuseapp.com/en/app/463768717/home-design-3d/problems"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "name": "eMeals - Meal Planning Recipes",
+    "appId": "com.emeals",
+    "price": "Paid-gated: subscription-only service (~$59.99/yr or ~$12.99/mo) after 14-day free trial; app is useless without subscription",
+    "installs": "500,000+",
+    "rating": 4.07,
+    "ratingsCount": "14,000",
+    "complaints": [
+      "Cannot cancel online — must phone customer service during limited hours; users report continued billing after attempted cancellation",
+      "Free trial silently converts to a full ANNUAL charge; strict no-refund policy ('too bad' responses); only 4% of support callers report resolution (PissedConsumer)",
+      "Android app abandoned: last update March 22, 2024 (~2+ years stale) while still charging subscribers",
+      "BBB/Trustpilot pages dominated by billing complaints rather than product complaints — the meal-planning value itself is what keeps people paying"
+    ],
+    "failureMode": "subscription-trap",
+    "freeIncumbentRisk": "Medium: free recipe apps abound, but curated weekly dinner plans + auto grocery-cart handoff (Walmart/Instacart) is what people pay eMeals for; Mealime/Samsung Food cover only part of it. Yummly's 2024 shutdown and Pepperplate's death also freed up meal-planning refugees",
+    "moatNotes": "Real moat is the human/AI-curated weekly menu content pipeline and grocery-API integrations — moderate effort, no network effect. A transparent-billing, cancel-anytime clone weaponizes their #1 complaint",
+    "sources": [
+      "https://www.appbrain.com/app/emeals-meal-planning-recipes/com.emeals",
+      "https://www.trustpilot.com/review/www.emeals.com",
+      "https://www.bbb.org/us/al/vestavia/profile/meal-prep/e-meals-0463-90045848/complaints",
+      "https://emeals.pissedconsumer.com/complaints/RT-P.html"
+    ],
+    "confidence": "high"
+  },
+  {
+    "name": "F-Secure FREEDOME VPN",
+    "appId": "com.fsecure.freedome.vpn.security.privacy.android",
+    "price": "Paid-gated: subscription VPN (~$35-50/yr), no permanent free tier",
+    "installs": "8,000,000",
+    "rating": 3.7,
+    "ratingsCount": "54,000",
+    "complaints": [
+      "Standalone Freedome declared end-of-life (transition began April 2024; EOL after May 22, 2024); Android app last updated June 26, 2024",
+      "F-Secure's Jan 2, 2025 backend change deliberately broke older Freedome/Total VPN apps — stuck on 'Connecting…' — stranding paying users mid-subscription",
+      "Paying subscribers force-migrated into the bigger F-Secure Total bundle/app they didn't choose",
+      "Long-time fans (privacy-conscious, EU-based, anti-US-VPN crowd) publicly hunting for replacements on F-Secure community and MalwareTips"
+    ],
+    "failureMode": "mix",
+    "freeIncumbentRisk": "High: Proton VPN's free tier and well-run paid rivals (Mullvad, Windscribe) absorb refugees; a new entrant can't compete on price alone",
+    "moatNotes": "CAUTION: real infrastructure moat — global server fleet, ongoing opex, trust/reputation are the product; this is NOT a solo-dev clone target unless built as a reseller/white-label, and the trust deficit favors established brands. Included as demand evidence more than a build target",
+    "sources": [
+      "https://www.appbrain.com/app/f-secure-freedome-vpn/com.fsecure.freedome.vpn.security.privacy.android",
+      "https://kb.f-secure.com/s/article/F-Secure-Freedome-VPN-reaching-end-of-life?language=en_US",
+      "https://kb.f-secure.com/s/article/Update-Your-F-Secure-VPN-by-January-2-2025?language=en_US",
+      "https://malwaretips.com/threads/eol-of-the-standalone-f-secure-freedome-vpn-and-id-protection-apps.130299/"
+    ],
+    "confidence": "high"
+  },
+  {
+    "_note": "Investigated but rejected (failed rubric): Paprika 3 Android (4.87, actively updated), ChefTap (4.48, dying but users still happy), BigOven (4.65), mSecure (4.68 despite forced-sub anger), Enpass (anger exists but Play rating too high), Magicplan (4.2, 10M — just above threshold), AppLock/DoMobile (4.23), Construction Master Pro (4.76), iScape Android (4.36 but only 130 ratings), SplashID (3.37 but ratings base too thin to verify 100K+ on current package)."
+  }
+]
