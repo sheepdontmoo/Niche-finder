@@ -28,8 +28,15 @@ object DocStash {
 private val colors = lightColorScheme(
     primary = DocStash.stamp,
     onPrimary = Color(0xFFFFFFFF),
+    // Explicit container roles matter: FloatingActionButton, NavigationBarItem's selected
+    // indicator, and other M3 components default to *Container roles, which otherwise fall
+    // back to Material3's baseline purple instead of a tint of our own brand colors.
+    primaryContainer = Color(0xFFF3D9CD),
+    onPrimaryContainer = Color(0xFF6B2113),
     secondary = DocStash.unlocked,
     onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFD3E9DE),
+    onSecondaryContainer = Color(0xFF1F4531),
     background = DocStash.paper,
     onBackground = DocStash.ink,
     surface = DocStash.paperCard,
