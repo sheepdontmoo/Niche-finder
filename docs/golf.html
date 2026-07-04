@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fairway Caddie — Golf GPS Rangefinder & Scorecard</title>
+<meta name="description" content="Fairway Caddie: a golf GPS rangefinder and scorecard app. Front, middle, back yardage to every green, one-tap scoring, no subscription trap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAFAF6; --panel: #FFFFFF; --edge: #E3E8E0;
+    --ink: #16211A; --ink-dim: #66736A;
+    --fairway: #17914F; --fairway-soft: #0E6B3C; --gold: #A87A1F;
+    --under: #C93A3A; --over: #2F6BD8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px; }
+  header { text-align: center; padding: 48px 0 24px; }
+  .mark { width: 64px; height: 64px; margin: 0 auto 18px; }
+  .badge { display: inline-block; background: rgba(23,145,79,.08); color: var(--fairway-soft); border: 1px solid rgba(23,145,79,.3); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 600; margin-bottom: 22px; }
+  h1 { font-family: 'Anton', sans-serif; font-size: clamp(34px, 7vw, 54px); line-height: 1; letter-spacing: .5px; }
+  h1 .g { color: var(--fairway); }
+  .sub { color: var(--ink-dim); font-size: clamp(16px, 3vw, 19px); margin-top: 18px; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .cta { display: block; text-align: center; background: var(--fairway); color: #fff; font-weight: 700; font-size: 18px; border: 0; border-radius: 999px; padding: 16px 28px; margin: 28px auto 8px; cursor: pointer; text-decoration: none; max-width: 340px; }
+  .cta:hover { background: var(--fairway-soft); }
+  .tiny { text-align: center; color: var(--ink-dim); font-size: 13px; }
+  section { margin: 44px 0; }
+  h2 { font-family: 'Anton', sans-serif; font-size: 22px; letter-spacing: .3px; margin-bottom: 16px; }
+  .cards { display: grid; gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--edge); border-radius: 16px; padding: 18px; }
+  .card b { display: block; margin-bottom: 4px; }
+  .card span { color: var(--ink-dim); font-size: 15px; }
+  .numbers { display: flex; justify-content: center; gap: 28px; align-items: flex-end; margin: 8px 0 4px; }
+  .numbers .n { text-align: center; }
+  .numbers .n b { font-family: 'Anton', sans-serif; display: block; }
+  .numbers .front b { font-size: 34px; color: var(--gold); }
+  .numbers .mid b { font-size: 64px; color: var(--ink); }
+  .numbers .back b { font-size: 34px; color: var(--ink); }
+  .numbers .n span { font-size: 11px; letter-spacing: 2px; color: var(--ink-dim); }
+  .vs { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--edge); border-radius: 14px; overflow: hidden; font-size: 15px; }
+  .vs th, .vs td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--edge); }
+  .vs th { color: var(--ink-dim); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  .vs td:first-child { color: var(--ink-dim); }
+  .yes { color: var(--fairway-soft); font-weight: 700; }
+  .no { color: var(--under); }
+  footer { border-top: 1px solid var(--edge); color: var(--ink-dim); font-size: 13px; text-align: center; padding: 32px 0 48px; margin-top: 48px; }
+  @media (min-width: 560px) { .cards { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <svg class="mark" viewBox="0 0 70 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M36,4 C52,2 66,12 65,27 C64,42 54,52 40,54 C25,56 6,50 5,34 C4,18 20,6 36,4 Z" fill="rgba(23,145,79,0.10)" stroke="#17914F" stroke-width="3.5"/>
+    <circle cx="27" cy="54" r="5.5" fill="#A87A1F"/>
+    <circle cx="25" cy="66" r="2.3" fill="#66736A"/>
+    <circle cx="23" cy="76" r="2.3" fill="#66736A"/>
+  </svg>
+  <div class="badge">Golf GPS — early access</div>
+  <h1>Golf GPS.<br><span class="g">No subscription trap.</span></h1>
+  <p class="sub">Fairway Caddie is a golf GPS rangefinder and scorecard: front, middle, back
+  yardage to every green, one-tap scoring, and a real free tier — not a 14-day trial.</p>
+  <!-- SWAP THIS LINK: replace with your Tally/Google Form URL for the waitlist -->
+  <a class="cta" href="https://example.com/YOUR-WAITLIST-FORM">Join early access →</a>
+  <p class="tiny">One email when it's live. That's it.</p>
+</header>
+
+<section>
+  <h2>The number you need</h2>
+  <div class="card">
+    <div class="numbers">
+      <div class="n front"><b>121</b><span>FRONT</span></div>
+      <div class="n mid"><b>136</b><span>MIDDLE</span></div>
+      <div class="n back"><b>150</b><span>BACK</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Sound familiar?</h2>
+  <div class="cards">
+    <div class="card"><b>Your golf GPS app died</b>
+      <span>Abandoned since your phone's last three updates, or delisted entirely.</span></div>
+    <div class="card"><b>Or it's €50–100 every year</b>
+      <span>For the same front/middle/back numbers every golf GPS app has done for a decade.</span></div>
+    <div class="card"><b>The screen is unreadable outdoors</b>
+      <span>Tiny numbers on a busy satellite map, squinting in full sun.</span></div>
+    <div class="card"><b>You just want the yardage</b>
+      <span>Not a social feed, not a leaderboard, not a step counter.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>What Fairway Caddie does differently</h2>
+  <table class="vs">
+    <tr><th></th><th>Fairway Caddie</th><th>Most golf GPS apps</th></tr>
+    <tr><td>Price</td><td class="yes">Real free tier, forever</td><td class="no">€50–100/yr, or a 14-day trial</td></tr>
+    <tr><td>The main number</td><td class="yes">Huge, sunlight-readable</td><td class="no">Small text on a satellite map</td></tr>
+    <tr><td>Green shape</td><td class="yes">The actual mapped green</td><td class="no">A generic icon</td></tr>
+    <tr><td>Scoring</td><td class="yes">One tap, auto-advances</td><td class="no">Multiple taps per hole</td></tr>
+    <tr><td>Offline</td><td class="yes">Courses saved to your phone</td><td class="no">Often needs signal</td></tr>
+  </table>
+</section>
+
+<header style="padding-top:8px">
+  <a class="cta" href="https://example.com/YOUR-WAITLIST-FORM">Get early access →</a>
+  <p class="tiny">No spam. One email when the beta opens, one when we launch.</p>
+</header>
+
+<footer>
+  Fairway Caddie is an independent golf GPS app. Course data © OpenStreetMap contributors.<br>
+  Working title — final name may change. © 2026
+</footer>
+
+</div>
+</body>
+</html>

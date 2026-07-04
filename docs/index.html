@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RevGauge — the no-subscription OBD2 scanner</title>
+<meta name="description" content="A modern OBD2 car scanner app. One-time price, works with cheap ELM327 adapters, real gauges on Android Auto. No subscription, ever.">
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --text: #e6edf3; --muted: #9aa4b2;
+    --accent: #2dd4bf; --accent-dark: #14b8a6; --warn: #f59e0b; --line: #2d333b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 24px; }
+  header { text-align: center; padding: 56px 0 32px; }
+  .badge { display: inline-block; background: rgba(45,212,191,.12); color: var(--accent); border: 1px solid rgba(45,212,191,.35); border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+  h1 { font-size: clamp(28px, 6vw, 44px); line-height: 1.15; letter-spacing: -.02em; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .sub { color: var(--muted); font-size: clamp(16px, 3vw, 19px); margin-top: 16px; }
+  .cta { display: block; text-align: center; background: var(--accent-dark); color: #04211d; font-weight: 700; font-size: 18px; border: 0; border-radius: 12px; padding: 16px 28px; margin: 28px auto 8px; cursor: pointer; text-decoration: none; max-width: 380px; }
+  .cta:hover { background: var(--accent); }
+  .tiny { text-align: center; color: var(--muted); font-size: 13px; }
+  section { margin: 48px 0; }
+  h2 { font-size: 22px; margin-bottom: 16px; }
+  .cards { display: grid; gap: 12px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  .card b { display: block; margin-bottom: 4px; }
+  .card span { color: var(--muted); font-size: 15px; }
+  .vs { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 15px; }
+  .vs th, .vs td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+  .vs th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  .vs td:first-child { color: var(--muted); }
+  .yes { color: var(--accent); font-weight: 700; }
+  .no { color: var(--warn); }
+  footer { border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; text-align: center; padding: 32px 0 48px; margin-top: 56px; }
+  @media (min-width: 560px) { .cards { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="badge">Early access — Android beta opening soon</div>
+  <h1>Your car's data.<br>One price. <em>No subscription.</em></h1>
+  <p class="sub">RevGauge is a modern OBD2 scanner app: live gauges, fault codes in plain
+  English, and real dashboards on Android Auto — with any cheap ELM327 adapter you already own.</p>
+  <!-- SWAP THIS LINK: replace with your Tally/Google Form URL for the waitlist -->
+  <a class="cta" href="https://example.com/YOUR-WAITLIST-FORM">Join the free beta waitlist →</a>
+  <p class="tiny">Founding testers get the Pro unlock free, forever.</p>
+</header>
+
+<section>
+  <h2>Sound familiar?</h2>
+  <div class="cards">
+    <div class="card"><b>Your favorite scanner app was abandoned</b>
+      <span>Paid years ago, no updates since, and it can't read your newer car or talk to your new adapter.</span></div>
+    <div class="card"><b>Or it costs €80+ every single year</b>
+      <span>Plus their special adapter. And features that "support your car" — until they don't.</span></div>
+    <div class="card"><b>Android Auto shows… text?</b>
+      <span>You want real gauges on the car screen, not three lines of numbers.</span></div>
+    <div class="card"><b>Your cheap adapter gets blamed</b>
+      <span>Apps that only behave with €100 hardware. Your €15 plug should just work.</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>What RevGauge does differently</h2>
+  <table class="vs">
+    <tr><th></th><th>RevGauge</th><th>The others</th></tr>
+    <tr><td>Price</td><td class="yes">One-time, under €10</td><td class="no">€60–115 / year</td></tr>
+    <tr><td>Works with €15 adapters</td><td class="yes">Yes — built for them</td><td class="no">Often proprietary only</td></tr>
+    <tr><td>Bluetooth LE adapters</td><td class="yes">Yes</td><td class="no">Still missing in 2026</td></tr>
+    <tr><td>Android Auto gauges</td><td class="yes">Real gauges (coming in beta)</td><td class="no">Text lists</td></tr>
+    <tr><td>Actively developed</td><td class="yes">Weekly builds</td><td class="no">Last update: years ago</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>In the first release</h2>
+  <div class="cards">
+    <div class="card"><b>Live gauges</b><span>RPM, speed, temps, voltage, load — smooth and configurable.</span></div>
+    <div class="card"><b>Fault codes, translated</b><span>Read &amp; clear check-engine codes with plain-English explanations.</span></div>
+    <div class="card"><b>Every adapter type</b><span>Bluetooth, Bluetooth LE, and WiFi ELM327 adapters.</span></div>
+    <div class="card"><b>Try before you plug</b><span>Full demo mode — explore the app with a simulated engine.</span></div>
+  </div>
+</section>
+
+<header style="padding-top:8px">
+  <!-- SWAP THIS LINK too (same form) -->
+  <a class="cta" href="https://example.com/YOUR-WAITLIST-FORM">Get early access →</a>
+  <p class="tiny">No spam. One email when the beta opens, one when we launch.</p>
+</header>
+
+<footer>
+  RevGauge is an independent app and is not affiliated with any vehicle manufacturer or other scanner product.<br>
+  Working title — final name may change. © 2026
+</footer>
+
+</div>
+</body>
+</html>
