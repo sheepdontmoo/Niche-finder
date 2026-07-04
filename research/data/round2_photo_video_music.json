@@ -1,0 +1,5 @@
+[
+  {"name":"Camera FV-5","appId":"com.flavionet.android.camera.pro","price":"$4.99","installs":"500k+","rating":4.10,"ratingsCount":"~19k","complaints":["Crashes/freezes some devices","Manual settings reset on restart","No full native resolution support","Photos fail to save","Slow updates vs Android camera API changes"],"confidence":"high"},
+  {"name":"FL Studio Mobile","appId":"com.imageline.FLM","price":"$14.99","installs":"1M+","rating":4.01,"ratingsCount":"~37k","complaints":["Crashes causing total project loss, no reliable autosave","Crashes on DirectWave/Slicer tool","Audible glitch inserted between audio slices","Device-dependent latency","Instability on larger projects"],"confidence":"high"},
+  {"name":"edjing PRO Music DJ mixer","appId":"com.djit.apps.edjing.expert","price":"$5.99","installs":"100k+","rating":3.53,"ratingsCount":"~8-9k","complaints":["Forced to repay after subscription pivot, broken purchase restore","No purchase record retention","Frequent crashes during mixing/recording","Broken crossfader/sliders on Android","Lost SoundCloud/Apple Music integration","Slow support"],"confidence":"high"}
+]
