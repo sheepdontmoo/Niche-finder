@@ -45,6 +45,19 @@ private val colors = lightColorScheme(
     onSurfaceVariant = DocStash.inkDim,
     outline = DocStash.paperEdge,
     error = DocStash.warn,
+    // Left unset, this defaults to Material3's baseline purple too: tonal elevation (the subtle
+    // tint elevated surfaces used to get) blends `surface` with `surfaceTint`.
+    surfaceTint = DocStash.stamp,
+    // As of Material3 1.3.0 (bundled in compose-bom 2024.09.00+), Card and friends no longer use
+    // `surface` + tonal elevation at all -- they default straight to the surfaceContainer* roles,
+    // which (like every role above) fall back to baseline purple if left unset. Every populated
+    // list of Cards was quietly purple-tinted until this was set; only visible by actually
+    // running the app with real data, never from reading the color scheme in isolation.
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = DocStash.paperCard,
+    surfaceContainer = DocStash.paperCard,
+    surfaceContainerHigh = DocStash.paperCard,
+    surfaceContainerHighest = DocStash.paperCard,
 )
 
 private val type = Typography(

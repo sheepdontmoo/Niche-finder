@@ -44,7 +44,13 @@ class DocStashViewModel(app: Application) : AndroidViewModel(app) {
     private var pendingScanTarget: String? = null
 
     init {
-        _state.update { it.copy(documents = store.all()) }
+        // store.all() reads and parses the manifest from disk -- real I/O, not just a map lookup.
+        // Calling it directly here would run synchronously on whichever thread constructs this
+        // ViewModel, which is the main thread the first time a Composable asks for it.
+        viewModelScope.launch {
+            val documents = withContext(Dispatchers.IO) { store.all() }
+            _state.update { it.copy(documents = documents) }
+        }
         viewModelScope.launch { billing.proUnlocked.collect { unlocked -> _state.update { it.copy(proUnlocked = unlocked) } } }
         viewModelScope.launch { billing.priceLabel.collect { label -> _state.update { it.copy(proPriceLabel = label) } } }
     }
