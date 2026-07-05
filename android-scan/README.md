@@ -6,16 +6,28 @@ scan → OCR → searchable PDF, one $7.99 one-time unlock, no subscription ever
 [`scan-core`](../scan-core) (PDF assembly, naming, search, entitlement logic) with Google ML Kit's
 Document Scanner + Text Recognition APIs, Compose UI, and Play Billing.
 
-## Status: compiles clean, runtime-untested
+## Status: compiles clean, release-signed, live-tested, reviewed
 
-`./gradlew assembleDebug` and `./gradlew lint` both pass with zero errors (verified in this
-sandbox, including real dependency resolution against ML Kit and Play Billing's Maven artifacts —
-not just a manual code review). What's **not** verified here: actually running the scan → OCR →
-export flow on a device/emulator with live Google Play Services, and a real Play Billing sandbox
-purchase. Both need a real device/emulator with Play Services, which this sandbox doesn't have
-running (even though, contrary to expectations, its network policy did allow fetching the ML
-Kit/Play Services *build-time* Maven dependencies — see the PR description for details). Verify
-end-to-end on a device/emulator with Play Store before shipping.
+Ready for the Play Console steps in [`PLAY_STORE_CHECKLIST.md`](PLAY_STORE_CHECKLIST.md). Concretely,
+in this sandbox:
+
+- `./gradlew assembleDebug`, `./gradlew lint`, `./gradlew assembleRelease`, and
+  `./gradlew bundleRelease` all pass clean — real dependency resolution against ML Kit and Play
+  Billing's Maven artifacts, a real signed + minified (R8) release APK and AAB, not just a
+  read-through of the code.
+- A Bugbot review pass (see git log: "Fix 6 issues from a Bugbot review pass") found and fixed 2
+  high-severity issues (a delete-then-append file collision that could silently overwrite a page's
+  image; a failed billing query that could revoke a paying user's Pro status) and 4 medium ones.
+- Installed and ran the actual signed release APK on an emulator, seeded it with sample documents,
+  and live-tested the Library screen, search, and branding. This caught 3 real bugs a code review
+  never would have: two Material3 color roles (`primaryContainer`/`secondaryContainer` and, less
+  obviously, `surfaceContainer*`) silently falling back to Material's baseline purple instead of the
+  app's own palette, and a blocking file read on the main thread at startup. All three fixed.
+- **Not verified here** (needs a device/emulator with a signed-in Google account and Play Store,
+  which this sandbox's emulator doesn't have): the actual scan → OCR capture flow through ML Kit's
+  dynamically-delivered document scanner module, and a real Play Billing sandbox purchase. Both
+  showed up as expected in logs (ML Kit's `mlkit.docscan.crop`/`enhance` modules and Play Billing's
+  API check both report unavailable without a signed-in account) rather than as app bugs.
 
 ## Project map
 
@@ -27,13 +39,15 @@ end-to-end on a device/emulator with Play Store before shipping.
 | `app/src/main/kotlin/.../billing/BillingManager.kt` | Play Billing wiring for the one-time `pro_unlock` product |
 | `app/src/main/kotlin/.../ui/` | Library (search), Document (viewer/export), Settings (Pro unlock) screens |
 | `../scan-core/` | PDF assembly, file naming, OCR search, entitlement — the genuinely testable, non-ML-Kit logic |
+| `store-assets/` | Play Store hi-res icon, feature graphic, and a real app screenshot |
+| `PLAY_STORE_CHECKLIST.md` | The ordered, human-side path from here to a published listing |
 
-## Play Console setup (human — not doable from this sandbox)
+## Play Console setup
 
-1. Create the app in Play Console, upload a signed build to a closed test track.
-2. Create **one** managed product (one-time product): ID `pro_unlock`, suggested price **$7.99**.
-   Do not create a subscription product — the entire pitch is "we don't do that."
-3. Add test accounts under Play Console → Setup → License testing before doing real purchase QA.
+See [`PLAY_STORE_CHECKLIST.md`](PLAY_STORE_CHECKLIST.md) for the full ordered checklist (account
+setup, upload keystore, store listing, the `pro_unlock` in-app product, closed testing requirement,
+submission). Short version: create **one** in-app product (not a subscription) with ID `pro_unlock`
+at **$7.99**, and add license testers before doing real purchase QA.
 
 ## Manual verification checklist (device/emulator with Play Store)
 
