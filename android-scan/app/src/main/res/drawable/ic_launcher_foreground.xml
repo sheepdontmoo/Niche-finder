@@ -1,0 +1,55 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Scanner viewfinder corner brackets — framing the page, evoking the scan action -->
+    <path
+        android:pathData="M18,26 L18,14 L30,14"
+        android:strokeColor="#FBF6EC"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M78,14 L90,14 L90,26"
+        android:strokeColor="#FBF6EC"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M18,82 L18,94 L30,94"
+        android:strokeColor="#FBF6EC"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M90,82 L90,94 L78,94"
+        android:strokeColor="#FBF6EC"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    <!-- The document: a page with a folded top-right corner -->
+    <path
+        android:pathData="M32,22 L66,22 L76,32 L76,86 L32,86 Z"
+        android:fillColor="#FBF6EC"/>
+    <path
+        android:pathData="M66,22 L76,22 L76,32 Z"
+        android:fillColor="#E8DCC3"/>
+    <!-- Lines of scanned text on the page -->
+    <path
+        android:pathData="M40,40 L68,40"
+        android:strokeColor="#8A7F68"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M40,52 L68,52"
+        android:strokeColor="#8A7F68"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+    <path
+        android:pathData="M40,64 L60,64"
+        android:strokeColor="#8A7F68"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"/>
+</vector>
