@@ -41,9 +41,9 @@
           {%- if block.settings.working_sat %}{%- assign days = days | append: '6,' %}{%- endif -%}
           {{- days | split: ',' | join: ',' -}}
         ],
-        "template": {{ block.settings.template | default: 'Order today to get it by {date}' | json }},
-        "locale": {{ block.settings.locale | default: 'en-IE' | json }},
-        "dateStyle": {{ block.settings.date_style | default: 'medium' | json }}
+        "template": {{ block.settings.template | json }},
+        "locale": {{ block.settings.locale | json }},
+        "dateStyle": {{ block.settings.date_style | json }}
       }
     {%- endif -%}
   </script>
