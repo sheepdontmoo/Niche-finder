@@ -29,16 +29,22 @@ so the block is never broken while the metafield path is being wired.
 - ✅ `npm run typecheck` — clean.
 - ✅ `npm run build` — production build succeeds.
 - ✅ `npm run lint` — clean.
+- ✅ **Storefront render** — the real `assets/delivery-date.js` was loaded in
+  headless Chromium against the block markup and rendered correct live dates:
+  a range (`en-IE`, "17 Jul 2026 – 21 Jul 2026") and a single day (`en-US`,
+  "Wednesday, July 15, 2026"), with cutoff + weekend-skipping applied.
 
 ## NOT yet verified (needs a real dev store — Darren)
 
 These require Shopify auth + a store and can't run in this environment:
 
-- The metafield → Liquid read path (`shop.metafields.delivery_date.settings`).
-  If it doesn't surface, the block falls back to its own settings; the fix is
+- The metafield → Liquid read path (`shop.metafields.delivery_date.settings`)
+  feeding config into the block. (The client render itself is verified above;
+  what's unverified is that path *sourcing* the config on a live store.) If it
+  doesn't surface, the block falls back to its own settings; the fix is
   confirming the metafield definition's storefront access on the store.
 - The billing subscribe/return flow end-to-end.
-- The block rendering the estimate on a live product page.
+- The admin settings page inside the Shopify admin iframe.
 
 ## Handoff — steps that need your login
 
