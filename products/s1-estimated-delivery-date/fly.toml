@@ -1,0 +1,28 @@
+# Fly.io deployment for the Estimated Delivery Date Shopify app.
+# `app` must be globally unique — change it if the name is taken.
+app = "edd-supadesign"
+primary_region = "lhr"
+
+[build]
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+  # SQLite lives on the mounted volume (see [[mounts]]) so it survives deploys.
+  DATABASE_URL = "file:/data/prod.sqlite"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  # Always-on so the App Store reviewer never hits a cold start.
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[mounts]]
+  source = "data"
+  destination = "/data"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
