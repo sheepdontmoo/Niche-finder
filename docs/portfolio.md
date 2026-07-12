@@ -11,7 +11,7 @@ in-review, live, killed}.
 | C2 · BYOK AI Rewrite Anywhere | Chrome | proposed | 0 | €0 | hold |
 | C3 · Outlook/Yahoo Mail Power Kit | Chrome | proposed | 0 | €0 | hold |
 | C4 · Seller SEO / Listing Optimizer | Chrome | proposed | 0 | €0 | hold |
-| S1 · Estimated Delivery Date | Shopify | building | 0 | €0 | feed |
+| S1 · SupaDatewise: Delivery Date | Shopify | in-review | 0 | €0 | feed |
 | S2 · Purchase Rules | Shopify | proposed | 0 | €0 | hold |
 | F1 · Smart Content Populator | Figma | proposed | 0 | €0 | hold |
 | F2 · Redline & Handoff Kit | Figma | proposed | 0 | €0 | hold |
@@ -29,3 +29,9 @@ in-review, live, killed}.
   Tests/typecheck/build/lint all green here; on-store verification + submit
   are the remaining (auth-gated) steps. **C1 handed to Codex** in parallel
   ([`codex-handoff-C1.md`](codex-handoff-C1.md)).
+- **2026-07-12** — **S1 SUBMITTED to the Shopify App Store** (in review).
+  Rebranded **SupaDatewise: Delivery Date**; deployed to permanent hosting
+  on Fly.io (`edd-supadesign.fly.dev`, app-owned metafields, no scopes);
+  listing complete (icon, feature graphic, 3 screenshots, privacy page,
+  screencast, testing instructions). First product of the venture shipped.
+  **TODO:** rotate the app Client secret (exposed in chat during setup).
