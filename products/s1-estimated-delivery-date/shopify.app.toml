@@ -1,6 +1,6 @@
 # This file stores configurations for your Shopify app.
 client_id = "26c0cd1cd1992a8d9114c826f47e3e5b"
-name = "SupaDatewise"
+name = "SupaDatewise: Delivery Date"
 application_url = "https://edd-supadesign.fly.dev"
 embedded = true
 
