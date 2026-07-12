@@ -5,8 +5,9 @@ application_url = "https://edd-supadesign.fly.dev"
 embedded = true
 
 [access_scopes]
-# write_metafields: store shop-level delivery settings the theme block reads.
-scopes = "write_metafields"
+# No scopes needed: settings are stored as app-owned metafields ($app namespace),
+# and the storefront block is a theme app extension.
+scopes = ""
 
 [auth]
 redirect_urls = [
