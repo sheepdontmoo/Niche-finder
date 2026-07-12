@@ -1,14 +1,19 @@
 # This file stores configurations for your Shopify app.
-# `client_id`, `application_url` and the dev/prod handles are populated by
-# `shopify app config link` (run against app 328515354625 in org 208004935).
-client_id = ""
+client_id = "26c0cd1cd1992a8d9114c826f47e3e5b"
 name = "Estimated Delivery Date"
+application_url = "https://edd-supadesign.fly.dev"
 embedded = true
 
 [access_scopes]
-# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
 # write_metafields: store shop-level delivery settings the theme block reads.
 scopes = "write_metafields"
+
+[auth]
+redirect_urls = [
+  "https://edd-supadesign.fly.dev/auth/callback",
+  "https://edd-supadesign.fly.dev/auth/shopify/callback",
+  "https://edd-supadesign.fly.dev/api/auth/callback",
+]
 
 [webhooks]
 api_version = "2025-10"
@@ -20,19 +25,10 @@ api_version = "2025-10"
 
   # Handled by: /app/routes/webhooks.app.scopes_update.tsx
   [[webhooks.subscriptions]]
-  topics = [ "app/scopes_update" ]
+  topics = ["app/scopes_update"]
   uri = "/webhooks/app/scopes_update"
 
-  # Webhooks can have filters
-  # Only receive webhooks for product updates with a product price >= 10.00
-  # See: https://shopify.dev/docs/apps/build/webhooks/customize/filters
-  # [[webhooks.subscriptions]]
-  # topics = ["products/update"]
-  # uri = "/webhooks/products/update"
-  # filter = "variants.price:>=10.00"
-
   # Mandatory compliance topics for public apps.
-  # See: https://shopify.dev/docs/apps/build/privacy-law-compliance
   [[webhooks.subscriptions]]
   uri = "/webhooks/compliance"
   compliance_topics = [
@@ -40,3 +36,6 @@ api_version = "2025-10"
     "customers/redact",
     "shop/redact",
   ]
+
+[pos]
+embedded = false
