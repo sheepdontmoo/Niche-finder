@@ -7,7 +7,7 @@ import type {
 import { useFetcher, useLoaderData } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-import { authenticate, PRO_PLAN } from "../shopify.server";
+import { authenticate } from "../shopify.server";
 import { readSettings, writeSettings } from "../lib/settings.server";
 import {
   estimateDelivery,
@@ -26,37 +26,20 @@ const WEEKDAYS = [
   { value: 0, label: "Sun" },
 ];
 
-// Charge real money only in production; dev/test stores use Shopify test billing.
-const isTestBilling = process.env.NODE_ENV !== "production";
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { admin, billing } = await authenticate.admin(request);
-
-  const [settings, billingCheck] = await Promise.all([
-    readSettings(admin.graphql),
-    billing.check({ plans: [PRO_PLAN], isTest: isTestBilling }),
-  ]);
-
+  // Billing is enforced in app.tsx's loader, so by here the shop is subscribed.
+  const { admin } = await authenticate.admin(request);
+  const settings = await readSettings(admin.graphql);
   const estimate = estimateDelivery(new Date(), settings);
   return {
     settings,
-    hasActivePayment: billingCheck.hasActivePayment,
     preview: formatEstimate(estimate, settings),
   };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin, billing } = await authenticate.admin(request);
+  const { admin } = await authenticate.admin(request);
   const form = await request.formData();
-
-  if (form.get("intent") === "subscribe") {
-    // Redirects to Shopify's subscription confirmation page.
-    return await billing.request({
-      plan: PRO_PLAN,
-      isTest: isTestBilling,
-      returnUrl: `${process.env.SHOPIFY_APP_URL}/app`,
-    });
-  }
 
   const parsed: Partial<DeliverySettings> = {
     enabled: form.get("enabled") === "on",
@@ -98,21 +81,6 @@ export default function Index() {
 
   return (
     <s-page heading="Estimated Delivery Date">
-      {!loaded.hasActivePayment && (
-        <s-banner tone="warning" heading="Start your subscription">
-          <s-paragraph>
-            You&apos;re on a free trial. Subscribe to keep the delivery estimate
-            live on your storefront after it ends.
-          </s-paragraph>
-          <fetcher.Form method="post">
-            <input type="hidden" name="intent" value="subscribe" />
-            <s-button variant="primary" type="submit">
-              Subscribe — $6.99/month
-            </s-button>
-          </fetcher.Form>
-        </s-banner>
-      )}
-
       <s-section heading="How it looks">
         <s-paragraph>Preview for an order placed right now:</s-paragraph>
         <s-box
