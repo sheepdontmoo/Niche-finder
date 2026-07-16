@@ -14,7 +14,12 @@ const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
   apiVersion: ApiVersion.October25,
-  scopes: process.env.SCOPES?.split(","),
+  // No access scopes: the app stores settings as app-owned ($app) metafields
+  // and renders via a theme app extension — neither needs a scope. This MUST
+  // stay empty to match `access_scopes` in shopify.app.toml; a mismatch makes
+  // fresh installs loop into an in-iframe OAuth redirect ("accounts.shopify.com
+  // refused to connect"). Hardcoded so a stale SCOPES env can't reintroduce it.
+  scopes: [],
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),

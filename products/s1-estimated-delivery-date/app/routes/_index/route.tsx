@@ -21,9 +21,10 @@ export default function App() {
   return (
     <div className={styles.index}>
       <div className={styles.content}>
-        <h1 className={styles.heading}>A short heading about [your app]</h1>
+        <h1 className={styles.heading}>SupaDatewise: Delivery Date</h1>
         <p className={styles.text}>
-          A tagline about [your app] that describes your value proposition.
+          Show shoppers a clear, automatic estimated delivery date on your
+          product and cart pages. Install from the Shopify App Store.
         </p>
         {showForm && (
           <Form className={styles.form} method="post" action="/auth/login">
@@ -39,16 +40,16 @@ export default function App() {
         )}
         <ul className={styles.list}>
           <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
+            <strong>Automatic estimates</strong>. A get-it-by-date message
+            calculated from your processing time, cutoff and shipping window.
           </li>
           <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
+            <strong>No theme code</strong>. Add a drag-and-drop block to your
+            product pages in the theme editor.
           </li>
           <li>
-            <strong>Product feature</strong>. Some detail about your feature and
-            its benefit to your customer.
+            <strong>Fully customizable</strong>. Control the wording, date
+            format, working days and locale.
           </li>
         </ul>
       </div>
