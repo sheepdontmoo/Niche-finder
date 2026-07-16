@@ -4,6 +4,10 @@ name = "SupaDatewise: Delivery Date"
 application_url = "https://edd-supadesign.fly.dev"
 embedded = true
 
+[build]
+# Never let `shopify app dev` overwrite the production URL with a temp tunnel.
+automatically_update_urls_on_dev = false
+
 [access_scopes]
 # No scopes needed: settings are stored as app-owned metafields ($app namespace),
 # and the storefront block is a theme app extension.
