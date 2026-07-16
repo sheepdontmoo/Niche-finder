@@ -1,0 +1,46 @@
+# This file stores configurations for your Shopify app.
+client_id = "26c0cd1cd1992a8d9114c826f47e3e5b"
+name = "SupaDatewise: Delivery Date"
+application_url = "https://edd-supadesign.fly.dev"
+embedded = true
+
+[build]
+# Never let `shopify app dev` overwrite the production URL with a temp tunnel.
+automatically_update_urls_on_dev = false
+
+[access_scopes]
+# No scopes needed: settings are stored as app-owned metafields ($app namespace),
+# and the storefront block is a theme app extension.
+scopes = ""
+
+[auth]
+redirect_urls = [
+  "https://edd-supadesign.fly.dev/auth/callback",
+  "https://edd-supadesign.fly.dev/auth/shopify/callback",
+  "https://edd-supadesign.fly.dev/api/auth/callback",
+]
+
+[webhooks]
+api_version = "2025-10"
+
+  # Handled by: /app/routes/webhooks.app.uninstalled.tsx
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/app/uninstalled"
+  topics = ["app/uninstalled"]
+
+  # Handled by: /app/routes/webhooks.app.scopes_update.tsx
+  [[webhooks.subscriptions]]
+  topics = ["app/scopes_update"]
+  uri = "/webhooks/app/scopes_update"
+
+  # Mandatory compliance topics for public apps.
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/compliance"
+  compliance_topics = [
+    "customers/data_request",
+    "customers/redact",
+    "shop/redact",
+  ]
+
+[pos]
+embedded = false

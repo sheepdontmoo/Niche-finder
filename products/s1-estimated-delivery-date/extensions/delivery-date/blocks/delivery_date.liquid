@@ -1,0 +1,154 @@
+{%- comment -%}
+  Estimated Delivery Date block.
+
+  Config resolution order:
+    1. Shop metafield delivery_date.settings (set by the app admin) — the
+       single source of truth once the app has been configured.
+    2. This block's own settings (below) — a fallback so the block still
+       works if the metafield isn't readable yet or the merchant prefers to
+       configure per-block in the theme editor.
+
+  The actual date math runs client-side in assets/delivery-date.js, which is a
+  verbatim port of the app's tested app/lib/delivery-date.ts.
+{%- endcomment -%}
+
+{%- assign mf = shop.metafields.app.settings -%}
+
+<div
+  class="edd-block"
+  data-edd
+  style="color: {{ block.settings.text_color }}; font-size: {{ block.settings.font_size }}px;"
+  {{ block.shopify_attributes }}
+>
+  <script type="application/json" data-edd-config>
+    {%- if mf and mf.value -%}
+      {{ mf.value | json }}
+    {%- else -%}
+      {
+        "enabled": true,
+        "processingDays": {{ block.settings.processing_days | default: 1 }},
+        "cutoffHour": {{ block.settings.cutoff_hour | default: 14 }},
+        "transitDaysMin": {{ block.settings.transit_min | default: 3 }},
+        "transitDaysMax": {{ block.settings.transit_max | default: 5 }},
+        "workingDays": [
+          {%- assign days = '' -%}
+          {%- if block.settings.working_sun %}{%- assign days = days | append: '0,' %}{%- endif -%}
+          {%- if block.settings.working_mon %}{%- assign days = days | append: '1,' %}{%- endif -%}
+          {%- if block.settings.working_tue %}{%- assign days = days | append: '2,' %}{%- endif -%}
+          {%- if block.settings.working_wed %}{%- assign days = days | append: '3,' %}{%- endif -%}
+          {%- if block.settings.working_thu %}{%- assign days = days | append: '4,' %}{%- endif -%}
+          {%- if block.settings.working_fri %}{%- assign days = days | append: '5,' %}{%- endif -%}
+          {%- if block.settings.working_sat %}{%- assign days = days | append: '6,' %}{%- endif -%}
+          {{- days | split: ',' | join: ',' -}}
+        ],
+        "template": {{ block.settings.template | json }},
+        "locale": {{ block.settings.locale | json }},
+        "dateStyle": {{ block.settings.date_style | json }}
+      }
+    {%- endif -%}
+  </script>
+
+  <span data-edd-output aria-live="polite">{{ block.settings.loading_text }}</span>
+</div>
+
+<script src="{{ 'delivery-date.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "Estimated Delivery Date",
+  "target": "section",
+  "javascript": "delivery-date.js",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Fallback rules"
+    },
+    {
+      "type": "paragraph",
+      "content": "These are used only until the app's settings are saved. Configure the app for a single source of truth."
+    },
+    {
+      "type": "number",
+      "id": "processing_days",
+      "label": "Processing time (business days)",
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "cutoff_hour",
+      "label": "Order cutoff hour (0-23)",
+      "default": 14
+    },
+    {
+      "type": "number",
+      "id": "transit_min",
+      "label": "Shipping time min (business days)",
+      "default": 3
+    },
+    {
+      "type": "number",
+      "id": "transit_max",
+      "label": "Shipping time max (business days)",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Working days"
+    },
+    { "type": "checkbox", "id": "working_mon", "label": "Monday", "default": true },
+    { "type": "checkbox", "id": "working_tue", "label": "Tuesday", "default": true },
+    { "type": "checkbox", "id": "working_wed", "label": "Wednesday", "default": true },
+    { "type": "checkbox", "id": "working_thu", "label": "Thursday", "default": true },
+    { "type": "checkbox", "id": "working_fri", "label": "Friday", "default": true },
+    { "type": "checkbox", "id": "working_sat", "label": "Saturday", "default": false },
+    { "type": "checkbox", "id": "working_sun", "label": "Sunday", "default": false },
+    {
+      "type": "header",
+      "content": "Wording and appearance"
+    },
+    {
+      "type": "text",
+      "id": "template",
+      "label": "Message template",
+      "info": "Use {date}, or {min} and {max} for a range.",
+      "default": "Order today to get it by {date}"
+    },
+    {
+      "type": "text",
+      "id": "locale",
+      "label": "Locale",
+      "default": "en-IE"
+    },
+    {
+      "type": "select",
+      "id": "date_style",
+      "label": "Date format",
+      "options": [
+        { "value": "full", "label": "Full" },
+        { "value": "long", "label": "Long" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "short", "label": "Short" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "text",
+      "id": "loading_text",
+      "label": "Loading text",
+      "default": "Calculating delivery date..."
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "number",
+      "id": "font_size",
+      "label": "Font size (px)",
+      "default": 15
+    }
+  ]
+}
+{% endschema %}

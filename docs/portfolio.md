@@ -1,0 +1,44 @@
+# Portfolio table (Rule 5)
+
+Updated weekly. Verdict ∈ {kill, hold, feed}. Status ∈ {spec, building,
+in-review, live, killed}.
+
+**Week of 2026-07-10 (Day 0)**
+
+| Product | Platform | Status | Installs | MRR | Verdict |
+|---------|----------|--------|----------|-----|---------|
+| C1 · Reseller Analytics & Export | Chrome | spec | 0 | €0 | hold |
+| C2 · BYOK AI Rewrite Anywhere | Chrome | proposed | 0 | €0 | hold |
+| C3 · Outlook/Yahoo Mail Power Kit | Chrome | proposed | 0 | €0 | hold |
+| C4 · Seller SEO / Listing Optimizer | Chrome | proposed | 0 | €0 | hold |
+| S1 · SupaDatewise: Delivery Date | Shopify | in-review | 0 | €0 | feed |
+| S2 · Purchase Rules | Shopify | proposed | 0 | €0 | hold |
+| F1 · Smart Content Populator | Figma | proposed | 0 | €0 | hold |
+| F2 · Redline & Handoff Kit | Figma | proposed | 0 | €0 | hold |
+
+**Combined MRR:** €0 · **Live:** 0/8 · **Next gate:** Day 30 — 8 live, first paid sale.
+
+## Log
+
+- **2026-07-10** — Wave 1 researched and proposed (see
+  [`wave-1-plan.md`](wave-1-plan.md)). C1 + S1 fully specced. Awaiting
+  Darren greenlight + Shopify Partner account.
+- **2026-07-11** — Shopify Partner app created (app `328515354625`).
+  **S1 built**: full embedded app + theme app extension + billing, in
+  [`products/s1-estimated-delivery-date/`](../products/s1-estimated-delivery-date/).
+  Tests/typecheck/build/lint all green here; on-store verification + submit
+  are the remaining (auth-gated) steps. **C1 handed to Codex** in parallel
+  ([`codex-handoff-C1.md`](codex-handoff-C1.md)).
+- **2026-07-12** — **S1 SUBMITTED to the Shopify App Store** (in review).
+  Rebranded **SupaDatewise: Delivery Date**; deployed to permanent hosting
+  on Fly.io (`edd-supadesign.fly.dev`, app-owned metafields, no scopes);
+  listing complete (icon, feature graphic, 3 screenshots, privacy page,
+  screencast, testing instructions). First product of the venture shipped.
+  **TODO:** rotate the app Client secret (exposed in chat during setup).
+- **2026-07-16** — Review round 1 bounce (1.2.2: "application error after
+  subscribing") diagnosed via Fly logs: the dashboard pricing plan enrolled
+  the app in **Shopify Managed Pricing**, which forbids in-app Billing API
+  charges. Removed all in-app billing code (Shopify now handles plan/trial/
+  charges entirely); also fixed a dev-tunnel URL that had been deployed as the
+  app URL (`shopify app dev clean` + locked URL updates off in the toml).
+  Proof-of-resolution video recorded; **resubmitted for review**.
