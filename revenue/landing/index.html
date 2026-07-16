@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Niche-finder — done-for-you B2B prospect lists</title>
+<style>
+  :root{--bg:#0b0f19;--card:#141a2b;--ink:#eef2ff;--mut:#9aa6c4;--acc:#5b8cff;--acc2:#37e0a6;--line:#232c44}
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px}
+  header{padding:72px 0 40px;text-align:center}
+  .kicker{color:var(--acc2);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+  h1{font-size:clamp(30px,5vw,52px);line-height:1.1;margin:14px 0 16px}
+  .sub{color:var(--mut);font-size:clamp(17px,2.4vw,21px);max-width:680px;margin:0 auto}
+  .cta{display:inline-block;margin-top:28px;background:var(--acc);color:#fff;text-decoration:none;font-weight:600;padding:14px 26px;border-radius:12px}
+  .cta.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);margin-left:10px}
+  section{padding:40px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(22px,3vw,30px);margin:0 0 22px}
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .card h3{margin:0 0 8px;font-size:18px}
+  .card p{margin:0;color:var(--mut);font-size:15px}
+  .price{display:flex;align-items:baseline;gap:6px;margin:6px 0 12px}
+  .price b{font-size:30px}
+  .price span{color:var(--mut);font-size:14px}
+  ul.feat{list-style:none;padding:0;margin:0}
+  ul.feat li{padding:6px 0 6px 26px;position:relative;color:var(--ink);font-size:15px}
+  ul.feat li::before{content:"✓";position:absolute;left:0;color:var(--acc2);font-weight:700}
+  .featured{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+  .tag{display:inline-block;background:rgba(91,140,255,.15);color:var(--acc);font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;font-size:14px;overflow-x:auto;display:block}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{color:var(--mut);font-weight:600}
+  .steps{counter-reset:s}
+  .step{display:flex;gap:14px;padding:12px 0}
+  .step b{flex:0 0 30px;height:30px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:14px}
+  footer{padding:48px 0 72px;text-align:center;color:var(--mut);font-size:14px}
+  .note{color:var(--mut);font-size:13px;text-align:center;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Niche-finder</div>
+    <h1>Prospect lists your reps actually want to call.</h1>
+    <p class="sub">You name the niche. We hand you a verified, enriched, signal-tagged
+      B2B prospect list with personalized outreach — in 48 hours. See the quality free,
+      before you pay a cent.</p>
+    <a class="cta" href="#sample">Get 10 free leads</a>
+    <a class="cta ghost" href="#pricing">See pricing</a>
+  </header>
+
+  <section>
+    <h2>What's in every list</h2>
+    <div class="grid">
+      <div class="card"><h3>Verified contacts</h3><p>Name, title, company, LinkedIn, validated business email. Bounces removed.</p></div>
+      <div class="card"><h3>The <em>why</em>, tagged</h3><p>Each prospect carries the buying signal — hiring, funding, tech stack, growth — that makes them worth a message now.</p></div>
+      <div class="card"><h3>Segmented by fit</h3><p>A/B/C tiers so your team works the hottest prospects first.</p></div>
+      <div class="card"><h3>Outreach written</h3><p>A tailored sequence written to the signal — not a generic blast that gets deleted.</p></div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>Simple, fixed pricing</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>Starter</h3>
+        <div class="price"><b>€290</b><span>one-off</span></div>
+        <ul class="feat"><li>50 verified prospects</li><li>1 outreach template</li><li>CRM-ready CSV</li><li>48-hour delivery</li></ul>
+      </div>
+      <div class="card featured">
+        <span class="tag">Most popular</span>
+        <h3>Growth Sprint</h3>
+        <div class="price"><b>€690</b><span>one-off</span></div>
+        <ul class="feat"><li>150 enriched prospects</li><li>A/B/C segmentation</li><li>3-touch outreach sequence</li><li>1-page ICP brief</li><li>3-day delivery</li></ul>
+      </div>
+      <div class="card">
+        <h3>Pipeline Retainer</h3>
+        <div class="price"><b>€900</b><span>/ month</span></div>
+        <ul class="feat"><li>200 fresh leads / month</li><li>Signal reporting</li><li>Sequences rewritten monthly</li><li>Monthly targeting review</li></ul>
+      </div>
+    </div>
+    <p class="note">Add-ons: +50 leads €120 · CRM formatting €60 · warm-intro research €150.</p>
+  </section>
+
+  <section id="sample">
+    <h2>See it before you buy</h2>
+    <p class="sub" style="margin-bottom:22px">Tell us your target niche and titles. We'll
+      build a real <b>10-prospect sample</b> — verified and signal-tagged — at no cost. If
+      it's not sharper than what you work today, you keep the 10 and owe us nothing.</p>
+    <a class="cta" href="mailto:REPLACE_WITH_APPROVED_EMAIL?subject=Free%2010-lead%20sample&body=Niche%3A%0ATitles%20I%20target%3A%0AGeography%3A">Request my free sample</a>
+    <p class="note">Payment link and contact email are inserted only after human approval to publish.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><b>1</b><div><strong>Brief.</strong> A short form or 15-min call — your ICP, niche, geography, exclusions.</div></div>
+      <div class="step"><b>2</b><div><strong>Build.</strong> We research, enrich, verify, and write the outreach.</div></div>
+      <div class="step"><b>3</b><div><strong>Deliver.</strong> Clean CSV + copy + a short walkthrough — ready to send.</div></div>
+      <div class="step"><b>4</b><div><strong>Iterate.</strong> Next batch is sharpened by what replied.</div></div>
+    </div>
+  </section>
+
+  <footer>
+    Niche-finder · done-for-you B2B prospect lists &amp; outreach<br>
+    <span class="note">Draft landing page — not published until human approval.</span>
+  </footer>
+</div>
+</body>
+</html>
