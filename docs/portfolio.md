@@ -35,3 +35,10 @@ in-review, live, killed}.
   listing complete (icon, feature graphic, 3 screenshots, privacy page,
   screencast, testing instructions). First product of the venture shipped.
   **TODO:** rotate the app Client secret (exposed in chat during setup).
+- **2026-07-16** — Review round 1 bounce (1.2.2: "application error after
+  subscribing") diagnosed via Fly logs: the dashboard pricing plan enrolled
+  the app in **Shopify Managed Pricing**, which forbids in-app Billing API
+  charges. Removed all in-app billing code (Shopify now handles plan/trial/
+  charges entirely); also fixed a dev-tunnel URL that had been deployed as the
+  app URL (`shopify app dev clean` + locked URL updates off in the toml).
+  Proof-of-resolution video recorded; **resubmitted for review**.
