@@ -5,12 +5,17 @@ import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate, PRO_PLAN } from "../shopify.server";
 
-// Charge real money only in production; dev/test stores use Shopify test billing.
-// eslint-disable-next-line no-undef
-const isTestBilling = process.env.NODE_ENV !== "production";
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { billing } = await authenticate.admin(request);
+  const { admin, billing } = await authenticate.admin(request);
+
+  // Development stores (including Shopify's App Store reviewers) can ONLY
+  // accept test charges — creating a real charge there throws, which surfaces
+  // as "Application Error". Detect the store type at runtime: test charge for
+  // dev stores, real charge for real merchants.
+  const planRes = await admin.graphql(`#graphql
+    query ShopPlan { shop { plan { partnerDevelopment } } }`);
+  const planBody = await planRes.json();
+  const isDevStore = Boolean(planBody.data?.shop?.plan?.partnerDevelopment);
 
   // Enforce billing in the loader so the payment-confirmation redirect happens
   // at the top window via App Bridge (the correct, App Store-compliant flow).
@@ -18,11 +23,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // once they approve, the subscription is active and the app loads.
   await billing.require({
     plans: [PRO_PLAN],
-    isTest: isTestBilling,
+    // Accept any active subscription, test or real.
+    isTest: true,
     onFailure: async () =>
       billing.request({
         plan: PRO_PLAN,
-        isTest: isTestBilling,
+        isTest: isDevStore,
         // eslint-disable-next-line no-undef
         returnUrl: `${process.env.SHOPIFY_APP_URL}/app`,
       }),
