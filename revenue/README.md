@@ -1,17 +1,25 @@
-# Revenue engine — Niche-finder lead-gen service
+# Revenue engine — €0 → €25,000 in 90 days
 
-The kit that turns the Niche-finder asset into collected revenue. Goal: €0 → €25,000
-in 90 days, all real and verified. Nothing here goes live without explicit human approval.
+Lead horse (revised 2026-07-19): **AI Visual Studio** — premium AI product/brand visuals,
+ad creative, and real-estate virtual staging, built on a funded ~50k-credit Magnific
+studio. Instant visual proof, ~100% margin, delivered in minutes. Nothing goes live
+without explicit human approval.
+
+## Current kit
 
 | File | What it is | Status |
 |---|---|---|
-| [`PLAN.md`](PLAN.md) | 90-day plan: offer, pricing, math to €25k, funnel, approval gates | ready |
-| [`assets/lead-gen-offer.md`](assets/lead-gen-offer.md) | Client-facing offer one-pager | ready |
-| [`assets/cold-outreach.md`](assets/cold-outreach.md) | Sample-first outreach sequences (human-approved sends only) | ready |
-| [`delivery/sample-deliverable.md`](delivery/sample-deliverable.md) | The proof-of-quality artifact buyers receive | template |
-| [`landing/index.html`](landing/index.html) | Landing page, ready to publish on approval | draft |
+| [`STRATEGY.md`](STRATEGY.md) | Revised lead-horse strategy, economics, path to €25k, gates | **active** |
+| [`studio/delivery-sop.md`](studio/delivery-sop.md) | Production pipeline + per-model prompt recipes + quality gate | ready |
+| [`studio/storefront.html`](studio/storefront.html) | Storefront/gig page, ready to publish on approval | draft |
+| [`PLAN.md`](PLAN.md) | Original lead-gen plan — kept as documented fallback | fallback |
+| [`assets/`](assets/) · [`delivery/`](delivery/) · [`landing/`](landing/) | Lead-gen kit (fallback) | fallback |
 
-## Where we are
-Assets built (no approval gate). **Blocked on human decisions** to start firing:
-beachhead niche + warm channel, payment rail, budget appetite, and a green light to
-build the first real sample and begin outreach. See `PLAN.md` §6–7.
+## Where we are (autopilot)
+Strategy + offer + delivery pipeline + storefront built (no gate). **Next actions are
+red-light gates:**
+1. 🔴 Generate the real proof portfolio (~750–1200 of ~50k credits).
+2. 🔴 Publish storefront / marketplace gig + set up payment rail (user identity).
+3. 🔴 First outreach / listing live → deliver → collect.
+
+See `STRATEGY.md` for full detail and the status ledger.
