@@ -11,9 +11,12 @@ android {
     defaultConfig {
         applicationId = "com.nichefinder.caddie"
         minSdk = 26
+        // targetSdk 35 (Android 15) meets Google Play's requirement for an app
+        // to remain available to new users. Bump versionCode for the new
+        // compliance release; must exceed the currently-live versionCode.
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
     }
 
     // Upload signing: supplied via environment so no secret ever enters the

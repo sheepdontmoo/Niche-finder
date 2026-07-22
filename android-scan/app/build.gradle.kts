@@ -12,9 +12,12 @@ android {
     defaultConfig {
         applicationId = "com.nichefinder.docstash"
         minSdk = 26
+        // targetSdk 35 (Android 15) meets Google Play's requirement for an app
+        // to remain available to new users. Bump versionCode for the new
+        // compliance release; must exceed the currently-live versionCode.
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.1"
     }
 
     // Upload signing: supplied via environment so no secret ever enters the
