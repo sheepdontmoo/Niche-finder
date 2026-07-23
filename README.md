@@ -24,14 +24,29 @@ npm run dev
 
 Open http://localhost:3000 — works great in a phone browser too (the file input opens the camera on mobile).
 
-## Deploy
+## Deploy (web backend)
 
-Any Node host works; Vercel is one-click. Set `ANTHROPIC_API_KEY` in the environment.
+Any Node host works; Vercel is one-click. Environment variables:
+
+- `ANTHROPIC_API_KEY` — required
+- `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` — optional but recommended; enables **server-side** free-scan metering per device (see `lib/metering.ts`). Without them, only the client-side gate applies.
+
+## Mobile apps (Capacitor)
+
+Native Android and iOS projects live in `android/` and `ios/`, with app icons and splash screens already generated (source art in `resources/`, regenerate with `scripts/make-assets.py` + `npx @capacitor/assets generate`). The mobile apps are static shells that call your hosted backend:
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://your-deployment.vercel.app npm run build:mobile
+npx cap sync
+# Android: cd android && ./gradlew bundleRelease  (see docs/play-store.md)
+# iOS:     npx cap open ios  (requires a Mac + Xcode)
+```
+
+**Full Play Store submission guide — listing copy, data safety answers, signing, checklist: [`docs/play-store.md`](docs/play-store.md).**
 
 ## Roadmap ideas
 
-- Real payments (Stripe web / RevenueCat if wrapped as a mobile app via Capacitor)
-- Server-side scan metering (auth + database) instead of `localStorage`
+- RevenueCat subscription (`pro_weekly`) wired to the `pro:{deviceId}` flag in Redis
 - Scan history & shareable result cards (built-in TikTok content loop)
 - Multi-timeframe analysis: upload 2–3 screenshots of the same asset
 

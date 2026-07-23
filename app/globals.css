@@ -343,6 +343,47 @@ ul.plain li::before {
   text-align: center;
 }
 
+.legal h1 {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.legal .updated {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.legal h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 18px 0 6px;
+}
+
+.legal p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.legal a {
+  color: var(--accent);
+}
+
+.footer-links {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.footer-links a {
+  color: var(--muted);
+  text-decoration: underline;
+  margin: 0 8px;
+}
+
 .paywall-overlay {
   position: fixed;
   inset: 0;

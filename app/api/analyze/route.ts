@@ -2,9 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { AnalysisSchema } from "@/lib/analysis";
+import {
+  FREE_SCANS,
+  getScansUsed,
+  incrementScans,
+  isPro,
+  meteringEnabled,
+} from "@/lib/metering";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
+
+// The Capacitor shell serves the UI from capacitor://localhost (iOS) or
+// https://localhost (Android), so the hosted API must answer cross-origin.
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, X-Device-Id",
+};
+
+function json(body: unknown, status = 200) {
+  return NextResponse.json(body, { status, headers: CORS_HEADERS });
+}
+
+export function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
 
 const ALLOWED_MEDIA_TYPES = [
   "image/jpeg",
@@ -28,28 +51,52 @@ Phrase entry, stop and target fields as hypothetical, conditional scenarios ("if
 
 export async function POST(req: NextRequest) {
   if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json(
-      { error: "Server is missing ANTHROPIC_API_KEY" },
-      { status: 500 },
-    );
+    return json({ error: "Server is missing ANTHROPIC_API_KEY" }, 500);
   }
 
   let body: { image?: string; mediaType?: string };
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    return json({ error: "Invalid JSON body" }, 400);
   }
 
   const { image, mediaType } = body;
   if (!image || typeof image !== "string") {
-    return NextResponse.json({ error: "Missing image" }, { status: 400 });
+    return json({ error: "Missing image" }, 400);
   }
   if (image.length > MAX_BASE64_LENGTH) {
-    return NextResponse.json({ error: "Image too large" }, { status: 413 });
+    return json({ error: "Image too large" }, 413);
   }
   if (!ALLOWED_MEDIA_TYPES.includes(mediaType as AllowedMediaType)) {
-    return NextResponse.json({ error: "Unsupported image type" }, { status: 400 });
+    return json({ error: "Unsupported image type" }, 400);
+  }
+
+  // Server-side free-scan gate (enforced when Upstash is configured).
+  const deviceId = req.headers.get("x-device-id")?.slice(0, 64) ?? null;
+  let metered = false;
+  if (meteringEnabled() && deviceId) {
+    try {
+      if (!(await isPro(deviceId))) {
+        const used = await getScansUsed(deviceId);
+        if (used >= FREE_SCANS) {
+          return json(
+            {
+              error: "Out of free scans",
+              code: "limit_reached",
+              scans_used: used,
+              scans_limit: FREE_SCANS,
+            },
+            402,
+          );
+        }
+        metered = true;
+      }
+    } catch (e) {
+      // Metering outage should not block paying-intent users entirely;
+      // log and fall through to the client-side gate.
+      console.error("Metering unavailable", e);
+    }
   }
 
   const client = new Anthropic();
@@ -83,28 +130,40 @@ export async function POST(req: NextRequest) {
     });
 
     if (response.stop_reason === "refusal" || !response.parsed_output) {
-      return NextResponse.json(
+      return json(
         { error: "The analysis could not be completed for this image." },
-        { status: 422 },
+        422,
       );
     }
 
-    return NextResponse.json({ analysis: response.parsed_output });
+    const analysis = response.parsed_output;
+
+    let scansUsed: number | null = null;
+    if (metered && deviceId && analysis.is_chart) {
+      try {
+        scansUsed = await incrementScans(deviceId);
+      } catch (e) {
+        console.error("Failed to record scan", e);
+      }
+    }
+
+    return json({
+      analysis,
+      scans_used: scansUsed,
+      scans_limit: meteringEnabled() ? FREE_SCANS : null,
+    });
   } catch (error) {
     if (error instanceof Anthropic.RateLimitError) {
-      return NextResponse.json(
+      return json(
         { error: "Too many requests right now — try again in a minute." },
-        { status: 429 },
+        429,
       );
     }
     if (error instanceof Anthropic.APIError) {
       console.error("Anthropic API error", error.status, error.message);
-      return NextResponse.json(
-        { error: "Analysis service error — try again." },
-        { status: 502 },
-      );
+      return json({ error: "Analysis service error — try again." }, 502);
     }
     console.error("Unexpected error in /api/analyze", error);
-    return NextResponse.json({ error: "Unexpected error" }, { status: 500 });
+    return json({ error: "Unexpected error" }, 500);
   }
 }

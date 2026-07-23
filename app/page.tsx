@@ -5,7 +5,21 @@ import type { Analysis } from "@/lib/analysis";
 
 const FREE_SCANS = 3;
 const SCANS_KEY = "chart-detector-scans-used";
+const DEVICE_KEY = "chart-detector-device-id";
 const MAX_DIMENSION = 2000;
+
+// Empty for the web deployment (same-origin); set NEXT_PUBLIC_API_BASE_URL
+// for the Capacitor mobile builds, which call the hosted backend.
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+
+function getDeviceId(): string {
+  let id = localStorage.getItem(DEVICE_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(DEVICE_KEY, id);
+  }
+  return id;
+}
 
 type Status = "idle" | "ready" | "analyzing" | "done" | "error";
 
@@ -85,13 +99,24 @@ export default function Home() {
 
     try {
       const { base64, mediaType } = await fileToResizedJpeg(file);
-      const res = await fetch("/api/analyze", {
+      const res = await fetch(`${API_BASE}/api/analyze`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Device-Id": getDeviceId(),
+        },
         body: JSON.stringify({ image: base64, mediaType }),
       });
 
       const data = await res.json();
+      if (res.status === 402) {
+        // Server-side gate says this device is out of free scans.
+        localStorage.setItem(SCANS_KEY, String(data.scans_used ?? FREE_SCANS));
+        setScansUsed(data.scans_used ?? FREE_SCANS);
+        setStatus("ready");
+        setShowPaywall(true);
+        return;
+      }
       if (!res.ok) {
         throw new Error(data.error || "Analysis failed");
       }
@@ -101,7 +126,11 @@ export default function Home() {
       setStatus("done");
 
       if (result.is_chart) {
-        const used = readScansUsed() + 1;
+        // Prefer the server's authoritative count when metering is on.
+        const used =
+          typeof data.scans_used === "number"
+            ? data.scans_used
+            : readScansUsed() + 1;
         localStorage.setItem(SCANS_KEY, String(used));
         setScansUsed(used);
       }
@@ -346,6 +375,10 @@ export default function Home() {
         Trading involves substantial risk of loss — always do your own
         research.
       </p>
+      <div className="footer-links">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/terms">Terms of Use</a>
+      </div>
 
       {showPaywall && (
         <div className="paywall-overlay" onClick={() => setShowPaywall(false)}>

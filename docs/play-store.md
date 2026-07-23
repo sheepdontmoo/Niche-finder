@@ -1,0 +1,127 @@
+# Google Play submission kit — ChartDetector
+
+Everything needed to go from this repo to a live Play Store listing. The Android project is already generated, icon/splash assets are in place, and the release build pipeline is verified (`bundleRelease` produces a signed `.aab`).
+
+## 1. One-time local setup
+
+```bash
+npm install
+# Android SDK + Java 17+ required (Android Studio installs both)
+```
+
+Generate your **upload keystore** (do this once, back it up — losing it is painful):
+
+```bash
+keytool -genkeypair -v -keystore android/upload-keystore.jks \
+  -alias upload -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Create `android/key.properties` (gitignored):
+
+```
+storeFile=upload-keystore.jks
+storePassword=YOUR_PASSWORD
+keyAlias=upload
+keyPassword=YOUR_PASSWORD
+```
+
+## 2. Deploy the backend first
+
+The mobile app is a static shell that calls your hosted API:
+
+1. Deploy this repo to Vercel (or any Node host) with env vars:
+   - `ANTHROPIC_API_KEY` (required)
+   - `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (recommended — enables server-side scan limits; free tier at upstash.com)
+2. Note the URL, e.g. `https://chartdetector.vercel.app`
+
+## 3. Build the release bundle
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://your-deployment.vercel.app npm run build:mobile
+npx cap sync android
+cd android && ./gradlew bundleRelease
+```
+
+Output: `android/app/build/outputs/bundle/release/app-release.aab` — this is what you upload to Play Console.
+
+Bump `versionCode`/`versionName` in `android/app/build.gradle` for every subsequent upload.
+
+## 4. Play Console setup
+
+Create the app in [Play Console](https://play.google.com/console) → **Create app** → App name "ChartDetector", App/Free (with in-app purchases later).
+
+### Store listing copy (ready to paste)
+
+**App name:** ChartDetector: AI Chart Analysis
+
+**Short description (80 chars max):**
+> Snap any trading chart. Get instant AI analysis: trend, patterns, key levels.
+
+**Full description:**
+> Point your camera at any trading chart — stocks, crypto, forex — or upload a screenshot, and ChartDetector's AI reads it in seconds.
+>
+> WHAT YOU GET PER SCAN
+> • Trend direction and overall bias with a confidence score
+> • Chart patterns detected (flags, triangles, double tops…) and what they typically signal
+> • Support and resistance levels read from the chart
+> • Indicator observations (RSI, MACD, volume, moving averages)
+> • A hypothetical setup: entry scenario, invalidation, targets
+> • Honest risk notes on anything that weakens the setup
+>
+> WORKS EVERYWHERE
+> Any platform, any broker, any market — if you can screenshot it, ChartDetector can read it.
+>
+> IMPORTANT
+> ChartDetector provides AI-generated educational analysis only. It is not financial advice, and past patterns do not predict future results. Trading involves substantial risk of loss.
+
+**Category:** Finance
+**Tags:** technical analysis, trading, charts
+
+### Privacy policy URL
+
+Point to your deployment: `https://your-deployment.vercel.app/privacy` (page ships in this repo).
+
+### Data safety form answers
+
+| Question | Answer |
+|---|---|
+| Does your app collect or share user data? | Yes |
+| Photos — collected? | Yes — chart image, sent for processing (analysis), not shared for ads, ephemeral processing, optional (user-initiated) |
+| Device or other IDs — collected? | Yes — anonymous app-generated ID for scan limits; not linked to identity; not shared |
+| Data encrypted in transit? | Yes (HTTPS) |
+| Can users request deletion? | Yes (contact email; also clearing app data removes the device ID) |
+| Anything shared with third parties? | Chart images processed by AI provider (Anthropic) as a service provider |
+
+### Content rating questionnaire
+
+Category: Utility/Productivity/Finance. No user-generated content, no violence, no gambling (the app does not facilitate real-money wagering — say **no** to gambling questions; it's an analysis tool). Expected rating: Everyone / PEGI 3. The "simulated gambling" question is also **no**.
+
+### Finance app declarations
+
+Play may ask finance-specific questions. ChartDetector is **not** a trading app, does not execute trades, does not hold funds, and is not a personal financial advisory service — it provides general educational analysis of user-supplied images. Keep the disclaimer visible in screenshots you upload.
+
+## 5. Monetization (after first approval)
+
+The paywall UI ships as a stub. To charge:
+
+1. Play Console → Monetize → Products → Subscriptions → create `pro_weekly` ($9.99/week).
+2. Integrate [RevenueCat](https://www.revenuecat.com) (`@revenuecat/purchases-capacitor`) — it wraps Play Billing and handles receipts/entitlements.
+3. On purchase, call your backend to set `pro:{deviceId} = 1` in Redis (see `lib/metering.ts`) so the API stops gating scans.
+
+Tip: you can also ship v1 free-only (3 scans/device) to get through first review faster, then add the subscription in an update.
+
+## 6. Submission checklist
+
+- [ ] Backend deployed with `ANTHROPIC_API_KEY` + Upstash metering
+- [ ] `NEXT_PUBLIC_API_BASE_URL` baked into the mobile build
+- [ ] Upload keystore generated and backed up
+- [ ] `bundleRelease` `.aab` uploaded to an internal testing track first
+- [ ] Screenshots: 2–8 phone screenshots (1080×1920+). Capture: hero screen, a result card with verdict, patterns card, paywall
+- [ ] Feature graphic 1024×500 (required)
+- [ ] Privacy policy URL live
+- [ ] Data safety + content rating forms completed
+- [ ] Test on the internal track, then promote to production
+
+## iOS (when the Apple account is ready)
+
+The `ios/` project is already generated with icons/splash. On a Mac: `npm run build:mobile && npx cap sync ios && npx cap open ios`, set the signing team in Xcode, archive, and upload via Xcode Organizer. Apple will require: App Privacy labels (same answers as data safety above), Sign in with Apple only if you add third-party login (we have none), and StoreKit/RevenueCat for the subscription.
