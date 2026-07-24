@@ -1,10 +1,10 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.chartdetector.app",
-  appName: "ChartDetector",
+  appId: "com.litmas.app",
+  appName: "Litmas",
   webDir: "out",
-  backgroundColor: "#0b0f14",
+  backgroundColor: "#0b0d10",
   android: {
     allowMixedContent: false,
   },

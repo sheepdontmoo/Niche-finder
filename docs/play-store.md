@@ -1,4 +1,4 @@
-# Google Play submission kit — ChartDetector
+# Google Play submission kit — Litmas
 
 Everything needed to go from this repo to a live Play Store listing. The Android project is already generated, icon/splash assets are in place, and the release build pipeline is verified (`bundleRelease` produces a signed `.aab`).
 
@@ -32,7 +32,7 @@ The mobile app is a static shell that calls your hosted API:
 1. Deploy this repo to Vercel (or any Node host) with env vars:
    - `ANTHROPIC_API_KEY` (required)
    - `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` (recommended — enables server-side scan limits; free tier at upstash.com)
-2. Note the URL, e.g. `https://chartdetector.vercel.app`
+2. Note the URL, e.g. `https://litmas.vercel.app`
 
 ## 3. Build the release bundle
 
@@ -48,34 +48,43 @@ Bump `versionCode`/`versionName` in `android/app/build.gradle` for every subsequ
 
 ## 4. Play Console setup
 
-Create the app in [Play Console](https://play.google.com/console) → **Create app** → App name "ChartDetector", App/Free (with in-app purchases later).
+Create the app in [Play Console](https://play.google.com/console) → **Create app** → App name "Litmas", App/Free (with in-app purchases later).
 
 ### Store listing copy (ready to paste)
 
-**App name:** ChartDetector: AI Chart Analysis
+**App name:** Litmas — AI Chart Detector
 
 **Short description (80 chars max):**
-> Snap any trading chart. Get instant AI analysis: trend, patterns, key levels.
+> Check every trade. Scan any chart for patterns, levels and a buy/hold/sell read.
 
 **Full description:**
-> Point your camera at any trading chart — stocks, crypto, forex — or upload a screenshot, and ChartDetector's AI reads it in seconds.
+> Litmas is the second opinion on any position — before you enter, and while you're holding.
+>
+> Point your camera at any trading chart — stocks, crypto, forex — or upload a screenshot, and Litmas reads it in seconds.
 >
 > WHAT YOU GET PER SCAN
-> • Trend direction and overall bias with a confidence score
-> • Chart patterns detected (flags, triangles, double tops…) and what they typically signal
-> • Support and resistance levels read from the chart
+> • A plain-language BUY, HOLD or SELL call, with the reasoning in one line
+> • A confidence score, so you know how much the read is worth
+> • Chart patterns detected, and what each one typically signals
+> • Support and resistance levels read off the chart
+> • The level that would prove the read wrong
 > • Indicator observations (RSI, MACD, volume, moving averages)
-> • A hypothetical setup: entry scenario, invalidation, targets
-> • Honest risk notes on anything that weakens the setup
+> • Honest risk notes on anything that weakens the read
+>
+> SAVED HISTORY
+> Every scan is kept on your device so you can look back at what you were seeing at the time.
 >
 > WORKS EVERYWHERE
-> Any platform, any broker, any market — if you can screenshot it, ChartDetector can read it.
+> Any platform, any broker, any market — if you can screenshot it, Litmas can read it.
+>
+> SUBSCRIPTION
+> Litmas starts with free scans. Unlimited checks are a subscription, offered monthly or yearly with a 3-day free trial. Subscriptions renew automatically unless cancelled at least 24 hours before the period ends; manage or cancel any time in your Google Play account settings.
 >
 > IMPORTANT
-> ChartDetector provides AI-generated educational analysis only. It is not financial advice, and past patterns do not predict future results. Trading involves substantial risk of loss.
+> Litmas provides AI-generated educational analysis only. It is not financial advice, and past patterns do not predict future results. Trading involves substantial risk of loss.
 
 **Category:** Finance
-**Tags:** technical analysis, trading, charts
+**Tags:** technical analysis, trading, charts, candlestick
 
 ### Privacy policy URL
 
@@ -98,13 +107,14 @@ Category: Utility/Productivity/Finance. No user-generated content, no violence, 
 
 ### Finance app declarations
 
-Play may ask finance-specific questions. ChartDetector is **not** a trading app, does not execute trades, does not hold funds, and is not a personal financial advisory service — it provides general educational analysis of user-supplied images. Keep the disclaimer visible in screenshots you upload.
+Play may ask finance-specific questions. Litmas is **not** a trading app, does not execute trades, does not hold funds, and is not a personal financial advisory service — it provides general educational analysis of user-supplied images. Keep the disclaimer visible in screenshots you upload.
 
 ## 5. Monetization (after first approval)
 
-The paywall UI ships as a stub. To charge:
+The paywall UI ships complete (3-day trial, monthly + yearly, auto-renew
+disclosure) but is not wired to billing. To charge:
 
-1. Play Console → Monetize → Products → Subscriptions → create `pro_weekly` ($9.99/week).
+1. Play Console → Monetize → Products → Subscriptions → create `litmas_monthly` ($9.99/month) and `litmas_yearly` ($59.99/year), each with a 3-day free trial. Product IDs and prices must match `PLANS` in `app/page.tsx`.
 2. Integrate [RevenueCat](https://www.revenuecat.com) (`@revenuecat/purchases-capacitor`) — it wraps Play Billing and handles receipts/entitlements.
 3. On purchase, call your backend to set `pro:{deviceId} = 1` in Redis (see `lib/metering.ts`) so the API stops gating scans.
 
@@ -117,8 +127,8 @@ Tip: you can also ship v1 free-only (3 scans/device) to get through first review
 
 - `feature-graphic.png` — the required 1024×500 feature graphic
 - `screenshot-1..4.png` — four branded 1080×1920 listing screenshots with
-  bold headline captions (Snap any chart → AI verdict → Patterns & levels →
-  Ideas with risk)
+  bold headline captions (Check every trade → Buy, hold or sell → Patterns &
+  levels → Every scan, saved)
 
 The app icon (512×512 for Play Console) can be exported from
 `resources/icon.png` (it's 1024×1024 — Play accepts it downscaled, or upload

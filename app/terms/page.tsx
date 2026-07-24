@@ -1,12 +1,10 @@
-export const metadata = { title: "Terms of Use — ChartDetector" };
+export const metadata = { title: "Terms of Use — Litmas" };
 
 export default function Terms() {
   return (
     <main>
       <div className="header">
-        <div className="logo">
-          Chart<span>Detector</span>
-        </div>
+        <div className="wordmark">Litmas</div>
       </div>
       <div className="legal">
         <h1>Terms of Use</h1>
@@ -14,7 +12,7 @@ export default function Terms() {
 
         <h2>1. Educational tool only</h2>
         <p>
-          ChartDetector uses AI to describe what is visible in a chart image:
+          Litmas uses AI to describe what is visible in a chart image:
           trend, patterns, and levels. Its output is educational commentary,
           not investment advice, a recommendation, or a solicitation to buy or
           sell any security or asset. AI output can be wrong. Never trade
@@ -30,11 +28,18 @@ export default function Terms() {
 
         <h2>3. Subscriptions</h2>
         <p>
-          Free usage is limited to a number of scans per device. Paid plans
-          unlock additional scans and are billed through the app store you
-          purchased from (or our web payment provider). You can cancel at any
-          time in your store subscription settings; access continues until the
-          end of the paid period.
+          Free usage is limited to a number of scans per device. Beyond that,
+          Litmas is a subscription, offered monthly or yearly and preceded by a
+          3-day free trial.
+        </p>
+        <p>
+          Subscriptions renew automatically at the end of each period unless
+          cancelled at least 24 hours before that period ends, and your store
+          account is charged for renewal within 24 hours of the period ending.
+          If you do not cancel before the free trial ends, the trial converts
+          into a paid subscription. You can cancel at any time in your store
+          account settings; access continues until the end of the period you
+          have already paid for.
         </p>
 
         <h2>4. Acceptable use</h2>
@@ -61,7 +66,7 @@ export default function Terms() {
         <p>Questions? Email basdesignco@gmail.com.</p>
 
         <p>
-          <a href="/">← Back to ChartDetector</a>
+          <a href="/">← Back to Litmas</a>
         </p>
       </div>
     </main>

@@ -1,12 +1,10 @@
-export const metadata = { title: "Privacy Policy — ChartDetector" };
+export const metadata = { title: "Privacy Policy — Litmas" };
 
 export default function Privacy() {
   return (
     <main>
       <div className="header">
-        <div className="logo">
-          Chart<span>Detector</span>
-        </div>
+        <div className="wordmark">Litmas</div>
       </div>
       <div className="legal">
         <h1>Privacy Policy</h1>
@@ -24,6 +22,12 @@ export default function Privacy() {
           random identifier stored on your device. It is used only to count
           free scans and unlock purchases. It is not linked to your name,
           email, contacts, or any other personal information.
+        </p>
+        <p>
+          <strong>Your scan history stays on your device.</strong> Saved
+          analyses — including the small thumbnail of each chart — are stored
+          locally in the app and are never uploaded to us. Clearing the app&apos;s
+          data, or tapping Clear history, removes them permanently.
         </p>
         <p>
           <strong>What we do not collect.</strong> We do not collect your
@@ -55,7 +59,7 @@ export default function Privacy() {
 
         <h2>Not financial advice</h2>
         <p>
-          ChartDetector provides AI-generated educational analysis only. It is
+          Litmas provides AI-generated educational analysis only. It is
           not investment, financial, legal, or tax advice.
         </p>
 
@@ -63,7 +67,7 @@ export default function Privacy() {
         <p>Questions? Email basdesignco@gmail.com.</p>
 
         <p>
-          <a href="/">← Back to ChartDetector</a>
+          <a href="/">← Back to Litmas</a>
         </p>
       </div>
     </main>

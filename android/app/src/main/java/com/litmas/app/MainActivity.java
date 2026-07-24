@@ -1,4 +1,4 @@
-package com.chartdetector.app;
+package com.litmas.app;
 
 import com.getcapacitor.BridgeActivity;
 

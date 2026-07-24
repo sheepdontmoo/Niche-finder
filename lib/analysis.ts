@@ -16,13 +16,20 @@ export const AnalysisSchema = z.object({
     .string()
     .nullable()
     .describe("Chart timeframe if visible, e.g. 15m, 1H, 1D"),
-  trend: z.enum(["bullish", "bearish", "sideways"]),
-  bias: z
-    .enum(["long", "short", "neutral"])
-    .describe("Overall directional bias suggested by the technicals"),
+  trend: z.enum(["up", "down", "sideways"]).describe("Direction of the trend"),
+  call: z
+    .enum(["BUY", "HOLD", "SELL"])
+    .describe(
+      "The plain-language read on this chart as it stands. BUY when the technicals favour opening or adding to a long, SELL when they favour exiting or shorting, HOLD when the chart is unclear, mid-range, or the setup has not confirmed.",
+    ),
+  call_reason: z
+    .string()
+    .describe(
+      "One sentence, plain English, explaining the call in terms a non-technical trader understands",
+    ),
   confidence: z
     .number()
-    .describe("Confidence in the analysis, 0-100"),
+    .describe("Confidence in the call, 0-100. Be honest — low when the chart is unclear."),
   patterns: z
     .array(
       z.object({
@@ -40,17 +47,10 @@ export const AnalysisSchema = z.object({
   indicators: z
     .array(z.string())
     .describe("Observations about any visible indicators (RSI, MACD, volume, MAs)"),
-  entry_idea: z
+  invalidation: z
     .string()
     .nullable()
-    .describe("A hypothetical entry scenario, phrased conditionally"),
-  stop_loss_idea: z
-    .string()
-    .nullable()
-    .describe("Where invalidation of the setup would occur"),
-  take_profit_ideas: z
-    .array(z.string())
-    .describe("Hypothetical targets if the setup plays out"),
+    .describe("The level or condition that would prove this read wrong"),
   risk_notes: z
     .string()
     .describe("Key risks, caveats, or conflicting signals in this chart"),
@@ -60,3 +60,4 @@ export const AnalysisSchema = z.object({
 });
 
 export type Analysis = z.infer<typeof AnalysisSchema>;
+export type Call = Analysis["call"];

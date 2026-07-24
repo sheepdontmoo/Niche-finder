@@ -19,14 +19,17 @@ Litmas · "AI candlestick & chart detector" · "Check every trade." · single
 test strip logo · orange `#FF6A00` only · fallback name Second. Do not
 reopen, re-pitch or re-litigate any of it — build to the brief.
 
-"ChartDetector" everywhere in the code is a **placeholder** predating the
-lock. It must be replaced with Litmas before any store upload, since the
-Android `applicationId` is permanent once published.
+**The brand is applied.** The old "ChartDetector" placeholder is gone from
+the codebase. Bundle id is `com.litmas.app` on both platforms — permanent
+once the first build is uploaded, so do not change it after that.
 
-Rename scope when applying the brand: app UI copy, `app/layout.tsx`
-metadata, legal pages, `capacitor.config.ts` (appId + appName), Android
-(`build.gradle` namespace/applicationId, `MainActivity` package,
-`strings.xml`), iOS (`Info.plist`, `project.pbxproj`),
-`scripts/make-assets.py` + `scripts/make-store-assets.py`, regenerate
-`resources/` + platform icons + `store-assets/`, and update `README.md` +
-`docs/play-store.md`.
+Regenerating brand assets:
+
+```bash
+python3 scripts/make-assets.py                  # icon + splash source art
+npx @capacitor/assets generate --android --ios  # platform icon sets
+python3 scripts/make-store-assets.py --shots-dir <app-screenshots>
+```
+
+Keep the one-colour rule when touching UI: `--brand` is the only tinted
+token in `app/globals.css`. Greys are ground. Nothing else gets a hue.
