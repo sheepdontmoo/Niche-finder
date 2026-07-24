@@ -40,8 +40,16 @@ export async function incrementScans(deviceId: string): Promise<number> {
 }
 
 export async function isPro(deviceId: string): Promise<boolean> {
-  // Set `pro:{deviceId}` to "1" from your billing webhook (RevenueCat /
-  // Play Billing / Stripe) to unlock unlimited scans for a device.
+  // Written by the RevenueCat webhook (app/api/revenuecat/route.ts), keyed by
+  // the same anonymous device id the client sends as appUserID.
   const result = await redis(["GET", `pro:${deviceId}`]);
   return result === "1";
+}
+
+export async function setPro(deviceId: string, active: boolean): Promise<void> {
+  if (active) {
+    await redis(["SET", `pro:${deviceId}`, "1"]);
+  } else {
+    await redis(["DEL", `pro:${deviceId}`]);
+  }
 }

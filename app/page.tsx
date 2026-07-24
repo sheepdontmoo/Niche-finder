@@ -9,6 +9,14 @@ import {
   saveEntry,
   type HistoryEntry,
 } from "@/lib/history";
+import {
+  getPlans,
+  initBilling,
+  isSubscribed,
+  purchase,
+  restore,
+  type Plan,
+} from "@/lib/billing";
 
 const FREE_SCANS = 3;
 const SCANS_KEY = "litmas-scans-used";
@@ -224,14 +232,60 @@ export default function Home() {
   const [plan, setPlan] = useState<PlanKey>("yearly");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [openEntry, setOpenEntry] = useState<HistoryEntry | null>(null);
+  const [pro, setPro] = useState(false);
+  const [livePlans, setLivePlans] = useState<Plan[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [billingMsg, setBillingMsg] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setScansUsed(readScansUsed());
     setHistory(readHistory());
+    (async () => {
+      if (!(await initBilling(getDeviceId()))) return;
+      setPro(await isSubscribed());
+      setLivePlans(await getPlans());
+    })();
   }, []);
 
-  const scansLeft = Math.max(0, FREE_SCANS - scansUsed);
+  const scansLeft = pro ? Infinity : Math.max(0, FREE_SCANS - scansUsed);
+
+  async function buy() {
+    const chosen = livePlans.find((p) => p.key === plan);
+    if (!chosen) {
+      setBillingMsg(
+        "Subscriptions aren't available here — open Litmas on your phone to subscribe.",
+      );
+      return;
+    }
+    setBusy(true);
+    setBillingMsg(null);
+    const outcome = await purchase(chosen);
+    setBusy(false);
+    if (outcome.status === "subscribed") {
+      setPro(true);
+      setShowPaywall(false);
+    } else if (outcome.status === "error") {
+      setBillingMsg(outcome.message);
+    } else if (outcome.status === "unavailable") {
+      setBillingMsg("Subscriptions aren't available on this device.");
+    }
+  }
+
+  async function restorePurchases() {
+    setBusy(true);
+    setBillingMsg(null);
+    const outcome = await restore();
+    setBusy(false);
+    if (outcome.status === "subscribed") {
+      setPro(true);
+      setShowPaywall(false);
+    } else if (outcome.status === "error") {
+      setBillingMsg(outcome.message);
+    } else if (outcome.status === "unavailable") {
+      setBillingMsg("Subscriptions aren't available on this device.");
+    }
+  }
 
   function handleFile(f: File) {
     if (!f.type.startsWith("image/")) {
@@ -327,10 +381,12 @@ export default function Home() {
             <div className="subtitle">AI candlestick &amp; chart detector</div>
           </div>
         </div>
-        <div className={`pill ${scansLeft > 0 ? "" : "on"}`}>
-          {scansLeft > 0
-            ? `${scansLeft} free scan${scansLeft === 1 ? "" : "s"}`
-            : "Start free trial"}
+        <div className={`pill ${pro || scansLeft > 0 ? "" : "on"}`}>
+          {pro
+            ? "Pro"
+            : scansLeft > 0
+              ? `${scansLeft} free scan${scansLeft === 1 ? "" : "s"}`
+              : "Start free trial"}
         </div>
       </div>
 
@@ -581,44 +637,62 @@ export default function Home() {
             </p>
 
             <div className="plans">
-              {(Object.keys(PLANS) as PlanKey[]).map((key) => (
-                <button
-                  key={key}
-                  type="button"
-                  className="plan"
-                  aria-pressed={plan === key}
-                  onClick={() => setPlan(key)}
-                >
-                  <span>
-                    <span className="name">
-                      {key === "yearly" ? "Yearly" : "Monthly"}
+              {(Object.keys(PLANS) as PlanKey[]).map((key) => {
+                const live = livePlans.find((p) => p.key === key);
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    className="plan"
+                    aria-pressed={plan === key}
+                    onClick={() => setPlan(key)}
+                  >
+                    <span>
+                      <span className="name">
+                        {key === "yearly" ? "Yearly" : "Monthly"}
+                      </span>
+                      <span className="terms">
+                        3 days free, then billed{" "}
+                        {key === "yearly" ? "annually" : "monthly"}
+                      </span>
                     </span>
-                    <span className="terms">
-                      3 days free, then billed{" "}
-                      {key === "yearly" ? "annually" : "monthly"}
+                    <span className="price">
+                      {live?.priceString ?? PLANS[key].price}
+                      <small>{PLANS[key].per}</small>
                     </span>
-                  </span>
-                  <span className="price">
-                    {PLANS[key].price}
-                    <small>{PLANS[key].per}</small>
-                  </span>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
 
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowPaywall(false)}
-            >
-              Start 3-day free trial
+            {billingMsg && (
+              <div className="error-box" style={{ marginTop: 12 }}>
+                {billingMsg}
+              </div>
+            )}
+
+            <button className="btn btn-primary" onClick={buy} disabled={busy}>
+              {busy ? "Working…" : "Start 3-day free trial"}
             </button>
-            <button
-              className="btn-quiet"
-              style={{ display: "block", margin: "10px auto 0" }}
-              onClick={() => setShowPaywall(false)}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: 18,
+                marginTop: 10,
+              }}
             >
-              Not now
-            </button>
+              <button
+                className="btn-quiet"
+                onClick={restorePurchases}
+                disabled={busy}
+              >
+                Restore purchase
+              </button>
+              <button className="btn-quiet" onClick={() => setShowPaywall(false)}>
+                Not now
+              </button>
+            </div>
 
             <p className="renew">
               Your subscription renews automatically at the end of each period

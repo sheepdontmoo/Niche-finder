@@ -109,16 +109,36 @@ Category: Utility/Productivity/Finance. No user-generated content, no violence, 
 
 Play may ask finance-specific questions. Litmas is **not** a trading app, does not execute trades, does not hold funds, and is not a personal financial advisory service — it provides general educational analysis of user-supplied images. Keep the disclaimer visible in screenshots you upload.
 
-## 5. Monetization (after first approval)
+## 5. Monetization — built, needs configuring
 
-The paywall UI ships complete (3-day trial, monthly + yearly, auto-renew
-disclosure) but is not wired to billing. To charge:
+Play Billing is wired through RevenueCat (`lib/billing.ts`, plugin
+`@revenuecat/purchases-capacitor`). The AAB already contains the billing
+client and the `com.android.vending.BILLING` permission. What's left is
+account configuration:
 
-1. Play Console → Monetize → Products → Subscriptions → create `litmas_monthly` ($9.99/month) and `litmas_yearly` ($59.99/year), each with a 3-day free trial. Product IDs and prices must match `PLANS` in `app/page.tsx`.
-2. Integrate [RevenueCat](https://www.revenuecat.com) (`@revenuecat/purchases-capacitor`) — it wraps Play Billing and handles receipts/entitlements.
-3. On purchase, call your backend to set `pro:{deviceId} = 1` in Redis (see `lib/metering.ts`) so the API stops gating scans.
+1. **Play Console → Monetize → Products → Subscriptions.** Create
+   `litmas_monthly` and `litmas_yearly`, each with a **3-day free trial**.
+2. **RevenueCat → Project.** Connect the Play account, import both products,
+   put them in an Offering as the *Monthly* and *Annual* packages, and create
+   an entitlement with the identifier **`pro`** (this exact string is in
+   `lib/billing.ts`).
+3. **API keys.** Copy the public Google Play SDK key into
+   `NEXT_PUBLIC_REVENUECAT_ANDROID_KEY` and rebuild the mobile bundle. Without
+   it the paywall renders but cannot sell.
+4. **Webhook.** RevenueCat → Integrations → Webhooks → URL
+   `https://<your-deployment>/api/revenuecat`, Authorization header set to the
+   same value as `REVENUECAT_WEBHOOK_SECRET`. This mirrors entitlements into
+   Redis so the API stops gating scans for subscribers.
 
-Tip: you can also ship v1 free-only (3 scans/device) to get through first review faster, then add the subscription in an update.
+Prices shown in the paywall come from the store at runtime; the constants in
+`app/page.tsx` are only a fallback for the web build.
+
+**Store requirements already handled:** 3-day trial, monthly + yearly
+auto-renewing plans, the auto-renew/cancellation disclosure on the paywall, a
+**Restore purchase** button, and links to Terms and Privacy from the paywall.
+
+Tip: you can still ship v1 free-only to clear first review faster — just leave
+the RevenueCat key unset and the paywall stays non-transacting.
 
 ## 6. Store graphics — already made
 

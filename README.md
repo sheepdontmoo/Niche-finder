@@ -25,7 +25,9 @@ vision with structured outputs), wrapped for iOS/Android with **Capacitor**.
 4. The scan is saved to on-device history (`lib/history.ts` — localStorage,
    capped at 30 entries, never uploaded).
 5. Free scans are metered per anonymous device ID server-side; beyond that the
-   paywall offers a 3-day trial with monthly or yearly auto-renewing plans.
+   paywall sells a 3-day trial with monthly or yearly auto-renewing plans
+   through Play Billing / StoreKit (RevenueCat — `lib/billing.ts`), with a
+   webhook at `/api/revenuecat` mirroring entitlements into Redis.
 
 Non-chart images are detected (`is_chart: false`) and don't consume a scan.
 
@@ -71,9 +73,20 @@ npx @capacitor/assets generate --android --ios # platform icon sets
 python3 scripts/make-store-assets.py --shots-dir <dir-of-app-screenshots>
 ```
 
+## Billing
+
+Configure RevenueCat and the Play subscription products per
+[`docs/play-store.md`](docs/play-store.md) §5, then set
+`NEXT_PUBLIC_REVENUECAT_ANDROID_KEY` and `REVENUECAT_WEBHOOK_SECRET`. Leave the
+key unset and the paywall still renders but cannot transact — useful for a
+free-only v1.
+
+> **Note:** `@revenuecat/purchases-capacitor` ships a `prepare` script that can
+> wipe its own `dist/` during an install. If imports from it suddenly fail, run
+> `rm -rf node_modules/@revenuecat && npm install --ignore-scripts`.
+
 ## Roadmap
 
-- RevenueCat / Play Billing wired to the `pro:{deviceId}` flag in Redis
 - Shareable result cards
 - Multi-timeframe: several screenshots of the same asset in one check
 
