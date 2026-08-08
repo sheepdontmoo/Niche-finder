@@ -48,14 +48,25 @@ see "Closing the corpus gap" below.
 
 | Command | Use for |
 |---|---|
-| **`/acq`** | **Start here.** Full diagnosis — finds the one binding constraint and prescribes against it |
+| **`/acq-ask`** | **Start here.** Describe the problem in plain English, get the constraint and the turnaround. No form. |
+| `/acq` | Full structured diagnosis when you have the numbers |
 | `/acq-offer` | Grand Slam Offer — Value Equation, obstacle stack, enhancers, MAGIC naming |
 | `/acq-money` | Money model — the four offer types, CAC payback, cash ratios |
 | `/acq-ads` | CRO test plans, 6×5 ad assembly, 70/20/10 scaling, VSL copy |
 | `/acq-sales` | Speed to lead, closer rubric, scripts, incentives, team structure |
+| `/acq-objections` | Objections guide — every reason they say no, and what dissolves it |
+| `/acq-funnel` | Funnel design and repair — stages, targets, where the money leaks |
 
-Run `/acq` first. The specialist commands assume you already know the constraint —
-using them without a diagnosis is how you end up optimising the wrong thing well.
+`/acq-ask` is the front door and mirrors how people actually use ACQ Vantage:
+state the problem, get the answer. It asks at most three questions — only the
+ones that would change the prescription — and never demands a filled-in intake.
+
+`/acq` is the same engine with the numbers up front. The specialist commands
+assume you already know the constraint; using them without a diagnosis is how you
+optimise the wrong thing well.
+
+The specialist set mirrors the artefacts ACQ AI's own internal prompts produce —
+scripts, offers, funnels, objections guides, VSLs and sales systems.
 
 ---
 

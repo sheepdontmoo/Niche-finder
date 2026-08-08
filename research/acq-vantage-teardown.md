@@ -339,3 +339,66 @@ the chosen niche — not $1M. It might be $100k revenue, 10 placements, 50 units
 - https://www.prnewswire.com/news-releases/acquisitioncom-launches-acq-ventures-to-partner-with-visionary-tech-founders-and-entrepreneurs-302500130.html
 - https://revenuegeeks.com/software/skool/who-owns-skool
 - https://sharran.com/episode306/
+
+---
+
+## Appendix — the AI itself (research pass 2, 2026-08-08)
+
+Added after clips surfaced describing "ACQ Advantage" as a bot you prompt with
+your biggest problem to get an instant turnaround.
+
+### The name
+
+**There is no product called "ACQ Advantage."** Searching that spelling returns
+ACQ Vantage. It is a mishearing of "Vantage" in spoken clips. The AI inside it is
+"ACQ AI".
+
+### What the bot actually is
+
+Independently corroborated, and consistent with §5:
+
+- Acquisition.com's own wording: *"powered by state-of-the-art providers"*,
+  answers *"grounded in the principles behind $100M Offers, Leads, and Models."*
+- A published replica (jimvd.xyz/blog/acq-ai) reproduced it by **uploading the
+  three $100M books to Google NotebookLM** and querying it. The author found the
+  process "surprisingly easy."
+
+So: retrieval over a corpus on a frontier model. Not a trained model. The
+architecture is trivially replicable; the private corpus is not.
+
+### The 14 internal prompts
+
+The most useful new finding. ACQ AI is driven by **14 plug-and-play prompts built
+from Acquisition.com frameworks** — described as the same prompts used internally
+to build:
+
+> scripts, offers, funnels, objections guides, VSLs, and entire sales systems
+
+That is the agent roster. Our command set covers scripts, offers, VSLs and sales
+systems; **objections guides and funnels were the gaps**, now closed by
+`/acq-objections` and `/acq-funnel`.
+
+### The counter-view worth recording
+
+A practitioner analysis (Jason Dellatolla, LinkedIn) argues the *free* ACQ AI is
+principally a **data-capture play**: users supply revenue figures, operational
+problems and strategic decisions, and receive "generic advice formatted in
+Hormozi's voice." The framing is strategic rather than accusatory — build
+something that solves a real mass-market need while accumulating proprietary
+market intelligence about which industries are struggling and which founders are
+desperate.
+
+This dovetails with §8: the membership is deal flow, and the free tool is the
+top of that same funnel.
+
+**Both things are true at once.** Operators do get real value — good frameworks
+delivered decisively beat vague advice, and most businesses genuinely haven't
+applied them. And the output is largely public knowledge in a confident voice.
+That combination is precisely why a replica is viable.
+
+### Implication for our build
+
+The gap was never the reasoning — it was the **front door**. Testimonials
+describe zero friction: state the problem, get the answer. A tool that demands a
+completed intake form before it will speak has lost before it starts. Hence
+`/acq-ask`: at most three questions, and only the ones that change the answer.
