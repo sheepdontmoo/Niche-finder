@@ -99,11 +99,16 @@ business. Not underperforming; never attempted.
 Rungs above it are clean: conversion can't bind with a zero numerator, sales has
 no leads to close, and the offer has already closed two international federations.
 
-**The structural asset:** the market is *enumerable*. Roughly 35 Olympic IFs, ~40
-further IOC-recognised IFs, ~350–400 continental confederations, plus NGBs with
-real output volume — a tight ICP of perhaps **300–800 organisations worldwide**,
-every one publicly listed and contactable. The entire market fits in a
-spreadsheet and can be worked in a quarter by one person.
+**The structural asset:** the market is *enumerable* — and smaller than first
+estimated. Tier 1 is **~71 international federations, all named** in
+`281sport-prospects.md` (30 ASOIF full + 40 ARISF + 7 winter, less 6 overlaps).
+The 300–800 figure in the original diagnosis was too loose; it only holds once
+continental confederations and NGBs are added as tiers 2 and 3.
+
+**The finding that changes the approach: WAKO is an ARISF member.** The existing
+client sits inside a 40-federation association that meets at a General Assembly
+and at SportAccord. This is not cold outreach to strangers — it is a referral
+problem with a warm anchor already in the room.
 
 **Why paid ads are wrong here:** Meta cannot target "Secretary General of an
 international federation." The account already shows the symptom — the SupaDesign
