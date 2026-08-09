@@ -24,8 +24,9 @@ private call transcripts.** So:
 | Frameworks | Books + internal playbooks | `knowledge/acq/` — reconstructed from the books and published workshop write-ups |
 | Diagnosis | Portfolio director process | `/acq` — the constraint ladder + ratio thresholds |
 | Business context | Metrics submitted 2 months pre-workshop | `business-context/*.md` |
-| Agents | VSL, Meta ads, sales scripts | `/acq-ads`, `/acq-sales`, `/acq-offer`, `/acq-money` |
-| Private corpus | 50k hrs of client calls | **Missing — this is the real gap** |
+| Agents | Scripts, offers, funnels, objections, VSLs, sales systems | `/acq-ads`, `/acq-sales`, `/acq-offer`, `/acq-money`, `/acq-objections`, `/acq-funnel` |
+| Data in | Typed by the operator | `/acq-sync` for Meta Ads; money still manual |
+| Private corpus | 50k hrs of client calls | `knowledge/experience/` — **starts empty, and that is the real gap** |
 
 The frameworks are public — they're in three books Hormozi sells and in write-ups
 by people who paid $35–45k for the workshops. What's genuinely proprietary is the
@@ -40,7 +41,11 @@ see "Closing the corpus gap" below.
 2. Fill it in. Mark anything untracked as `NOT TRACKED` — **don't guess.** An
    untracked number is a finding in its own right, and a guessed one poisons the
    diagnosis.
-3. Run `/acq <business>`
+3. Run `/acq-sync <business>` to pull live ad numbers in
+4. Run `/acq <business>`
+
+Or skip all of it and run `/acq-ask "<your problem>"`. See
+`business-context/281sport.md` for a worked example.
 
 ---
 
@@ -56,6 +61,7 @@ see "Closing the corpus gap" below.
 | `/acq-sales` | Speed to lead, closer rubric, scripts, incentives, team structure |
 | `/acq-objections` | Objections guide — every reason they say no, and what dissolves it |
 | `/acq-funnel` | Funnel design and repair — stages, targets, where the money leaks |
+| `/acq-sync` | Pull live Meta Ads spend, leads and CPL into `business-context/` |
 
 `/acq-ask` is the front door and mirrors how people actually use ACQ Vantage:
 state the problem, get the answer. It asks at most three questions — only the
@@ -81,6 +87,8 @@ scripts, offers, funnels, objections guides, VSLs and sales systems.
 | `knowledge/acq/04-marketing-ops.md` | CRO, page structure, ad assembly, 70/20/10, media incentives |
 | `knowledge/acq/05-sales.md` | Speed to lead, 31-point rubric, operationalising behaviour, player-coach |
 | `knowledge/acq/06-people-scaling.md` | Hiring for traits, operational clarity, retention, status ladders |
+| `knowledge/acq/07-benchmarks.md` | Funnel benchmarks **per business model** — the generic numbers are the Services row |
+| `knowledge/experience/` | Our own measured results. Overrides the rules of thumb once populated |
 
 ---
 
@@ -121,10 +129,18 @@ private corpus they don't have — ours:
 - Historical P&Ls and cohort retention data
 - Post-mortems on things that failed and why
 
-Drop these in `business-context/` (or a `corpus/` directory) and they become
-retrievable context. Hormozi's advantage is pattern recognition across 1,000
-companies; ours is total recall on *our own*. For our own businesses that is
-frequently the more useful of the two.
+These go in **`knowledge/experience/`**, one file per entry. The directory exists
+and is nearly empty — it is worth nothing until it isn't, and it only fills if
+every diagnosis deposits something.
+
+The rule that makes it useful: **record the prediction before the outcome, and
+never edit it afterwards.** An entry recording only what happened teaches nothing,
+because hindsight rewrites it into something obvious. A wrong prediction left
+standing is the only entry here with real information in it.
+
+Hormozi's advantage is pattern recognition across 1,000 companies; ours is total
+recall on *our own*. For our own businesses that is frequently the more useful of
+the two — but only after it has some entries in it.
 
 ---
 

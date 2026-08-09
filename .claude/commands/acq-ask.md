@@ -91,8 +91,9 @@ money is in this.
 
 - **Gross profit, never revenue.** Correct them if they reason in revenue.
 - **One constraint.** Naming three is a failure of diagnosis, not thoroughness.
-- **Match the stage.** Check revenue before prescribing. $10M advice given to a
-  $500k business is actively harmful.
+- **Match the stage.** Check revenue before prescribing. Ten-million-dollar advice
+  given to a half-million-dollar business is actively harmful. (No `$` before a
+  digit anywhere in this file — it expands as a positional argument.)
 - **More before New.** Check whether the existing channel was ever scaled.
 - **Don't invent numbers.** "Don't know" stays unknown, and gets named as a gap.
 - **Thresholds are rules of thumb**, not laws — say so when one is load-bearing

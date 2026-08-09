@@ -62,8 +62,13 @@ Show the arithmetic. If a ratio can't be computed, say which input is missing an
 what it would take to get it.
 
 ### 3. Locate the growth level
-$0–1M / $1–3M / $3–10M / $10–100M. All subsequent advice must match the level —
-$10M advice given to a $500k business is actively harmful.
+Bands, in USD: 0–1M / 1–3M / 3–10M / 10–100M. All subsequent advice must match the
+level — ten-million-dollar advice given to a half-million-dollar business is
+actively harmful.
+
+(Written without dollar signs on purpose: a literal `$` followed by a digit is
+consumed as a positional argument when this command expands, which silently
+replaced these bands with fragments of the user's input.)
 
 ### 4. Name the ONE binding constraint
 Walk the ladder in order — Leads → Sales → LTV → Margin/Cash → People/Ops. Name

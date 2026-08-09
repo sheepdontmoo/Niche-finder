@@ -402,3 +402,54 @@ The gap was never the reasoning — it was the **front door**. Testimonials
 describe zero friction: state the problem, get the answer. A tool that demands a
 completed intake form before it will speak has lost before it starts. Hence
 `/acq-ask`: at most three questions, and only the ones that change the answer.
+
+---
+
+## Appendix B — branded ad creative (2026-08-09)
+
+A second Instagram ad, materially different from the one in §7.
+
+### The creative
+
+Black hero panel, Hormozi in a weighted vest, headline:
+
+> **50,000 HOURS OF CONSULTING. ONE AI.**
+> Rated #1 for business by members.
+> `[ JOIN VANTAGE ]`
+
+Below it, on white:
+
+> **Everything inside Vantage $8,000 for the full year.**
+> Billed annually, about $667 a month.
+
+Caption: *"We just opened Vantage. Right now you can join as a Founding Member…"*
+
+### What's new
+
+1. **The per-month reframe.** $8,000/yr restated as "about $667 a month" —
+   in the ad itself, not on the pricing page. Same money, smaller unit, and it
+   quietly lands Premium next to Standard's $1,000/mo so the annual reads as
+   *cheaper per month* than the monthly tier. That comparison is the whole point.
+2. **"Founding Member" + "We just opened."** Scarcity framing, and worth noting
+   against §1: Vantage has been running since roughly July 2025 with ~1,500
+   members, and absorbed Scale Advisory in March 2026. "Just opened" is
+   positioning, not chronology.
+3. **"Rated #1 for business by members."** New social-proof line, unattributed —
+   no source, no sample, no rating body named.
+
+### Correction to §7
+
+§7 records their paid creative as a zero-cost repurposed podcast clip with a text
+box over it. This ad is a produced, branded asset. So they run **at least two
+creative families in paid** — cheap borrowed-trust clips *and* polished direct
+response.
+
+That also weakens the §5 claim that the corpus is framed in different units by
+channel ("50,000 hours" for the site, "$31M across 1,026 businesses" for ads).
+The hours framing is running in paid here. The observation that they vary the
+unit stands; the neat channel split does not.
+
+### Still unchanged
+
+Price, the four levers, the verified-revenue gate, and the funnel shape are all
+as recorded. Nothing here alters the build.
