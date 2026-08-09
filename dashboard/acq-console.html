@@ -1,0 +1,876 @@
+<title>ACQ Console</title>
+<style>
+  /* ---- Tokens: light is the base, complete on bare :root ---- */
+  :root {
+    --ground:#F5F6FA; --surface:#FFFFFF; --surface-2:#EEF0F7; --surface-3:#E4E7F1;
+    --line:#DDE1EC; --line-strong:#C3C9DA;
+    --ink:#12162A; --ink-2:#4A5270; --ink-3:#666E8C;
+    --accent:#4338CA; --accent-soft:#EDEDFC; --accent-line:#C7C6F5;
+    --pass:#0F7B4F; --pass-soft:#E4F3EC;
+    --warn:#A85A08; --warn-soft:#FBEEDF;
+    --fail:#B3261E; --fail-soft:#FBE9E7;
+    --shadow:0 1px 2px rgba(18,22,42,.06), 0 8px 24px -12px rgba(18,22,42,.14);
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0B0E17; --surface:#141827; --surface-2:#1D2233; --surface-3:#262C40;
+      --line:#2A3145; --line-strong:#3B435C;
+      --ink:#E9ECF7; --ink-2:#A8B0C9; --ink-3:#828BA8;
+      --accent:#8B94F5; --accent-soft:#1C2040; --accent-line:#3A4180;
+      --pass:#3DBE86; --pass-soft:#12291F;
+      --warn:#E0A040; --warn-soft:#2A2114;
+      --fail:#F0736A; --fail-soft:#2E1917;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0B0E17; --surface:#141827; --surface-2:#1D2233; --surface-3:#262C40;
+    --line:#2A3145; --line-strong:#3B435C;
+    --ink:#E9ECF7; --ink-2:#A8B0C9; --ink-3:#828BA8;
+    --accent:#8B94F5; --accent-soft:#1C2040; --accent-line:#3A4180;
+    --pass:#3DBE86; --pass-soft:#12291F;
+    --warn:#E0A040; --warn-soft:#2A2114;
+    --fail:#F0736A; --fail-soft:#2E1917;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  h1,h2,h3 { text-wrap:balance; margin:0; font-weight:640; letter-spacing:-.01em; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:3px; }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } }
+
+  /* ---- Shell ---- */
+  .wrap { max-width:1360px; margin:0 auto; padding:24px 20px 64px; }
+  header.top {
+    display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end; justify-content:space-between;
+    padding-bottom:18px; margin-bottom:22px; border-bottom:1px solid var(--line);
+  }
+  .brandline { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .brand { font-size:20px; font-weight:680; letter-spacing:-.02em; }
+  .brand-mark {
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); border:1px solid var(--accent-line); background:var(--accent-soft);
+    padding:3px 7px; border-radius:4px;
+  }
+  .sub { color:var(--ink-3); font-size:13px; max-width:60ch; }
+  .bizbar { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+  /* ---- Controls ---- */
+  select, input, button, textarea {
+    font-family:inherit; font-size:14px; color:var(--ink);
+    background:var(--surface); border:1px solid var(--line-strong); border-radius:7px;
+    padding:7px 9px;
+  }
+  input.num, select { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  button {
+    cursor:pointer; font-weight:560; background:var(--surface-2); border-color:var(--line-strong);
+    transition:background .12s ease, border-color .12s ease;
+  }
+  button:hover { background:var(--surface-3); }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  :root[data-theme="dark"] button.primary, :root:not([data-theme="light"]) button.primary { color:#0B0E17; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) button.primary { color:#fff; } }
+  button.primary:hover { filter:brightness(1.08); }
+
+  /* ---- Layout ---- */
+  .console { display:grid; grid-template-columns:340px minmax(0,1fr); gap:22px; align-items:start; }
+  @media (max-width:1000px) { .console { grid-template-columns:1fr; } }
+
+  .panel {
+    background:var(--surface); border:1px solid var(--line); border-radius:12px;
+    box-shadow:var(--shadow);
+  }
+  .panel > h2 {
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
+    padding:14px 16px 0; font-family:var(--mono); font-weight:600;
+  }
+  .panel-body { padding:14px 16px 16px; display:flex; flex-direction:column; gap:14px; }
+
+  /* ---- Intake ---- */
+  .rail { position:sticky; top:16px; max-height:calc(100vh - 32px); overflow-y:auto; }
+  @media (max-width:1000px) { .rail { position:static; max-height:none; } }
+  fieldset { border:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  legend {
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--ink-3); padding:0 0 4px; width:100%; border-bottom:1px solid var(--line); margin-bottom:4px;
+  }
+  .field { display:grid; grid-template-columns:1fr 96px; gap:10px; align-items:center; }
+  .field label { font-size:13px; color:var(--ink-2); }
+  .field .hint { display:block; font-size:11px; color:var(--ink-3); }
+  .field input, .field select { width:100%; padding:5px 7px; font-size:13px; text-align:right; }
+  .field select { text-align:left; }
+  .field-wide { grid-template-columns:1fr; }
+  .field-wide input { text-align:left; }
+  .toggles { display:flex; gap:6px; flex-wrap:wrap; }
+  .toggle {
+    font-size:12px; padding:5px 9px; border-radius:999px; border:1px solid var(--line-strong);
+    background:var(--surface-2); color:var(--ink-2); cursor:pointer; font-weight:520;
+  }
+  .toggle[aria-pressed="true"] { background:var(--accent-soft); border-color:var(--accent-line); color:var(--accent); }
+
+  /* ---- Verdict ---- */
+  .verdict {
+    display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; align-items:center;
+    padding:18px 20px; border-radius:12px; border:1px solid var(--line);
+    background:var(--surface); box-shadow:var(--shadow); border-left:5px solid var(--ink-3);
+  }
+  .verdict[data-sev="fail"] { border-left-color:var(--fail); }
+  .verdict[data-sev="warn"] { border-left-color:var(--warn); }
+  .verdict[data-sev="pass"] { border-left-color:var(--pass); }
+  .verdict-label {
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
+  }
+  .verdict h2 { font-size:26px; margin:2px 0 4px; letter-spacing:-.025em; }
+  .verdict p { margin:0; color:var(--ink-2); font-size:14px; max-width:70ch; }
+  .stagechip {
+    text-align:right; font-family:var(--mono); font-size:12px; color:var(--ink-2);
+    border:1px solid var(--line); background:var(--surface-2); border-radius:8px; padding:8px 12px; white-space:nowrap;
+  }
+  .stagechip b { display:block; font-size:15px; color:var(--ink); }
+
+  /* ---- Meters ---- */
+  .meters { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; }
+  .meter { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 16px; box-shadow:var(--shadow); }
+  .meter-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .meter-name { font-size:12.5px; color:var(--ink-2); font-weight:560; }
+  .meter-val { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:29px; font-weight:600; letter-spacing:-.03em; line-height:1.1; margin:6px 0 2px; }
+  .meter-target { font-family:var(--mono); font-size:11.5px; color:var(--ink-3); }
+  .track { position:relative; height:7px; border-radius:4px; background:var(--surface-3); margin-top:11px; overflow:hidden; }
+  .track-fill { position:absolute; inset:0 auto 0 0; border-radius:4px; background:var(--accent); }
+  .track-mark { position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink-2); border-radius:1px; }
+  .pill {
+    display:inline-flex; align-items:center; gap:5px; font-family:var(--mono);
+    font-size:10.5px; letter-spacing:.07em; text-transform:uppercase; font-weight:600;
+    padding:3px 7px; border-radius:5px; border:1px solid transparent; white-space:nowrap;
+  }
+  .pill[data-sev="pass"] { color:var(--pass); background:var(--pass-soft); border-color:var(--pass); }
+  .pill[data-sev="warn"] { color:var(--warn); background:var(--warn-soft); border-color:var(--warn); }
+  .pill[data-sev="fail"] { color:var(--fail); background:var(--fail-soft); border-color:var(--fail); }
+  .pill[data-sev="none"] { color:var(--ink-3); background:var(--surface-2); border-color:var(--line-strong); }
+
+  /* ---- Ladder ---- */
+  .ladder { display:flex; flex-direction:column; gap:0; }
+  .rung {
+    display:grid; grid-template-columns:26px minmax(0,1fr) auto; gap:12px; align-items:start;
+    padding:11px 0; border-bottom:1px solid var(--line);
+  }
+  .rung:last-child { border-bottom:none; }
+  .rung-idx { font-family:var(--mono); font-size:12px; color:var(--ink-3); padding-top:2px; }
+  .rung-name { font-weight:600; font-size:14.5px; }
+  .rung-why { color:var(--ink-2); font-size:13px; margin-top:2px; }
+  .rung[data-state="binding"] .rung-name { color:var(--fail); }
+  .rung[data-state="binding"] { background:var(--fail-soft); margin:0 -12px; padding-left:12px; padding-right:12px; border-radius:8px; border-bottom-color:transparent; }
+
+  /* ---- Funnel chart ---- */
+  .chart { display:flex; flex-direction:column; gap:9px; margin-top:4px; }
+  .bar-row { display:grid; grid-template-columns:132px minmax(0,1fr) 74px; gap:12px; align-items:center; }
+  .bar-label { font-size:13px; color:var(--ink-2); }
+  .bar-track { position:relative; height:22px; background:var(--surface-2); border-radius:4px; }
+  .bar-fill { position:absolute; left:0; top:0; bottom:0; border-radius:0 4px 4px 0; background:var(--accent); min-width:3px; }
+  .bar-fill[data-weak="true"] { background:var(--fail); }
+  .bar-bench { position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--ink-3); border-radius:1px; }
+  .bar-val { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; text-align:right; color:var(--ink); }
+  .bar-row:hover .bar-track { outline:2px solid var(--accent-line); outline-offset:2px; }
+  .chart-key { font-size:12px; color:var(--ink-3); display:flex; gap:16px; flex-wrap:wrap; margin-top:6px; }
+  .keydot { display:inline-block; width:9px; height:9px; border-radius:2px; vertical-align:middle; margin-right:5px; }
+
+  /* ---- Prescriptions ---- */
+  ol.rx { list-style:none; counter-reset:rx; padding:0; margin:0; display:flex; flex-direction:column; gap:12px; }
+  ol.rx li { counter-increment:rx; display:grid; grid-template-columns:24px minmax(0,1fr); gap:12px; }
+  ol.rx li::before {
+    content:counter(rx); font-family:var(--mono); font-size:12px; color:var(--accent);
+    background:var(--accent-soft); border:1px solid var(--accent-line); border-radius:5px;
+    width:24px; height:24px; display:grid; place-items:center; font-weight:600;
+  }
+  .rx-do { font-weight:600; font-size:14.5px; }
+  .rx-meta { color:var(--ink-2); font-size:13px; margin-top:2px; }
+  .rx-meta code {
+    font-family:var(--mono); font-size:12px; background:var(--surface-2);
+    border:1px solid var(--line); border-radius:4px; padding:1px 5px;
+  }
+
+  .gaps { display:flex; flex-wrap:wrap; gap:7px; }
+  .gap-chip {
+    font-family:var(--mono); font-size:11.5px; color:var(--warn);
+    background:var(--warn-soft); border:1px solid var(--warn); border-radius:5px; padding:3px 8px;
+  }
+  .note { font-size:12.5px; color:var(--ink-3); }
+  table.portfolio { width:100%; border-collapse:collapse; font-size:13.5px; }
+  table.portfolio th {
+    text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--ink-3); font-weight:600; padding:0 10px 8px 0; border-bottom:1px solid var(--line);
+  }
+  table.portfolio td { padding:9px 10px 9px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  table.portfolio tr:last-child td { border-bottom:none; }
+  .tbl-scroll { overflow-x:auto; }
+  .stack { display:flex; flex-direction:column; gap:22px; }
+  .rowbtns { display:flex; gap:8px; flex-wrap:wrap; }
+  textarea { width:100%; min-height:120px; font-family:var(--mono); font-size:12px; resize:vertical; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="brandline">
+        <span class="brand">ACQ Console</span>
+        <span class="brand-mark">Constraint Diagnostic</span>
+      </div>
+      <p class="sub">Enter what you know. The console computes the ratios, walks the constraint ladder, and names the one thing binding your growth. Leave anything untracked blank — gaps are reported, never guessed.</p>
+    </div>
+    <div class="bizbar">
+      <select id="bizSelect" aria-label="Select business"></select>
+      <button id="addBiz">New</button>
+      <button id="delBiz">Delete</button>
+    </div>
+  </header>
+
+  <div class="console">
+    <!-- INTAKE -->
+    <form class="panel rail" id="intake" autocomplete="off">
+      <h2>Intake</h2>
+      <div class="panel-body">
+        <fieldset>
+          <legend>Identity</legend>
+          <div class="field field-wide"><label for="f_name">Business name</label><input id="f_name" data-k="name" type="text"></div>
+          <div class="field"><label for="f_model">Model</label>
+            <select id="f_model" data-k="model">
+              <option value="">—</option><option>Services</option><option>Product</option><option>SaaS</option>
+              <option>Ecommerce</option><option>Local</option><option>Info</option><option>Other</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Size</legend>
+          <div class="field"><label for="f_rev">Revenue <span class="hint">trailing 12mo</span></label><input class="num" id="f_rev" data-k="revenue" type="number" min="0" step="1000"></div>
+          <div class="field"><label for="f_gp">Gross profit <span class="hint">trailing 12mo</span></label><input class="num" id="f_gp" data-k="grossProfit" type="number" min="0" step="1000"></div>
+          <div class="field"><label for="f_owner">Owner hrs/wk <span class="hint">in delivery</span></label><input class="num" id="f_owner" data-k="ownerHours" type="number" min="0" max="100"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Unit economics</legend>
+          <div class="field"><label for="f_cac">CAC <span class="hint">incl. labour</span></label><input class="num" id="f_cac" data-k="cac" type="number" min="0" step="1"></div>
+          <div class="field"><label for="f_ltgp">LTGP <span class="hint">lifetime gross profit</span></label><input class="num" id="f_ltgp" data-k="ltgp" type="number" min="0" step="1"></div>
+          <div class="field"><label for="f_fecc">FECC <span class="hint">cash in first 30d</span></label><input class="num" id="f_fecc" data-k="fecc" type="number" min="0" step="1"></div>
+          <div class="field"><label for="f_pb">Payback <span class="hint">days</span></label><input class="num" id="f_pb" data-k="payback" type="number" min="0" step="1"></div>
+          <div class="field"><label for="f_cust">New customers <span class="hint">per month</span></label><input class="num" id="f_cust" data-k="customers" type="number" min="0"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Funnel — conversion %</legend>
+          <div class="field"><label for="f_optin">Visit → opt-in</label><input class="num" id="f_optin" data-k="cvOptin" type="number" min="0" max="100" step="0.1"></div>
+          <div class="field"><label for="f_book">Opt-in → booked</label><input class="num" id="f_book" data-k="cvBooked" type="number" min="0" max="100" step="0.1"></div>
+          <div class="field"><label for="f_show">Booked → showed</label><input class="num" id="f_show" data-k="cvShowed" type="number" min="0" max="100" step="0.1"></div>
+          <div class="field"><label for="f_close">Showed → closed</label><input class="num" id="f_close" data-k="cvClosed" type="number" min="0" max="100" step="0.1"></div>
+          <div class="field"><label for="f_leads">Leads <span class="hint">per month</span></label><input class="num" id="f_leads" data-k="leads" type="number" min="0"></div>
+          <div class="field"><label for="f_stl">Speed to lead <span class="hint">median seconds</span></label><input class="num" id="f_stl" data-k="speedToLead" type="number" min="0"></div>
+          <div class="field"><label for="f_load">Page load <span class="hint">seconds</span></label><input class="num" id="f_load" data-k="pageLoad" type="number" min="0" step="0.1"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Channels running</legend>
+          <div class="toggles" id="channels">
+            <button type="button" class="toggle" data-ch="warm">Warm outreach</button>
+            <button type="button" class="toggle" data-ch="content">Content</button>
+            <button type="button" class="toggle" data-ch="cold">Cold outreach</button>
+            <button type="button" class="toggle" data-ch="paid">Paid ads</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Money model</legend>
+          <div class="toggles" id="offers">
+            <button type="button" class="toggle" data-of="attraction">Attraction</button>
+            <button type="button" class="toggle" data-of="upsell">Upsell at POS</button>
+            <button type="button" class="toggle" data-of="downsell">Downsell</button>
+            <button type="button" class="toggle" data-of="continuity">Continuity</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Sales team</legend>
+          <div class="field"><label for="f_closers">Closers + setters</label><input class="num" id="f_closers" data-k="closers" type="number" min="0"></div>
+          <div class="toggles" id="salesflags">
+            <button type="button" class="toggle" data-sf="rubric">Call rubric in use</button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Data</legend>
+          <div class="rowbtns">
+            <button type="button" id="exportMd">Export Markdown</button>
+            <button type="button" id="exportJson">Export JSON</button>
+            <button type="button" id="importBtn">Import JSON</button>
+          </div>
+          <p class="note">Saved in this browser only. Export Markdown to drop into <code>business-context/</code>.</p>
+        </fieldset>
+      </div>
+    </form>
+
+    <!-- DIAGNOSIS -->
+    <div class="stack">
+      <div class="verdict" id="verdict" data-sev="none">
+        <div>
+          <div class="verdict-label">Binding constraint</div>
+          <h2 id="v-name">Awaiting numbers</h2>
+          <p id="v-why">Fill in revenue, CAC and at least one funnel step to get a diagnosis.</p>
+          <p class="note" id="v-focus" style="margin-top:8px"></p>
+        </div>
+        <div class="stagechip">Growth level<b id="v-stage">—</b></div>
+      </div>
+
+      <section class="meters" id="meters" aria-label="Threshold ratios"></section>
+
+      <section class="panel">
+        <h2>Constraint ladder</h2>
+        <div class="panel-body">
+          <p class="note" style="margin:0">Exactly one rung binds at a time. Each assumes the rungs above it are healthy — fixing the binding one exposes the next.</p>
+          <div class="ladder" id="ladder"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Funnel conversion</h2>
+        <div class="panel-body">
+          <div class="chart" id="funnel"></div>
+          <div class="chart-key">
+            <span><span class="keydot" style="background:var(--accent)"></span>Your rate</span>
+            <span><span class="keydot" style="background:var(--fail)"></span>Weakest step</span>
+            <span><span class="keydot" style="background:var(--ink-3);width:2px;height:12px;border-radius:1px"></span>Benchmark</span>
+          </div>
+          <div id="prize"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Prescription</h2>
+        <div class="panel-body">
+          <ol class="rx" id="rx"></ol>
+          <p class="note" id="nextc"></p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Gaps in the data</h2>
+        <div class="panel-body">
+          <div class="gaps" id="gaps"></div>
+          <p class="note">An untracked number is a finding, not a blocker. Nothing here is estimated on your behalf.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="portfolioPanel" hidden>
+        <h2>Portfolio</h2>
+        <div class="panel-body">
+          <div class="tbl-scroll"><table class="portfolio" id="portfolio"></table></div>
+        </div>
+      </section>
+
+      <section class="panel" id="ioPanel" hidden>
+        <h2 id="ioTitle">Export</h2>
+        <div class="panel-body">
+          <textarea id="ioText" spellcheck="false" aria-label="Data"></textarea>
+          <div class="rowbtns">
+            <button type="button" class="primary" id="ioApply" hidden>Load this data</button>
+            <button type="button" id="ioClose">Close</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var BENCH = { cvOptin:30, cvBooked:40, cvShowed:70, cvClosed:25 };
+  var STEPS = [
+    { k:"cvOptin",  label:"Visit → opt-in" },
+    { k:"cvBooked", label:"Opt-in → booked" },
+    { k:"cvShowed", label:"Booked → showed" },
+    { k:"cvClosed", label:"Showed → closed" }
+  ];
+  var KEY = "acq-console-v1";
+  var state = { businesses: [], active: 0 };
+
+  function blank(name) {
+    return { name: name || "New business", model:"", revenue:null, grossProfit:null, ownerHours:null,
+      cac:null, ltgp:null, fecc:null, payback:null, customers:null,
+      cvOptin:null, cvBooked:null, cvShowed:null, cvClosed:null, leads:null, speedToLead:null, pageLoad:null,
+      channels:[], offers:["attraction"], closers:null, salesflags:[] };
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) { var p = JSON.parse(raw); if (p && p.businesses && p.businesses.length) { state = p; return; } }
+    } catch (e) {}
+    state = { businesses:[blank("My business")], active:0 };
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function biz() { return state.businesses[state.active]; }
+  var money = function (n) {
+    if (n == null) return "—";
+    if (Math.abs(n) >= 1e6) return "$" + (n/1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + "M";
+    if (Math.abs(n) >= 1e3) return "$" + Math.round(n/1e3) + "k";
+    return "$" + Math.round(n);
+  };
+  function has(v) { return v !== null && v !== undefined && v !== "" && !isNaN(v); }
+
+  /* ---------- computation ---------- */
+  function compute(b) {
+    var m = {};
+    m.margin = (has(b.revenue) && has(b.grossProfit) && b.revenue > 0) ? b.grossProfit / b.revenue : null;
+    m.ltgpCac = (has(b.ltgp) && has(b.cac) && b.cac > 0) ? b.ltgp / b.cac : null;
+    m.feccCac = (has(b.fecc) && has(b.cac) && b.cac > 0) ? b.fecc / b.cac : null;
+    m.payback = has(b.payback) ? b.payback : null;
+
+    m.steps = STEPS.map(function (s) {
+      var v = has(b[s.k]) ? b[s.k] : null;
+      return { k:s.k, label:s.label, value:v, bench:BENCH[s.k], ratio: v == null ? null : v / BENCH[s.k] };
+    });
+    var known = m.steps.filter(function (s) { return s.value != null; });
+    m.overall = known.length === STEPS.length
+      ? m.steps.reduce(function (a, s) { return a * (s.value/100); }, 1) * 100 : null;
+    m.weakest = null;
+    known.forEach(function (s) { if (!m.weakest || s.ratio < m.weakest.ratio) m.weakest = s; });
+
+    // Growth level
+    var r = b.revenue;
+    m.stage = !has(r) ? null : r < 1e6 ? "$0–1M" : r < 3e6 ? "$1–3M" : r < 10e6 ? "$3–10M" : "$10–100M";
+    m.stageFocus = !m.stage ? "" :
+      m.stage === "$0–1M" ? "Validate the core offer. One offer, one channel, one avatar." :
+      m.stage === "$1–3M" ? "Avoid distraction. Double down on what already works." :
+      m.stage === "$3–10M" ? "Build and empower a team. Move from doing to managing." :
+      "Subject-matter experts per department.";
+    return m;
+  }
+
+  /* ---------- the constraint ladder ---------- */
+  function diagnose(b, m) {
+    var R = [];
+    function rung(key, name, state, why) { R.push({ key:key, name:name, state:state, why:why }); }
+
+    // 0 — Conversion, the hidden constraint. Checked before Leads is accepted.
+    if (m.weakest && m.weakest.ratio < 0.7) {
+      rung("conversion", "Conversion (hidden constraint)", "fail",
+        m.weakest.label + " converts at " + m.weakest.value + "%, against a " + m.weakest.bench +
+        "% benchmark — " + Math.round((1 - m.weakest.ratio) * 100) + "% below. Buying more traffic to feed this is the most expensive available mistake.");
+    } else if (!m.weakest) {
+      rung("conversion", "Conversion (hidden constraint)", "unknown", "No funnel data entered. This is checked before leads for a reason — verify it before spending on traffic.");
+    } else {
+      rung("conversion", "Conversion (hidden constraint)", "ok", "Every measured step is within range of its benchmark.");
+    }
+
+    // 1 — Leads
+    var chCount = (b.channels || []).length;
+    if (chCount === 0) {
+      rung("leads", "Leads", "unknown", "No channels marked. Of the Core Four — warm, content, cold, paid — which are actually running at real volume?");
+    } else if (chCount === 1 && (b.channels[0] === "paid")) {
+      rung("leads", "Leads", "warn", "Paid ads only. The sequencing rule is warm → content → cold → paid; paid amplifies whatever is already true, including a broken funnel.");
+    } else if (!has(b.leads)) {
+      rung("leads", "Leads", "unknown", chCount + " of the Core Four running, but lead volume isn't tracked.");
+    } else {
+      rung("leads", "Leads", "ok", (b.leads) + " leads/mo across " + chCount + " of the Core Four. Exhaust More before reaching for New.");
+    }
+
+    // 2 — Sales
+    var salesIssues = [];
+    if (has(b.speedToLead) && b.speedToLead > 60) salesIssues.push("speed to lead is " + b.speedToLead + "s against a 60s target — conversion falls roughly 70% → 20% once a lead leaves without booking");
+    if (has(b.cvClosed) && b.cvClosed < BENCH.cvClosed * 0.7) salesIssues.push("close rate " + b.cvClosed + "% vs ~" + BENCH.cvClosed + "% benchmark");
+    if (has(b.cvShowed) && b.cvShowed < BENCH.cvShowed * 0.8) salesIssues.push("show rate " + b.cvShowed + "% vs ~" + BENCH.cvShowed + "% benchmark");
+    if (has(b.closers) && b.closers >= 3 && (b.salesflags || []).indexOf("rubric") === -1) salesIssues.push(b.closers + " reps with no call rubric — performance can't be diagnosed or delegated");
+    if (salesIssues.length) rung("sales", "Sales", "fail", salesIssues.join("; ") + ".");
+    else if (!has(b.speedToLead) && !has(b.cvClosed)) rung("sales", "Sales", "unknown", "No close rate or speed-to-lead recorded.");
+    else rung("sales", "Sales", "ok", "Close rate, show rate and speed to lead are within range.");
+
+    // 3 — LTV
+    var offers = b.offers || [];
+    var ltvIssues = [];
+    if (m.ltgpCac != null && m.ltgpCac < 3) ltvIssues.push("LTGP:CAC is " + m.ltgpCac.toFixed(2) + " against a target above 3" + (m.ltgpCac < 1 ? " — below 1, growth actively destroys the business" : " — growth doesn't compound here"));
+    if (offers.indexOf("continuity") === -1) ltvIssues.push("no continuity offer, so lifetime gross profit is capped at a single transaction");
+    if (ltvIssues.length) rung("ltv", "LTV", "fail", ltvIssues.join("; ") + ".");
+    else if (m.ltgpCac == null) rung("ltv", "LTV", "unknown", "LTGP or CAC missing — the return on acquisition can't be computed.");
+    else rung("ltv", "LTV", "ok", "LTGP:CAC " + m.ltgpCac.toFixed(2) + ", above the 3× threshold.");
+
+    // 4 — Margin / cash
+    var cashIssues = [];
+    if (m.feccCac != null && m.feccCac < 2) cashIssues.push("FECC:CAC is " + m.feccCac.toFixed(2) + " against a target above 2 — you can't collect enough up front to re-fund acquisition, so growth is capped by the balance sheet rather than by demand");
+    if (m.payback != null && m.payback > 30) cashIssues.push("payback takes " + m.payback + " days against a 30-day target, so the same dollar can't be recycled monthly");
+    if (offers.indexOf("upsell") === -1) cashIssues.push("no upsell at point of sale — the highest-intent moment is going unused");
+    if (offers.indexOf("downsell") === -1) cashIssues.push("no downsell, so every 'no' is a fully-funded loss");
+    if (cashIssues.length) rung("cash", "Margin & cash", "fail", cashIssues.join("; ") + ".");
+    else if (m.feccCac == null && m.payback == null) rung("cash", "Margin & cash", "unknown", "FECC and payback period missing.");
+    else rung("cash", "Margin & cash", "ok", "Front-end cash covers acquisition and payback is inside 30 days.");
+
+    // 5 — People / ops
+    var pplIssues = [];
+    if (has(b.ownerHours) && b.ownerHours >= 20 && has(b.revenue) && b.revenue >= 1e6) pplIssues.push("the owner is still " + b.ownerHours + " hrs/wk inside delivery at " + money(b.revenue) + " — at this stage the owner is the constraint");
+    if (m.margin != null && m.margin < 0.3) pplIssues.push("gross margin is " + Math.round(m.margin*100) + "%, thin enough that delivery cost limits what you can spend to grow");
+    if (pplIssues.length) rung("people", "People & ops", "fail", pplIssues.join("; ") + ".");
+    else if (!has(b.ownerHours)) rung("people", "People & ops", "unknown", "Owner hours in delivery not recorded.");
+    else rung("people", "People & ops", "ok", "Owner is out of delivery and margin supports the next stage.");
+
+    var binding = null;
+    for (var i = 0; i < R.length; i++) { if (R[i].state === "fail") { binding = R[i]; R[i].state = "binding"; break; } }
+    return { rungs:R, binding:binding };
+  }
+
+  /* ---------- prescriptions ---------- */
+  var RX = {
+    conversion: [
+      { do:"Run one CRO test per week on the weakest step", meta:"Target a ~50% relative lift, not 5%. Concentrate 80% of the work above the fold on both desktop and mobile.", watch:"step conversion %" },
+      { do:"Audit page load speed", meta:"Roughly 7% of revenue is lost per second of delay. Cheapest win available and it compounds against every future traffic dollar.", watch:"load time (s)" },
+      { do:"Restructure the opt-in page: headline → video/image → testimonials", meta:"All three above the fold where possible. Use incomplete-information bias — blurred assets, locked video — to lift opt-ins.", watch:"opt-in rate" }
+    ],
+    leads: [
+      { do:"Scale what already works before adding anything new", meta:"More, then Better, then New. Most 'the channel stopped working' is actually 'we never scaled it'.", watch:"leads/mo" },
+      { do:"Turn on warm outreach properly", meta:"Contact people who already know you and ask who else they know — don't pitch. Fastest zero-cost path, routinely skipped because it's uncomfortable.", watch:"leads/mo from warm" },
+      { do:"Build a lead magnet good enough to charge for", meta:"Solve a narrow problem completely so it reveals the broader one your paid offer solves.", watch:"cost per lead" }
+    ],
+    sales: [
+      { do:"Get median speed to lead under 60 seconds", meta:"Unbooked applicants go open; first setter claims with a double dial + text; lead stays live 7 days if contacted daily.", watch:"median speed to lead (s)" },
+      { do:"Build a 31-point call rubric and grade weekly", meta:"Score not-quite / good / great. Give feedback on the single lowest component only — multiple corrections produce zero change. Delegate grading to a QC VA.", watch:"close rate %" },
+      { do:"Switch to weekly sales competitions", meta:"Deliver rewards randomly, quickly and publicly. Weekly keeps all seven days live and lets a bad week reset.", watch:"close rate %" }
+    ],
+    ltv: [
+      { do:"Attach a continuity offer to the outcome", meta:"What recurring need does the result create? Recurring revenue is what makes LTGP large enough to clear 3× CAC.", watch:"LTGP:CAC" },
+      { do:"Raise price with a transition date", meta:"Existing clients keep the old price until date X; new clients pay more. Creates urgency without discounting.", watch:"LTGP" },
+      { do:"Fix retention before buying more traffic", meta:"Churn caps lifetime gross profit no matter how good acquisition gets.", watch:"monthly churn %" }
+    ],
+    cash: [
+      { do:"Add an upsell at the point of sale", meta:"The moment right after purchase is the highest-intent moment you will ever have. This is where CAC actually gets paid back.", watch:"payback (days)" },
+      { do:"Add a downsell to every 'no'", meta:"You already paid to acquire that conversation. A modified or lower-priced alternative converts a funded loss into revenue.", watch:"FECC:CAC" },
+      { do:"Pull cash earlier: deposits, annual billing, pre-payment discounts", meta:"Cash timing beats cash amount for growth rate. Earlier beats bigger.", watch:"payback (days)" }
+    ],
+    people: [
+      { do:"Get the owner out of delivery", meta:"Hire for traits and teach the skills. First hires remove the owner from delivery, not from selling.", watch:"owner hrs/wk in delivery" },
+      { do:"Give every role one owner and one number", meta:"The three recurring failures are unclear KPIs, weak hiring filters and inconsistent onboarding. Fix all three as processes, not events.", watch:"gross margin %" },
+      { do:"Unbundle every soft skill into gradeable behaviour", meta:"If it can't be graded it can't be trained. 'Listen actively' becomes nodding, verbal affirmations, and mirroring back in fewer words.", watch:"delivery consistency" }
+    ]
+  };
+  var NEXT = { conversion:"Sales capacity — a better-converting funnel puts more calls on the calendar than the current team can take.",
+    leads:"Sales — more volume exposes close rate and speed to lead.",
+    sales:"Margin and cash — a higher close rate consumes acquisition cash faster than you collect it.",
+    ltv:"Leads — once each customer is worth more, buying more of them becomes the limit.",
+    cash:"Leads — with a 30-day payback you can spend as fast as you collect, so traffic becomes the ceiling.",
+    people:"Marketing — capacity freed up at the top means the funnel has to fill it." };
+
+  /* ---------- render ---------- */
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  function meter(name, value, target, fmt, dir) {
+    var d = el("div", "meter");
+    var top = el("div", "meter-top");
+    top.appendChild(el("span", "meter-name", name));
+    var sev = "none", word = "No data";
+    if (value != null) {
+      var good = dir === "up" ? value >= target : value <= target;
+      var close = dir === "up" ? value >= target * 0.8 : value <= target * 1.5;
+      sev = good ? "pass" : close ? "warn" : "fail";
+      word = good ? "On target" : close ? (dir === "up" ? "Below target" : "Over target") : "Failing";
+    }
+    var p = el("span", "pill", word); p.setAttribute("data-sev", sev); top.appendChild(p);
+    d.appendChild(top);
+    d.appendChild(el("div", "meter-val", value == null ? "—" : fmt(value)));
+    d.appendChild(el("div", "meter-target", "Target " + (dir === "up" ? "> " : "≤ ") + fmt(target)));
+    var track = el("div", "track");
+    var fill = el("div", "track-fill");
+    var pct = value == null ? 0 : dir === "up"
+      ? Math.max(2, Math.min(100, (value / (target * 1.8)) * 100))
+      : Math.max(2, Math.min(100, (1 - Math.min(value, target * 2.5) / (target * 2.5)) * 100));
+    fill.style.width = pct + "%";
+    fill.style.background = sev === "pass" ? "var(--pass)" : sev === "warn" ? "var(--warn)" : sev === "fail" ? "var(--fail)" : "var(--line-strong)";
+    track.appendChild(fill);
+    var mark = el("div", "track-mark");
+    mark.style.left = (dir === "up" ? (1 / 1.8) * 100 : (1 - 1 / 2.5) * 100) + "%";
+    track.appendChild(mark);
+    d.appendChild(track);
+    return d;
+  }
+
+  function render() {
+    var b = biz(), m = compute(b), dx = diagnose(b, m);
+
+    // verdict
+    var v = document.getElementById("verdict");
+    if (dx.binding) {
+      v.setAttribute("data-sev", "fail");
+      document.getElementById("v-name").textContent = dx.binding.name.replace(" (hidden constraint)", "");
+      document.getElementById("v-why").textContent = dx.binding.why;
+    } else {
+      var unknowns = dx.rungs.filter(function (r) { return r.state === "unknown"; }).length;
+      v.setAttribute("data-sev", unknowns > 2 ? "none" : "pass");
+      document.getElementById("v-name").textContent = unknowns > 2 ? "Not enough data" : "No binding constraint found";
+      document.getElementById("v-why").textContent = unknowns > 2
+        ? "Fill in more of the intake — " + unknowns + " rungs can't be evaluated yet."
+        : "Every measured rung is within range. Either the inputs are optimistic, or the constraint is capital or ambition rather than operations.";
+    }
+    var st = document.getElementById("v-stage");
+    st.textContent = m.stage || "—";
+    document.getElementById("v-focus").textContent = m.stageFocus
+      ? "At " + m.stage + ": " + m.stageFocus + " Advice that doesn't match the stage does damage."
+      : "";
+
+    // meters
+    var mt = document.getElementById("meters");
+    mt.textContent = "";
+    mt.appendChild(meter("LTGP : CAC", m.ltgpCac, 3, function (n) { return n.toFixed(2) + "×"; }, "up"));
+    mt.appendChild(meter("FECC : CAC", m.feccCac, 2, function (n) { return n.toFixed(2) + "×"; }, "up"));
+    mt.appendChild(meter("Payback period", m.payback, 30, function (n) { return Math.round(n) + "d"; }, "down"));
+
+    // ladder
+    var L = document.getElementById("ladder");
+    L.textContent = "";
+    dx.rungs.forEach(function (r, i) {
+      var row = el("div", "rung"); row.setAttribute("data-state", r.state);
+      row.appendChild(el("div", "rung-idx", String(i)));
+      var mid = el("div");
+      mid.appendChild(el("div", "rung-name", r.name));
+      mid.appendChild(el("div", "rung-why", r.why));
+      row.appendChild(mid);
+      var word = r.state === "binding" ? "Binding" : r.state === "ok" ? "Clear" : r.state === "fail" ? "At risk" : "No data";
+      var sev = r.state === "binding" ? "fail" : r.state === "ok" ? "pass" : r.state === "fail" ? "warn" : "none";
+      var p = el("span", "pill", word); p.setAttribute("data-sev", sev);
+      row.appendChild(p);
+      L.appendChild(row);
+    });
+
+    // funnel
+    var F = document.getElementById("funnel");
+    F.textContent = "";
+    var maxScale = 100;
+    m.steps.forEach(function (s) {
+      var row = el("div", "bar-row");
+      row.appendChild(el("div", "bar-label", s.label));
+      var track = el("div", "bar-track");
+      if (s.value != null) {
+        var fill = el("div", "bar-fill");
+        fill.style.width = Math.max(1, (s.value / maxScale) * 100) + "%";
+        if (m.weakest && s.k === m.weakest.k && m.weakest.ratio < 1) fill.setAttribute("data-weak", "true");
+        track.appendChild(fill);
+      }
+      var bm = el("div", "bar-bench");
+      bm.style.left = (s.bench / maxScale) * 100 + "%";
+      track.appendChild(bm);
+      row.title = s.label + " — " + (s.value == null ? "not tracked" : s.value + "%") + " · benchmark " + s.bench + "%";
+      row.appendChild(track);
+      row.appendChild(el("div", "bar-val", s.value == null ? "—" : s.value + "%"));
+      F.appendChild(row);
+    });
+
+    // prize
+    var P = document.getElementById("prize");
+    P.textContent = "";
+    if (m.weakest && m.weakest.ratio < 1 && m.weakest.value > 0) {
+      var lift = (m.weakest.bench / m.weakest.value) - 1;
+      var line = el("p", "note");
+      line.style.marginTop = "14px";
+      line.style.color = "var(--ink-2)";
+      line.style.fontSize = "13.5px";
+      line.innerHTML = "<b>The prize:</b> lifting <b>" + m.weakest.label + "</b> from " + m.weakest.value +
+        "% to the " + m.weakest.bench + "% benchmark grows the business <b>" + Math.round(lift * 100) +
+        "%</b> — with no additional traffic" +
+        (m.overall != null ? ". End-to-end conversion would move from " + m.overall.toFixed(2) + "% to " + (m.overall * (1 + lift)).toFixed(2) + "%." : ".");
+      P.appendChild(line);
+    }
+
+    // prescription
+    var X = document.getElementById("rx");
+    X.textContent = "";
+    var key = dx.binding ? dx.binding.key : null;
+    var list = key ? RX[key] : null;
+    if (list) {
+      list.forEach(function (r) {
+        var li = el("li");
+        var d = el("div");
+        d.appendChild(el("div", "rx-do", r.do));
+        var meta = el("div", "rx-meta");
+        meta.textContent = r.meta + " ";
+        var code = el("code", null, "watch: " + r.watch);
+        meta.appendChild(code);
+        d.appendChild(meta);
+        li.appendChild(d);
+        X.appendChild(li);
+      });
+      document.getElementById("nextc").textContent = "Next constraint this will expose — " + NEXT[key];
+    } else {
+      var li2 = el("li");
+      var d2 = el("div");
+      d2.appendChild(el("div", "rx-do", "No prescription yet"));
+      d2.appendChild(el("div", "rx-meta", "Name the binding constraint first. Prescribing before diagnosing is how you optimise the wrong thing well."));
+      li2.appendChild(d2); X.appendChild(li2);
+      document.getElementById("nextc").textContent = "";
+    }
+
+    // gaps
+    var G = document.getElementById("gaps");
+    G.textContent = "";
+    var gapMap = { revenue:"Revenue", grossProfit:"Gross profit", cac:"CAC", ltgp:"LTGP", fecc:"FECC",
+      payback:"Payback period", cvOptin:"Opt-in rate", cvBooked:"Booked rate", cvShowed:"Show rate",
+      cvClosed:"Close rate", leads:"Leads/mo", speedToLead:"Speed to lead", pageLoad:"Page load", ownerHours:"Owner hours" };
+    var any = false;
+    Object.keys(gapMap).forEach(function (k) {
+      if (!has(b[k])) { G.appendChild(el("span", "gap-chip", gapMap[k])); any = true; }
+    });
+    if (!any) G.appendChild(el("span", "note", "Nothing missing — every input is tracked."));
+
+    renderPortfolio();
+    save();
+  }
+
+  function renderPortfolio() {
+    var panel = document.getElementById("portfolioPanel");
+    if (state.businesses.length < 2) { panel.hidden = true; return; }
+    panel.hidden = false;
+    var t = document.getElementById("portfolio");
+    t.textContent = "";
+    var thead = document.createElement("thead");
+    var hr = document.createElement("tr");
+    ["Business", "Level", "Binding constraint", "LTGP:CAC", "FECC:CAC", "Payback"].forEach(function (h) {
+      var th = document.createElement("th"); th.textContent = h; hr.appendChild(th);
+    });
+    thead.appendChild(hr); t.appendChild(thead);
+    var tb = document.createElement("tbody");
+    state.businesses.forEach(function (b, i) {
+      var m = compute(b), dx = diagnose(b, m);
+      var tr = document.createElement("tr");
+      function td(txt, mono) { var c = document.createElement("td"); c.textContent = txt; if (mono) c.className = "num"; tr.appendChild(c); return c; }
+      var first = td(b.name || "Untitled");
+      if (i === state.active) first.style.fontWeight = "650";
+      td(m.stage || "—", true);
+      var c = document.createElement("td");
+      if (dx.binding) {
+        var p = el("span", "pill", dx.binding.name.replace(" (hidden constraint)", ""));
+        p.setAttribute("data-sev", "fail"); c.appendChild(p);
+      } else { c.textContent = "—"; }
+      tr.appendChild(c);
+      td(m.ltgpCac == null ? "—" : m.ltgpCac.toFixed(2) + "×", true);
+      td(m.feccCac == null ? "—" : m.feccCac.toFixed(2) + "×", true);
+      td(m.payback == null ? "—" : Math.round(m.payback) + "d", true);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  /* ---------- form wiring ---------- */
+  function fillForm() {
+    var b = biz();
+    document.querySelectorAll("[data-k]").forEach(function (inp) {
+      var v = b[inp.getAttribute("data-k")];
+      inp.value = (v === null || v === undefined) ? "" : v;
+    });
+    document.querySelectorAll("#channels .toggle").forEach(function (t) {
+      t.setAttribute("aria-pressed", (b.channels || []).indexOf(t.dataset.ch) > -1 ? "true" : "false");
+    });
+    document.querySelectorAll("#offers .toggle").forEach(function (t) {
+      t.setAttribute("aria-pressed", (b.offers || []).indexOf(t.dataset.of) > -1 ? "true" : "false");
+    });
+    document.querySelectorAll("#salesflags .toggle").forEach(function (t) {
+      t.setAttribute("aria-pressed", (b.salesflags || []).indexOf(t.dataset.sf) > -1 ? "true" : "false");
+    });
+  }
+  function fillSelect() {
+    var s = document.getElementById("bizSelect");
+    s.textContent = "";
+    state.businesses.forEach(function (b, i) {
+      var o = document.createElement("option");
+      o.value = i; o.textContent = b.name || "Untitled";
+      if (i === state.active) o.selected = true;
+      s.appendChild(o);
+    });
+  }
+
+  document.getElementById("intake").addEventListener("input", function (e) {
+    var k = e.target.getAttribute("data-k");
+    if (!k) return;
+    var b = biz();
+    b[k] = e.target.type === "number" ? (e.target.value === "" ? null : parseFloat(e.target.value)) : e.target.value;
+    if (k === "name") fillSelect();
+    render();
+  });
+  function toggleGroup(sel, prop, attr) {
+    document.querySelector(sel).addEventListener("click", function (e) {
+      var t = e.target.closest(".toggle"); if (!t) return;
+      var b = biz(); b[prop] = b[prop] || [];
+      var v = t.dataset[attr], i = b[prop].indexOf(v);
+      if (i > -1) b[prop].splice(i, 1); else b[prop].push(v);
+      t.setAttribute("aria-pressed", i > -1 ? "false" : "true");
+      render();
+    });
+  }
+  toggleGroup("#channels", "channels", "ch");
+  toggleGroup("#offers", "offers", "of");
+  toggleGroup("#salesflags", "salesflags", "sf");
+
+  document.getElementById("bizSelect").addEventListener("change", function (e) {
+    state.active = parseInt(e.target.value, 10); fillForm(); render();
+  });
+  document.getElementById("addBiz").addEventListener("click", function () {
+    state.businesses.push(blank("Business " + (state.businesses.length + 1)));
+    state.active = state.businesses.length - 1;
+    fillSelect(); fillForm(); render();
+  });
+  document.getElementById("delBiz").addEventListener("click", function () {
+    if (state.businesses.length === 1) { state.businesses[0] = blank("My business"); }
+    else { state.businesses.splice(state.active, 1); state.active = 0; }
+    fillSelect(); fillForm(); render();
+  });
+
+  /* ---------- import / export ---------- */
+  function openIO(title, text, allowApply) {
+    document.getElementById("ioTitle").textContent = title;
+    document.getElementById("ioText").value = text;
+    document.getElementById("ioApply").hidden = !allowApply;
+    document.getElementById("ioPanel").hidden = false;
+    document.getElementById("ioPanel").scrollIntoView({ behavior:"smooth", block:"nearest" });
+  }
+  document.getElementById("ioClose").addEventListener("click", function () { document.getElementById("ioPanel").hidden = true; });
+  document.getElementById("exportJson").addEventListener("click", function () { openIO("Export — JSON", JSON.stringify(state, null, 2), false); });
+  document.getElementById("importBtn").addEventListener("click", function () { openIO("Import — paste JSON", "", true); });
+  document.getElementById("ioApply").addEventListener("click", function () {
+    try {
+      var p = JSON.parse(document.getElementById("ioText").value);
+      if (!p.businesses || !p.businesses.length) throw new Error("no businesses");
+      state = p; state.active = 0;
+      fillSelect(); fillForm(); render();
+      document.getElementById("ioPanel").hidden = true;
+    } catch (err) {
+      alert("That isn't valid console data. Paste the JSON exactly as exported.");
+    }
+  });
+  document.getElementById("exportMd").addEventListener("click", function () {
+    var b = biz(), m = compute(b), dx = diagnose(b, m);
+    function row(k, v) { return "- **" + k + ":** " + (v === null || v === undefined || v === "" ? "NOT TRACKED" : v); }
+    var L = [];
+    L.push("# Business context — " + (b.name || "Untitled"), "");
+    L.push("## Identity", row("Model", b.model), "");
+    L.push("## Size", row("Revenue (T12M)", b.revenue), row("Gross profit (T12M)", b.grossProfit),
+      row("Gross margin %", m.margin == null ? null : Math.round(m.margin * 100)),
+      row("Growth level", m.stage), row("Owner hrs/wk in delivery", b.ownerHours), "");
+    L.push("## The numbers", row("CAC", b.cac), row("LTGP", b.ltgp), row("FECC", b.fecc),
+      row("Payback (days)", b.payback), row("New customers/mo", b.customers),
+      row("LTGP : CAC", m.ltgpCac == null ? null : m.ltgpCac.toFixed(2)),
+      row("FECC : CAC", m.feccCac == null ? null : m.feccCac.toFixed(2)), "");
+    L.push("## Funnel", row("Channels running", (b.channels || []).join(", ")),
+      row("Leads/mo", b.leads), row("Visit → opt-in %", b.cvOptin), row("Opt-in → booked %", b.cvBooked),
+      row("Booked → showed %", b.cvShowed), row("Showed → closed %", b.cvClosed),
+      row("End-to-end %", m.overall == null ? null : m.overall.toFixed(2)),
+      row("Page load (s)", b.pageLoad), row("Speed to lead (s)", b.speedToLead), "");
+    L.push("## Money model", row("Offer types present", (b.offers || []).join(", ")), "");
+    L.push("## Sales", row("Closers + setters", b.closers), row("Call rubric", (b.salesflags || []).indexOf("rubric") > -1 ? "yes" : "no"), "");
+    L.push("## Diagnosis", row("Binding constraint", dx.binding ? dx.binding.name : "none found"),
+      dx.binding ? "" : null, dx.binding ? "> " + dx.binding.why : null);
+    openIO("Export — Markdown for business-context/", L.filter(function (x) { return x !== null; }).join("\n"), false);
+  });
+
+  load(); fillSelect(); fillForm(); render();
+})();
+</script>
