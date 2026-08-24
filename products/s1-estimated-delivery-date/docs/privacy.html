@@ -14,7 +14,7 @@
 </head>
 <body>
   <h1>Privacy Policy — Estimated Delivery Date</h1>
-  <p class="updated">Last updated: 11 July 2026</p>
+  <p class="updated">Last updated: 24 August 2026</p>
 
   <p>
     Estimated Delivery Date (the "App") is a Shopify app that displays an
@@ -49,15 +49,20 @@
   <p>
     Because the App holds no customer personal data, GDPR/CCPA
     <code>customers/data_request</code> and <code>customers/redact</code>
-    requests have no customer data to return or erase. On app uninstall
-    (<code>shop/redact</code>), the App's stored session and settings are
-    removed.
+    requests have no customer data to return or erase. On app uninstall, the
+    App deletes its stored Shopify app session. Merchant delivery settings are
+    app-owned Shopify metafields, whose post-uninstall lifecycle is controlled
+    by Shopify.
   </p>
 
   <h2>Data retention</h2>
   <p>
-    Settings and session data are retained while the App is installed and
-    removed when you uninstall the App.
+    The App deletes its stored session when you uninstall. Shopify deletes the
+    app-owned metafield definitions but may temporarily retain metafields and
+    their values without definitions; a quick reinstall may reassociate those
+    retained values. See
+    <a href="https://shopify.dev/docs/apps/build/metafields/definitions">Shopify's
+    metafield-definition documentation</a> for the platform lifecycle.
   </p>
 
   <h2>Contact</h2>
