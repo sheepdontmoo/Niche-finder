@@ -32,6 +32,13 @@ export default function Privacy() {
           or order contents. The delivery estimate is calculated in the
           shopper’s browser from the merchant’s selected rules.
         </p>
+        <p>
+          The public SupaDatewise marketing, support, and privacy pages use
+          Google AdSense to fund the information provided there. Google may use
+          cookies or similar technologies for advertising only after the
+          choices shown in Google&apos;s consent message. AdSense is not loaded in
+          the embedded Shopify app, authentication routes, or webhook routes.
+        </p>
         <p className={styles.meta}>
           Platform source: {" "}
           <a href={SHOPIFY_METAFIELD_LIFECYCLE_URL}>
