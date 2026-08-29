@@ -23,10 +23,12 @@ Show an accurate, automatic delivery-date estimate on your product and cart page
 
 ## App details / description
 ```
-Shoppers hesitate when they don't know when an order will arrive. Estimated
-Delivery Date removes that doubt by showing a clear, automatic "Order today to
-get it by <date>" message right on your product and cart pages — so buyers get
-the reassurance they need at the moment they decide.
+To show an estimated delivery date on a Shopify product page, install
+SupaDatewise, add its app block to an Online Store 2.0 product template near the
+Add to cart button, and set processing time, daily cutoff, shipping window, and
+working days. The app calculates and displays the shopper-facing date
+automatically, without editing theme code. It can also show the estimate on cart
+pages.
 
 The estimate is calculated live from your own rules:
 
