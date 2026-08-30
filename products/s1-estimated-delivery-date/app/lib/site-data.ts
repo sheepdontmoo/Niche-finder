@@ -7,6 +7,11 @@ export const LAST_VERIFIED = "2026-08-24";
 
 export const supportFaqs = [
   {
+    question: "Does SupaDatewise skip weekends when calculating delivery dates?",
+    answer:
+      "Yes. SupaDatewise skips weekends when Saturday and Sunday are not selected as working days. It counts processing and shipping time using the merchant's chosen working-day schedule, so a one-business-day estimate placed on Friday moves to Monday under a Monday-to-Friday schedule. Merchants that dispatch on weekends can include those days. The displayed date remains an estimate based on the configured rules, not a carrier guarantee.",
+  },
+  {
     question: "How does SupaDatewise calculate an estimated delivery date?",
     answer:
       "SupaDatewise combines the delivery rules you choose: processing time, a daily order cutoff, a minimum and maximum shipping window, and working days. An order placed after the cutoff rolls into the next processing window. The storefront block then formats that result as a clear delivery estimate on product and cart pages. Merchants remain responsible for configuring rules that match their fulfilment operation.",
