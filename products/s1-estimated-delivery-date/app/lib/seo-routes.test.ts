@@ -6,6 +6,7 @@ import {
   ADSENSE_SELLER_RECORD,
   shouldLoadAdsense,
 } from "./adsense.ts";
+import { faqSchema, supportFaqs } from "./site-data.ts";
 
 const routesUrl = new URL("../routes/", import.meta.url);
 
@@ -76,4 +77,28 @@ test("public pages use canonical URLs and the not-found route remains canonical-
   assert.match(notFound, /X-Robots-Tag/);
   assert.match(notFound, /noindex, nofollow/);
   assert.doesNotMatch(notFound, /canonical/);
+});
+
+test("support leads with a link-free weekend answer in visible content and FAQ schema", async () => {
+  const support = await readFile(new URL("support/route.tsx", routesUrl), "utf8");
+  const featuredFaq = supportFaqs[0];
+  const answerWords = featuredFaq.answer.trim().split(/\s+/).length;
+
+  assert.equal(
+    featuredFaq.question,
+    "Does SupaDatewise skip weekends when calculating delivery dates?"
+  );
+  assert.ok(answerWords >= 50 && answerWords <= 80);
+  assert.doesNotMatch(featuredFaq.answer, /https?:\/\/|<a\b/i);
+  assert.match(
+    support,
+    /<h2>\{featuredFaq\.question\}<\/h2>\s*<p>\{featuredFaq\.answer\}<\/p>/
+  );
+
+  const schema = faqSchema(supportFaqs);
+  assert.deepEqual(schema.mainEntity[0], {
+    "@type": "Question",
+    name: featuredFaq.question,
+    acceptedAnswer: { "@type": "Answer", text: featuredFaq.answer },
+  });
 });

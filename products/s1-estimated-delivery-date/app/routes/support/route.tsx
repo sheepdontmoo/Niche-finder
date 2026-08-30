@@ -19,6 +19,8 @@ export const meta = () => [
 ];
 
 export default function Support() {
+  const [featuredFaq, ...additionalFaqs] = supportFaqs;
+
   return (
     <main className={styles.index}>
       <article className={styles.content}>
@@ -37,9 +39,13 @@ export default function Support() {
           <a href={SHOPIFY_LISTING_URL}>SupaDatewise on the Shopify App Store</a>.
           Last verified: {LAST_VERIFIED}.
         </p>
+        <section className={styles.answer}>
+          <h2>{featuredFaq.question}</h2>
+          <p>{featuredFaq.answer}</p>
+        </section>
         <section aria-labelledby="support-faqs">
           <h2 id="support-faqs">Frequently asked questions</h2>
-          {supportFaqs.map((faq) => (
+          {additionalFaqs.map((faq) => (
             <section className={styles.answer} key={faq.question}>
               <h3>{faq.question}</h3>
               <p>{faq.answer}</p>
