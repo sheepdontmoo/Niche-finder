@@ -8,6 +8,8 @@
 (function () {
   "use strict";
 
+  var entitlementRequest;
+
   var DEFAULTS = {
     enabled: true,
     processingDays: 1,
@@ -18,7 +20,23 @@
     template: "Order today to get it by {date}",
     dateStyle: "medium",
     locale: "en-IE",
+    timeZone: "UTC",
   };
+
+  function isValidTimeZone(value) {
+    if (typeof value !== "string" || !value.trim()) return false;
+    var timeZone = value.trim();
+    try {
+      new Intl.DateTimeFormat("en", { timeZone: timeZone }).format(new Date(0));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function normalizeTimeZone(value) {
+    return isValidTimeZone(value) ? value.trim() : DEFAULTS.timeZone;
+  }
 
   function clampInt(v, min, max, fallback) {
     var n = Math.round(Number(v));
@@ -64,11 +82,12 @@
         typeof s.locale === "string" && s.locale.trim()
           ? s.locale
           : DEFAULTS.locale,
+      timeZone: normalizeTimeZone(s.timeZone),
     };
   }
 
   function isWorkingDay(date, workingDays) {
-    return workingDays.indexOf(date.getDay()) !== -1;
+    return workingDays.indexOf(date.getUTCDay()) !== -1;
   }
 
   function toWorkingDay(date, workingDays) {
@@ -76,7 +95,7 @@
     if (!workingDays.length) return d;
     var guard = 0;
     while (!isWorkingDay(d, workingDays) && guard < 14) {
-      d.setDate(d.getDate() + 1);
+      d.setUTCDate(d.getUTCDate() + 1);
       guard++;
     }
     return d;
@@ -87,17 +106,41 @@
     var remaining = Math.max(0, days);
     var guard = 0;
     while (remaining > 0 && guard < 3650) {
-      d.setDate(d.getDate() + 1);
+      d.setUTCDate(d.getUTCDate() + 1);
       if (isWorkingDay(d, workingDays)) remaining--;
       guard++;
     }
     return d;
   }
 
+  function zonedDateTimeParts(now, timeZone) {
+    var parts = new Intl.DateTimeFormat("en-US-u-ca-gregory-nu-latn", {
+      timeZone: timeZone,
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      hourCycle: "h23",
+    }).formatToParts(now);
+    var value = function (type) {
+      var part = parts.find(function (candidate) {
+        return candidate.type === type;
+      });
+      return Number(part && part.value);
+    };
+    return {
+      year: value("year"),
+      month: value("month"),
+      day: value("day"),
+      hour: value("hour"),
+    };
+  }
+
   function estimate(now, settings) {
     var s = normalize(settings);
-    var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    if (now.getHours() >= s.cutoffHour) start.setDate(start.getDate() + 1);
+    var parts = zonedDateTimeParts(now, s.timeZone);
+    var start = new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
+    if (parts.hour >= s.cutoffHour) start.setUTCDate(start.getUTCDate() + 1);
     var ship = addBusinessDays(start, s.processingDays, s.workingDays);
     var min = addBusinessDays(ship, s.transitDaysMin, s.workingDays);
     var max = addBusinessDays(ship, s.transitDaysMax, s.workingDays);
@@ -108,9 +151,15 @@
     var s = normalize(settings);
     var fmt = function (d) {
       try {
-        return new Intl.DateTimeFormat(s.locale, { dateStyle: s.dateStyle }).format(d);
+        return new Intl.DateTimeFormat(s.locale, {
+          dateStyle: s.dateStyle,
+          timeZone: "UTC",
+        }).format(d);
       } catch (e) {
-        return new Intl.DateTimeFormat(undefined, { dateStyle: s.dateStyle }).format(d);
+        return new Intl.DateTimeFormat(undefined, {
+          dateStyle: s.dateStyle,
+          timeZone: "UTC",
+        }).format(d);
       }
     };
     var minStr = fmt(est.min);
@@ -120,6 +169,27 @@
       .replace(/\{date\}/g, dateStr)
       .replace(/\{min\}/g, minStr)
       .replace(/\{max\}/g, maxStr);
+  }
+
+  function hasActiveSubscription(url) {
+    if (!entitlementRequest) {
+      if (typeof fetch !== "function") return Promise.resolve(false);
+      entitlementRequest = fetch(url, {
+        credentials: "same-origin",
+        headers: { Accept: "application/json" },
+      })
+        .then(function (response) {
+          if (!response.ok) return { active: false };
+          return response.json();
+        })
+        .then(function (body) {
+          return Boolean(body && body.active === true);
+        })
+        .catch(function () {
+          return false;
+        });
+    }
+    return entitlementRequest;
   }
 
   function render(block) {
@@ -135,13 +205,24 @@
       return;
     }
 
+    // Legacy saved metafields did not contain a timezone. Never present UTC as
+    // the merchant's zone: keep the block hidden until the merchant opens the
+    // app and saves once, which writes Shopify's authoritative IANA timezone.
+    if (!settings || !isValidTimeZone(settings.timeZone)) return;
+
     var s = normalize(settings);
     if (!s.enabled) {
-      block.style.display = "none";
       return;
     }
 
-    output.textContent = format(estimate(new Date(), s), s);
+    var entitlementUrl = block.getAttribute("data-edd-entitlement-url");
+    if (!entitlementUrl) return;
+
+    hasActiveSubscription(entitlementUrl).then(function (active) {
+      if (!active) return;
+      output.textContent = format(estimate(new Date(), s), s);
+      block.hidden = false;
+    });
   }
 
   function init() {

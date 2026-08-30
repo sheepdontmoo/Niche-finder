@@ -1,15 +1,42 @@
 import type { HeadersFunction, LoaderFunctionArgs } from "react-router";
+import { useLoaderData } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
+import { buildThemeActivationUrl } from "../lib/theme-activation";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await authenticate.admin(request);
-  return null;
+  const { session } = await authenticate.admin(request);
+  return {
+    activationUrl: buildThemeActivationUrl(
+      session.shop,
+      process.env.SHOPIFY_API_KEY,
+    ),
+  };
 };
 
 export default function Setup() {
+  const { activationUrl } = useLoaderData<typeof loader>();
+
   return (
     <s-page heading="Setup guide">
+      <s-section heading="Activate on a product page">
+        <s-paragraph>
+          First configure and save your delivery rules on the Settings page.
+          Then open your current theme with the Estimated Delivery Date block
+          ready to add, and preview its placement before saving the theme.
+        </s-paragraph>
+        {activationUrl ? (
+          <s-button variant="primary" href={activationUrl} target="_top">
+            Open theme editor
+          </s-button>
+        ) : (
+          <s-paragraph>
+            The activation link is unavailable because the app client ID is
+            missing. Use the manual steps below.
+          </s-paragraph>
+        )}
+      </s-section>
+
       <s-section heading="Add the delivery estimate to your storefront">
         <s-ordered-list>
           <s-list-item>

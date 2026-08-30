@@ -8,7 +8,14 @@ import { useFetcher, useLoaderData } from "react-router";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { boundary } from "@shopify/shopify-app-react-router/server";
 import { authenticate } from "../shopify.server";
+import { requireActiveAppPayment } from "../lib/billing";
 import { readSettings, writeSettings } from "../lib/settings.server";
+import {
+  getAuthenticatedShopId,
+  hasActivePartnerSubscription,
+  readPartnerBillingConfig,
+  rememberPartnerSubscription,
+} from "../lib/partner-subscription.server";
 import {
   estimateDelivery,
   formatEstimate,
@@ -27,7 +34,8 @@ const WEEKDAYS = [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  // Billing is enforced in app.tsx's loader, so by here the shop is subscribed.
+  // Shopify App Pricing handles plan selection outside this route. This loader
+  // authenticates the merchant and reads the rules for the embedded app.
   const { admin } = await authenticate.admin(request);
   const settings = await readSettings(admin.graphql);
   const estimate = estimateDelivery(new Date(), settings);
@@ -38,7 +46,25 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { admin } = await authenticate.admin(request);
+  const { admin, redirect, session } = await authenticate.admin(request);
+  // Nested actions run before parent-loader revalidation. Repeat the
+  // provider-backed entitlement check here so a direct POST cannot bypass the
+  // app-root payment gate and write usable storefront settings for free.
+  const billingConfig = readPartnerBillingConfig(process.env);
+  const shopId = await getAuthenticatedShopId(admin.graphql);
+  const hasActivePayment = await hasActivePartnerSubscription(
+    billingConfig,
+    shopId,
+  );
+  rememberPartnerSubscription(billingConfig, shopId, hasActivePayment);
+  const paymentRedirect = await requireActiveAppPayment(
+    hasActivePayment,
+    redirect,
+    session.shop,
+    billingConfig.appHandle,
+  );
+  if (paymentRedirect) return paymentRedirect;
+
   const form = await request.formData();
 
   const parsed: Partial<DeliverySettings> = {
@@ -153,6 +179,14 @@ export default function Index() {
               />
             ))}
           </s-stack>
+        </s-section>
+
+        <s-section heading="Store timezone">
+          <s-paragraph>
+            Daily cutoffs use your Shopify store timezone: {settings.timeZone}.
+            Save settings once after installing this version so the storefront
+            block receives this verified timezone.
+          </s-paragraph>
         </s-section>
 
         <s-section heading="Wording and format">

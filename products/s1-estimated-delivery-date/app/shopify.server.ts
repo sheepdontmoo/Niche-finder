@@ -7,19 +7,19 @@ import {
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import prisma from "./db.server";
 
-// Pricing is handled by Shopify Managed Pricing (configured in the dashboard),
-// so this app defines no Billing API plans and never creates charges itself.
+// Pricing is handled by Shopify App Pricing (formerly Managed Pricing). This
+// app defines no Billing API plans or charges; the app root verifies the
+// current subscription through Shopify's Partner API.
 
 const shopify = shopifyApp({
   apiKey: process.env.SHOPIFY_API_KEY,
   apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
   apiVersion: ApiVersion.October25,
-  // No access scopes: the app stores settings as app-owned ($app) metafields
-  // and renders via a theme app extension — neither needs a scope. This MUST
-  // stay empty to match `access_scopes` in shopify.app.toml; a mismatch makes
-  // fresh installs loop into an in-iframe OAuth redirect ("accounts.shopify.com
-  // refused to connect"). Hardcoded so a stale SCOPES env can't reintroduce it.
-  scopes: [],
+  // The HMAC-authenticated storefront entitlement endpoint requires only the
+  // app-proxy scope. Settings remain app-owned ($app) metafields and no order
+  // or customer-record scopes are requested. Keep this exactly aligned with
+  // `access_scopes` in shopify.app.toml so fresh installs do not OAuth-loop.
+  scopes: ["write_app_proxy"],
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
