@@ -10,6 +10,7 @@ import {
 import {
   getAuthenticatedShopId,
   hasActivePartnerSubscription,
+  hasActivePartnerSubscriptionAfterPlanSelection,
   readPartnerBillingConfig,
   rememberPartnerSubscription,
 } from "../lib/partner-subscription.server";
@@ -18,10 +19,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { admin, redirect, session } = await authenticate.admin(request);
   const billingConfig = readPartnerBillingConfig(process.env);
   const shopId = await getAuthenticatedShopId(admin.graphql);
-  const hasActivePayment = await hasActivePartnerSubscription(
-    billingConfig,
-    shopId,
+  const returnedFromPlanSelection = new URL(request.url).searchParams.has(
+    "plan_handle",
   );
+  const hasActivePayment = returnedFromPlanSelection
+    ? await hasActivePartnerSubscriptionAfterPlanSelection(
+        billingConfig,
+        shopId,
+      )
+    : await hasActivePartnerSubscription(billingConfig, shopId);
   rememberPartnerSubscription(billingConfig, shopId, hasActivePayment);
   const paymentRedirect = await requireActiveAppPayment(
     hasActivePayment,

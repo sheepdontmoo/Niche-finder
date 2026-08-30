@@ -25,20 +25,21 @@ Do not sign up for or purchase a new Fly account. Current authenticated app,
 release and cost evidence is **UNAVAILABLE** until access is restored.
 
 ## 3. Confirm provider configuration
-In the Dev Dashboard → your app → **API credentials** (a.k.a. Client
-credentials): copy the **Client ID** (this is `SHOPIFY_API_KEY`) and the
-**Client secret** (this is `SHOPIFY_API_SECRET`). Also copy the app's **App Home
-handle** from the current provider configuration; this is
-`SHOPIFY_APP_HANDLE`. The public App Store listing slug is not sufficient proof
-of the App Home handle.
+Authenticated reconciliation on 2026-08-30 confirmed Client ID
+`26c0cd1cd1992a8d9114c826f47e3e5b` and App Home handle
+`estimated-delivery-date-34`. The public listing slug
+`estimated-delivery-date-6` is different and must never be substituted for the
+App Home handle. Retrieve the client secret only at the approved Fly-secret
+action; never print or commit it.
 
 The app root verifies active Shopify App Pricing subscriptions with Shopify's
-Partner API. Confirm the owning **organization ID** (`SHOPIFY_PARTNER_ORG_ID`)
-and the app's full GraphQL ID (`SHOPIFY_APP_GID`, such as
-`gid://shopify/App/...`). Reuse an existing Partner API client only if it has
-the required **Manage apps** permission, or request exact approval before an
-organization owner creates or changes one. Its token is
-`SHOPIFY_PARTNER_API_ACCESS_TOKEN`. Treat that token like a password: store it
+Partner API. Authenticated reconciliation confirmed
+`SHOPIFY_PARTNER_ORG_ID=4774175` and
+`SHOPIFY_APP_GID=gid://shopify/App/396333842433`. Do not use Dev Dashboard
+organization ID `208004935` for the Partner endpoint; it returned 401. Partner
+API client `35086` (`SupaDatewise subscription status`) was created with
+**Manage apps only** after approval. Its access token is
+`SHOPIFY_PARTNER_API_ACCESS_TOKEN`. Treat the token like a password: store it
 only as a provider secret and never print or commit it.
 
 ## 4. Reconcile the existing app, then set configuration
@@ -100,6 +101,6 @@ SHOPIFY_PARTNER_API_ACCESS_TOKEN="<Partner API client token>"
 ```
 
 ## Note on cost
-Current Fly cost is **UNAVAILABLE** without authenticated billing evidence. Do
-not create infrastructure, resize machines or incur spend without a separate
-exact cap and approval.
+Authenticated release/runtime evidence does not prove the current Fly bill, so
+cost remains **UNAVAILABLE**. Do not create infrastructure, resize machines or
+incur spend without a separate exact cap and approval.

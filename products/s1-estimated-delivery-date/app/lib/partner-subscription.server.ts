@@ -13,13 +13,22 @@ export interface PartnerBillingConfig {
 type Environment = Record<string, string | undefined>;
 type AdminGraphql = AdminApiContext["graphql"];
 type Fetcher = typeof fetch;
+type Sleeper = (milliseconds: number) => Promise<void>;
 
 const STOREFRONT_CACHE_MS = 60_000;
+export const POST_APPROVAL_RECHECK_MS = 400;
+export const POST_APPROVAL_RECHECK_COOLDOWN_MS = 5_000;
+export const PARTNER_API_TIMEOUT_MS = 5_000;
 const subscriptionCache = new Map<
   string,
   { active: boolean; expiresAt: number }
 >();
 const subscriptionRequests = new Map<string, Promise<boolean>>();
+const subscriptionCacheRevisions = new Map<string, number>();
+const postApprovalRechecks = new Map<string, number>();
+
+const sleep: Sleeper = (milliseconds) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 function requireValue(value: string | undefined, name: string): string {
   const normalized = value?.trim();
@@ -86,6 +95,7 @@ export async function hasActivePartnerSubscription(
   const endpoint = `https://partners.shopify.com/${config.organizationId}/api/${PARTNER_API_VERSION}/graphql.json`;
   const response = await fetcher(endpoint, {
     method: "POST",
+    signal: AbortSignal.timeout(PARTNER_API_TIMEOUT_MS),
     headers: {
       "Content-Type": "application/json",
       "X-Shopify-Access-Token": config.accessToken,
@@ -127,6 +137,33 @@ export async function hasActivePartnerSubscription(
   throw new Error("Shopify Partner API subscription response is invalid");
 }
 
+/**
+ * Shopify redirects a merchant back with `plan_handle` after plan selection.
+ * That parameter is only a signal to tolerate a short provider-consistency
+ * window: access is still granted solely after Partner API returns an active
+ * contract. Ordinary unpaid and storefront requests remain one API call.
+ */
+export async function hasActivePartnerSubscriptionAfterPlanSelection(
+  config: PartnerBillingConfig,
+  shopId: string,
+  fetcher: Fetcher = fetch,
+  sleeper: Sleeper = sleep,
+  now = Date.now(),
+): Promise<boolean> {
+  if (await hasActivePartnerSubscription(config, shopId, fetcher)) return true;
+  const key = subscriptionCacheKey(config, shopId);
+  const previousRecheck = postApprovalRechecks.get(key);
+  if (
+    previousRecheck !== undefined &&
+    now - previousRecheck < POST_APPROVAL_RECHECK_COOLDOWN_MS
+  ) {
+    return false;
+  }
+  postApprovalRechecks.set(key, now);
+  await sleeper(POST_APPROVAL_RECHECK_MS);
+  return hasActivePartnerSubscription(config, shopId, fetcher);
+}
+
 function subscriptionCacheKey(
   config: PartnerBillingConfig,
   shopId: string,
@@ -145,7 +182,12 @@ export function rememberPartnerSubscription(
   active: boolean,
   now = Date.now(),
 ): void {
-  subscriptionCache.set(subscriptionCacheKey(config, shopId), {
+  const key = subscriptionCacheKey(config, shopId);
+  subscriptionCacheRevisions.set(
+    key,
+    (subscriptionCacheRevisions.get(key) ?? 0) + 1,
+  );
+  subscriptionCache.set(key, {
     active,
     expiresAt: now + STOREFRONT_CACHE_MS,
   });
@@ -162,6 +204,7 @@ export async function hasCachedActivePartnerSubscription(
   shopId: string,
   fetcher: Fetcher = fetch,
   now = Date.now(),
+  completionClock: () => number = Date.now,
 ): Promise<boolean> {
   const key = subscriptionCacheKey(config, shopId);
   const cached = subscriptionCache.get(key);
@@ -170,8 +213,18 @@ export async function hasCachedActivePartnerSubscription(
   const pending = subscriptionRequests.get(key);
   if (pending) return pending;
 
+  const revisionAtStart = subscriptionCacheRevisions.get(key) ?? 0;
   const request = hasActivePartnerSubscription(config, shopId, fetcher)
     .then((active) => {
+      // An authenticated admin check may have completed while this storefront
+      // request was in flight. Never let the older response replace that newer
+      // authoritative decision, especially after cancellation.
+      if ((subscriptionCacheRevisions.get(key) ?? 0) !== revisionAtStart) {
+        const newer = subscriptionCache.get(key);
+        return newer && newer.expiresAt > completionClock()
+          ? newer.active
+          : false;
+      }
       rememberPartnerSubscription(config, shopId, active, now);
       return active;
     })
@@ -183,4 +236,6 @@ export async function hasCachedActivePartnerSubscription(
 export function clearPartnerSubscriptionCacheForTests(): void {
   subscriptionCache.clear();
   subscriptionRequests.clear();
+  subscriptionCacheRevisions.clear();
+  postApprovalRechecks.clear();
 }

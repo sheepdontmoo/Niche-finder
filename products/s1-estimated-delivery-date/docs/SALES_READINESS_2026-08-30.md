@@ -1,17 +1,27 @@
 # SupaDatewise paid-install readiness — evidence and launch packet
 
-Evidence window: 2026-08-30 10:02–10:10 UTC for public checks and through
-10:39 UTC for local verification.
+Evidence window: 2026-08-30 10:02–10:10 UTC for public checks, through
+10:39 UTC for local verification, and through 15:30 UTC for authenticated
+Shopify/Fly reconciliation and controlled development-store billing checks.
 
 Commercial target: the first real processed, non-refunded Shopify app
 subscription.
 
-Current verified paid installs: **UNAVAILABLE**.
+Current verified paid installs: **0**. Shopify's authenticated app history and
+current-install view show no real paid recurring subscription. The sole current
+install is Darren's controlled development store.
 
-Current cleared subscription revenue: **UNAVAILABLE**.
+Current cleared subscription revenue: **USD $0.00**. Shopify Partner Dashboard
+shows total earnings of $0.00 and no recurring earning event.
 
 Traffic, listing visibility, public reviews, draft code, test charges, installs
 without provider-confirmed payment, and pipeline are not revenue.
+
+Companion packets:
+
+- [`COMPETITIVE_SCORECARD_2026-08-30.md`](./COMPETITIVE_SCORECARD_2026-08-30.md)
+- [`FIRST_PAID_MERCHANT_PLAN_2026-08-30.md`](./FIRST_PAID_MERCHANT_PLAN_2026-08-30.md)
+- [`../store-listing.md`](../store-listing.md)
 
 ## 1. Immutable source and provider identities
 
@@ -23,18 +33,23 @@ without provider-confirmed payment, and pipeline are not revenue.
 | Clean implementation base | `4e7c2aea5ff1ae4969a0982452598b6ad8f52128` | `agent/seo/supadatewise-weekends-answer-20260830` |
 | Isolated branch | `agent/growth/supadatewise-paid-readiness-20260830` | Created from the clean base |
 | Shopify app client ID | `26c0cd1cd1992a8d9114c826f47e3e5b` | Local TOML matches public listing install metadata and live App Bridge shell |
-| Shopify App Home handle | **UNAVAILABLE** | Local TOML omits it; the public App Store listing slug does not prove the admin App Home handle required by Shopify's plan-selector URL |
-| Shopify Partner organization ID | **UNAVAILABLE** | Legacy repository note says `208004935`; not accepted without authenticated provider evidence |
-| Shopify app GraphQL ID | **UNAVAILABLE** | Legacy repository note says numeric app `328515354625`; the required current `gid://shopify/App/...` value is not authenticated |
-| Partner API client/token | **UNAVAILABLE** | Dashboard access is blocked; requires an approved, securely stored client with Manage apps permission |
+| Shopify App Home handle | `estimated-delivery-date-34` | Authenticated App Home/admin route and hosted Shopify plan selector |
+| Shopify Partner organization ID | `4774175` | Authenticated Partner Dashboard URL and successful Partner API endpoint; Dev Dashboard organization `208004935` is a different identifier and returns 401 when used as the Partner API organization |
+| Shopify app GraphQL ID | `gid://shopify/App/396333842433` | Authenticated Dev Dashboard plus successful app/shop-filtered Partner API queries |
+| Controlled development shop | `supadesign-8073.myshopify.com`; `gid://shopify/Shop/79690203390` | Authenticated Dev Dashboard current-install view and Partner API query |
+| Partner API client/token | Client `35086`, `SupaDatewise subscription status`; **Manage apps only** | Created after exact approval. Token is held only in the authenticated browser session, hidden again in the dashboard, and is not printed or committed |
 | Shopify listing | [SupaDatewise: Delivery Date](https://apps.shopify.com/estimated-delivery-date-6) | Public, HTTP 200, active Install control |
 | Fly app/domain | `edd-supadesign` / `https://edd-supadesign.fly.dev` | DNS, TLS, Fly headers, local config, matching App Bridge key |
-| Exact production commit/release | **UNAVAILABLE** | Fly CLI has no access token and live app exposes no immutable commit receipt |
-| Shopify Partner/Dev Dashboard | **UNAVAILABLE** | Read-only browser attempt reached Shopify login; connected Chrome session unavailable |
+| Fly production release | Release `v6`; image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H`; machine `812e3dc95e2728` in `lhr` | Authenticated Fly dashboard, released 2026-07-18 11:10 UTC. Exact source commit remains **UNAVAILABLE** because the release exposes no commit receipt |
+| Active Shopify app version | `supadatewise-delivery-date-10`; version `1056076529665` | Authenticated Dev Dashboard; active since 2026-07-18 11:13 UTC |
+| Shopify Partner/Dev Dashboard | Organization/account `4774175`; Dev Dashboard organization `208004935`; app `396333842433` | Authenticated browser reconciliation |
 
 The unrelated repository default branch and the dirty desktop checkout are not
-safe release bases. Provider-generated config changes in the dirty checkout
-must be reconciled only after authenticated Shopify verification.
+safe release bases. Shopify CLI restored theme-extension UID
+`1e29f333-f7c8-b03f-d483-a7cdb79cd8f96c31405f` during the verified app build;
+it exactly matches the preserved dirty checkout and remained stable on a second
+build. Retaining it prevents the reviewed extension from being treated as a
+new extension, but it is not an immutable live-release receipt.
 
 ## 2. Verified funnel and biggest leaks
 
@@ -46,27 +61,48 @@ must be reconciled only after authenticated Shopify verification.
 | Install start | Public Install control opens Shopify's login/store-selection flow | Store-specific start count **UNAVAILABLE** |
 | Install completion/OAuth | Local app config and auth routes exist; public `/auth/login` responds | End-to-end result **UNAVAILABLE** without controlled store |
 | Scopes/permissions | Live source declares none; branch adds only `write_app_proxy` for an HMAC-authenticated storefront entitlement request; listing discloses store-owner contact data associated with the app session | Scope/config and merchant reauthorization impact **UNAVAILABLE** until controlled install |
-| Shopify App Pricing | Public listing shows $6.99/month and trial; pre-batch routes and theme fallback did not enforce an active plan | Provider state and required Partner API configuration are **UNAVAILABLE**; branch gates app root, settings mutation and storefront render, and requires authenticated handle, organization, app GID and client token before release |
+| Shopify App Pricing | Public Standard plan is $6.99/30 days with a seven-day trial; controlled dev store can test it for $0 | Shopify hosted selector says `Current`; Partner API reports `EVERY_30_DAYS` with trial end `2026-09-06T15:25:55Z`; history records `SUBSCRIPTION_CREATED`. This is a no-charge development contract, not revenue. One isolated null response recovered to active; the branch now rereads one null only on a signed-in `plan_handle` return and still requires Partner API activation |
 | Onboarding | Embedded settings and setup routes exist locally | Live production route/version **UNAVAILABLE** |
 | Settings save | Local GraphQL writes an app-owned shop metafield | Live result **UNAVAILABLE** |
 | Rules reach storefront | Pre-batch Liquid used `shop.metafields.app.settings`, not Shopify's `$app` reserved-namespace syntax | **BROKEN in reviewed source**; fixed locally, with the unentitled fallback removed |
 | Cutoff accuracy | Pre-batch renderer used the shopper device timezone despite UI promising shop time | **BROKEN cross-timezone**; fixed locally with Shopify `ianaTimezone` |
 | Theme loading | Script declared in schema and loaded again with a manual tag | Duplicate load; fixed locally |
-| Theme activation | Manual instructions only | One-click product-template deep link added locally; live test **UNAVAILABLE** |
+| Theme activation | Published Savor theme initially had no app block | Theme editor successfully found and staged `Estimated Delivery Date`; the unsaved preview rendered a date window. Save remains approval-gated, and the branch deep link is not deployed |
 | First widget rendered | No trustworthy event exists | **MISSING** measurement and live proof |
 | Public support | `/support` returns 404; listing exposes no support URL or mail link | **BLOCKER** for trust/acquisition |
 | Public privacy | `/privacy` returns 404; listing points to an older Telegraph policy | **BLOCKER** for trust/listing quality |
 | Webhooks | Pre-batch uninstall deletion depended on a session and `shop/redact` only acknowledged; unsigned probes fail closed | Unconditional idempotent shop deletion fixed locally; signed provider delivery **UNAVAILABLE** |
-| Current installs/trials | No authenticated Shopify provider evidence | **UNAVAILABLE**, never infer zero |
-| Paid subscriptions/churn/refunds | No authenticated Shopify provider evidence | **UNAVAILABLE** |
-| Cleared revenue | No Shopify payout/transaction evidence | **UNAVAILABLE** |
+| Current installs/trials | Authenticated current-install view shows only `supadesign`, installed 2026-07-11; hosted selector and Partner API show its no-charge Standard trial | **1 controlled dev-store install; 1 $0 test contract**. Neither is a paid merchant |
+| Paid subscriptions/churn/refunds | Authenticated history shows only free/test subscriptions; the one external store seen historically later closed | **0 verified paid subscriptions**; paid churn/refunds are not established because no paid subscription exists |
+| Cleared revenue | Partner Dashboard total earnings and event history | **USD $0.00**; no recurring earning event |
 
-**Biggest leak:** the reviewed source allowed app use without enforcing an
-active App Pricing plan, could save rules without applying them to the theme
-block, and could shift cutoffs outside the store timezone. Marketing that state
+**Biggest leak:** the current production version still opens without an active
+plan, has no configured app proxy, and can render a theme-block fallback that
+does not match the embedded app's saved-settings preview. Marketing that state
 would amplify a free or inaccurate activation path. The branch fixes those
-defects; acquisition remains suppressed until controlled-store and live release
-proof exist.
+defects locally; acquisition remains suppressed until the controlled-store and
+live release proof exist.
+
+### Authenticated production reconciliation
+
+- Fly release `v6` runs one `shared-cpu-1x`/512 MB machine in `lhr`; Fly lists
+  no secrets. Current environment values are only `DATABASE_URL`, `NODE_ENV`
+  and `PORT`.
+- The active Shopify app version has `/auth/callback`,
+  `/auth/shopify/callback`, and `/api/auth/callback` configured; the third path
+  returns 404 in production. It registers uninstall, scope-update, and privacy
+  callbacks, and includes the `delivery-date` theme extension.
+- The active Shopify version has no app proxy. The branch's storefront
+  entitlement check therefore cannot be verified against Shopify until the
+  scope/proxy configuration and reviewed Fly release are separately approved.
+- Last-30-day Partner evidence shows one install, one uninstall, net zero, and
+  payouts/earnings of $0.00. Historical installs include Darren's test stores
+  and one external store that later closed; none has a verified paid recurring
+  subscription.
+- The hosted plan selector and three consecutive Partner API checks agree that
+  the controlled dev store currently has the $0 Standard test contract. A
+  prior single null response is retained as a billing-consistency risk, not
+  overwritten or misreported.
 
 ## 3. Bounded implementation batch
 
@@ -89,18 +125,26 @@ proof exist.
    cache provider results for at most one minute to respect the four-request-
    per-second Partner API limit. Missing sessions, provider failures,
    cancellation and freeze states fail closed.
-9. Delete shop sessions unconditionally and idempotently on uninstall and
+9. On Shopify's documented post-plan `plan_handle` return only, reread one
+   initial null after 400 ms. The query must return an active contract on either
+   attempt; the URL parameter and historical events never grant access. A
+   five-second provider timeout and five-second per-shop reread cooldown prevent
+   hung calls and repeated retry amplification.
+10. Version storefront cache writes so an older in-flight request cannot
+    overwrite a newer authenticated admin decision in either direction. This
+    prevents a stale active response from replacing a cancellation result.
+11. Delete shop sessions unconditionally and idempotently on uninstall and
    `shop/redact`, including when Shopify no longer returns a webhook session.
-10. Fail closed when Shopify does not return a valid IANA timezone instead of
+12. Fail closed when Shopify does not return a valid IANA timezone instead of
    silently presenting UTC as the merchant timezone. Legacy storefront
    settings without a timezone stay hidden until the merchant resaves.
-11. Track `package-lock.json` so the Dockerfile's `npm ci` build is reproducible.
-12. Use Rollup's official WebAssembly Node distribution so the production build
+13. Track `package-lock.json` so the Dockerfile's `npm ci` build is reproducible.
+14. Use Rollup's official WebAssembly Node distribution so the production build
    remains reproducible on this Windows host without weakening Application
    Control or executing a blocked native addon.
-13. Replace the single-stage Dockerfile—which installed production-only packages
+15. Replace the single-stage Dockerfile—which installed production-only packages
    before trying to run a development-tool build—with a build/runtime split.
-14. Replace stale Billing API and unsupported conversion-lift claims in launch
+16. Replace stale Billing API and unsupported conversion-lift claims in launch
    material with factual Shopify App Pricing language.
 
 This branch intentionally adds only `write_app_proxy` and its reviewed proxy
@@ -172,10 +216,10 @@ entitlement route ignores it and must not copy it into application logs/events.
 | `onboarding_completed` | First successful `$app.settings` save with no GraphQL user errors | Authenticated app action | Code path exists; event **MISSING** |
 | `theme_block_active` | Shopify `app.extensions()` reports the delivery block active on the published theme | Authenticated App Bridge | **MISSING** |
 | `first_widget_rendered` | First successful render for an installation/version, deduplicated server-side | Proposed signed/pseudonymous beacon with no buyer payload | **MISSING**; do not add silently |
-| `trial_started` | Shopify App Pricing subscription enters trial | Shopify Partner API subscription evidence | **UNAVAILABLE** |
-| `paid_conversion` | Subscription becomes paid after trial and is not a no-charge/test contract | Shopify Partner API subscription evidence | **UNAVAILABLE** |
+| `trial_started` | Shopify App Pricing subscription enters trial | Shopify Partner API subscription evidence | **VERIFIED for controlled $0 dev test only** at 2026-08-30 15:25:55 UTC; not a merchant conversion |
+| `paid_conversion` | Subscription becomes paid after trial and is not a no-charge/test contract | Shopify Partner API subscription evidence plus non-test charge | **0 verified** |
 | `churn` | Paid subscription cancels/expires or app uninstalls, with effective time | Shopify pricing event + signed uninstall webhook | **UNAVAILABLE** |
-| `cleared_revenue` | Shopify payout/transaction is processed and non-refunded | Shopify payout/finance evidence | **UNAVAILABLE** |
+| `cleared_revenue` | Shopify payout/transaction is processed and non-refunded | Shopify payout/finance evidence | **USD $0.00 verified** through 2026-08-30 |
 
 Do not equate `install_completed`, a $0 development-store plan, or
 `paid_conversion` with cleared revenue. Reconcile subscription and payout
@@ -228,7 +272,7 @@ Local gate before draft PR (verified 2026-08-30):
 
 - clean isolated branch based on `4e7c2ae`; original dirty checkout preserved;
 - fresh `npm ci` succeeds from the tracked lockfile;
-- `npm run check` succeeds: 50 tests, lint, route type generation, TypeScript,
+- `npm run check` succeeds: 57 tests, lint, route type generation, TypeScript,
   client build and server build;
 - `shopify app build` succeeds, including Shopify Theme Check and bundling the
   `delivery-date` theme app extension;
@@ -333,4 +377,36 @@ storefront render. Those provider IDs are **MISSING** until an approved release.
     draft-PR identities; documentation only, with no product, provider or
     merchant-state change.
 
-The 30-step cap is exhausted. No recurring automation was proposed or created.
+The initial 30-step cap was exhausted. Darren then explicitly restarted the
+work with `go` and `Yes do what needs to be done to improve it and get users
+paying`. The continuation remains limited to safe, reversible work and stops at
+the original exact action-time gates. No recurring automation was proposed or
+created.
+
+## 10. Continuation ledger after renewed instruction
+
+1. Authenticated and reconciled the existing Fly app, release, machine,
+   environment names and zero-secret state without changing production.
+2. Authenticated and reconciled Shopify organization, app, listing, active
+   version, current installs, event history and earnings.
+3. Created the least-privilege Partner API client after exact approval; kept its
+   token out of source, logs and this document.
+4. Activated the Standard plan as a $0 development-store test contract after
+   exact approval; verified the hosted-plan state and `SUBSCRIPTION_CREATED`
+   event without claiming revenue.
+5. Repeated the official Partner API query after one transient null response;
+   three consecutive checks returned the active trial contract.
+6. Staged the Estimated Delivery Date block in the published-theme editor
+   without saving; verified a storefront preview render and retained the exact
+   save gate.
+7. Began the provider-evidence, competitive-scorecard and first-paid-merchant
+   packet refresh; no deployment, listing edit, outreach, store save or spend.
+8. Reproduced and fixed the post-plan transient-null loop and a storefront
+   cache race that could overwrite a newer cancellation decision; the 57-test
+   gate, lint, typecheck, production build, Shopify Theme Check/app build and
+   zero-runtime-vulnerability audit pass.
+9. Reconciled and retained Shopify CLI's stable theme-extension UID, which
+   matches the preserved checkout; no app version was released.
+10. Passed the fresh independent review after adding a five-second Partner API
+    timeout, completion-time cache expiry and per-shop retry cooldown. Reviewer
+    verdict: `ship`; production/provider actions remain separately gated.

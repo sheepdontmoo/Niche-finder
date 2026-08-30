@@ -5,7 +5,10 @@ import {
   getAuthenticatedShopId,
   hasCachedActivePartnerSubscription,
   hasActivePartnerSubscription,
+  hasActivePartnerSubscriptionAfterPlanSelection,
   PARTNER_API_VERSION,
+  POST_APPROVAL_RECHECK_COOLDOWN_MS,
+  POST_APPROVAL_RECHECK_MS,
   readPartnerBillingConfig,
   rememberPartnerSubscription,
   type PartnerBillingConfig,
@@ -114,6 +117,8 @@ describe("Shopify Partner API subscription check", () => {
       appId: CONFIG.appId,
       shopId: "gid://shopify/Shop/42",
     });
+    assert.ok(requestInit?.signal instanceof AbortSignal);
+    assert.equal(requestInit.signal.aborted, false);
   });
 
   it("returns false when no active managed-pricing contract exists", async () => {
@@ -127,6 +132,124 @@ describe("Shopify Partner API subscription check", () => {
       ),
       false,
     );
+  });
+
+  it("rechecks once after plan selection when the first contract read is null", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let calls = 0;
+    const waits: number[] = [];
+    const fetcher: typeof fetch = async () => {
+      calls++;
+      return jsonResponse({
+        data: {
+          activeSubscription:
+            calls === 1 ? null : { billingPeriod: "EVERY_30_DAYS" },
+        },
+      });
+    };
+
+    assert.equal(
+      await hasActivePartnerSubscriptionAfterPlanSelection(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        fetcher,
+        async (milliseconds) => {
+          waits.push(milliseconds);
+        },
+        1_000,
+      ),
+      true,
+    );
+    assert.equal(calls, 2);
+    assert.deepEqual(waits, [POST_APPROVAL_RECHECK_MS]);
+    clearPartnerSubscriptionCacheForTests();
+  });
+
+  it("stays fail closed when both post-plan contract reads are null", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let calls = 0;
+    const fetcher: typeof fetch = async () => {
+      calls++;
+      return jsonResponse({ data: { activeSubscription: null } });
+    };
+
+    assert.equal(
+      await hasActivePartnerSubscriptionAfterPlanSelection(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        fetcher,
+        async () => {},
+        1_000,
+      ),
+      false,
+    );
+    assert.equal(calls, 2);
+    clearPartnerSubscriptionCacheForTests();
+  });
+
+  it("does not retry after plan selection when the first read is active", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let calls = 0;
+    const fetcher: typeof fetch = async () => {
+      calls++;
+      return jsonResponse({
+        data: {
+          activeSubscription: { billingPeriod: "EVERY_30_DAYS" },
+        },
+      });
+    };
+
+    assert.equal(
+      await hasActivePartnerSubscriptionAfterPlanSelection(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        fetcher,
+        async () => {
+          throw new Error("active contract must not wait");
+        },
+        1_000,
+      ),
+      true,
+    );
+    assert.equal(calls, 1);
+    clearPartnerSubscriptionCacheForTests();
+  });
+
+  it("rate-limits repeated post-plan rereads for the same shop", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let calls = 0;
+    let waits = 0;
+    const fetcher: typeof fetch = async () => {
+      calls++;
+      return jsonResponse({ data: { activeSubscription: null } });
+    };
+    const sleeper = async () => {
+      waits++;
+    };
+
+    assert.equal(
+      await hasActivePartnerSubscriptionAfterPlanSelection(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        fetcher,
+        sleeper,
+        1_000,
+      ),
+      false,
+    );
+    assert.equal(
+      await hasActivePartnerSubscriptionAfterPlanSelection(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        fetcher,
+        sleeper,
+        1_000 + POST_APPROVAL_RECHECK_COOLDOWN_MS - 1,
+      ),
+      false,
+    );
+    assert.equal(calls, 3);
+    assert.equal(waits, 1);
+    clearPartnerSubscriptionCacheForTests();
   });
 
   it("fails closed on Partner API transport, GraphQL, or schema errors", async () => {
@@ -249,6 +372,120 @@ describe("Shopify Partner API subscription check", () => {
       ),
       true,
     );
+    clearPartnerSubscriptionCacheForTests();
+  });
+
+  it("does not let an older inactive storefront read replace newer active admin state", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let resolveResponse: ((response: Response) => void) | undefined;
+    const deferred = new Promise<Response>((resolve) => {
+      resolveResponse = resolve;
+    });
+    const fetcher: typeof fetch = async () => deferred;
+
+    const pending = hasCachedActivePartnerSubscription(
+      CONFIG,
+      "gid://shopify/Shop/42",
+      fetcher,
+      1_000,
+      () => 2_001,
+    );
+    rememberPartnerSubscription(CONFIG, "gid://shopify/Shop/42", true, 2_000);
+    resolveResponse?.(jsonResponse({ data: { activeSubscription: null } }));
+
+    assert.equal(await pending, true);
+    assert.equal(
+      await hasCachedActivePartnerSubscription(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        async () => {
+          throw new Error("newer admin state must remain cached");
+        },
+        2_001,
+      ),
+      true,
+    );
+    clearPartnerSubscriptionCacheForTests();
+  });
+
+  it("does not let an older active storefront read replace newer inactive admin state", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let resolveResponse: ((response: Response) => void) | undefined;
+    const deferred = new Promise<Response>((resolve) => {
+      resolveResponse = resolve;
+    });
+    const fetcher: typeof fetch = async () => deferred;
+
+    const pending = hasCachedActivePartnerSubscription(
+      CONFIG,
+      "gid://shopify/Shop/42",
+      fetcher,
+      1_000,
+      () => 2_001,
+    );
+    rememberPartnerSubscription(CONFIG, "gid://shopify/Shop/42", false, 2_000);
+    resolveResponse?.(
+      jsonResponse({
+        data: {
+          activeSubscription: { billingPeriod: "EVERY_30_DAYS" },
+        },
+      }),
+    );
+
+    assert.equal(await pending, false);
+    assert.equal(
+      await hasCachedActivePartnerSubscription(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        async () => {
+          throw new Error("newer inactive admin state must remain cached");
+        },
+        2_001,
+      ),
+      false,
+    );
+    clearPartnerSubscriptionCacheForTests();
+  });
+
+  it("fails closed when newer admin state expires before an older request finishes", async () => {
+    clearPartnerSubscriptionCacheForTests();
+    let resolveResponse: ((response: Response) => void) | undefined;
+    const deferred = new Promise<Response>((resolve) => {
+      resolveResponse = resolve;
+    });
+    const fetcher: typeof fetch = async () => deferred;
+
+    const pending = hasCachedActivePartnerSubscription(
+      CONFIG,
+      "gid://shopify/Shop/42",
+      fetcher,
+      1_000,
+      () => 62_000,
+    );
+    rememberPartnerSubscription(CONFIG, "gid://shopify/Shop/42", true, 2_000);
+    resolveResponse?.(
+      jsonResponse({
+        data: {
+          activeSubscription: { billingPeriod: "EVERY_30_DAYS" },
+        },
+      }),
+    );
+
+    assert.equal(await pending, false);
+    let freshCalls = 0;
+    assert.equal(
+      await hasCachedActivePartnerSubscription(
+        CONFIG,
+        "gid://shopify/Shop/42",
+        async () => {
+          freshCalls++;
+          return jsonResponse({ data: { activeSubscription: null } });
+        },
+        62_000,
+      ),
+      false,
+    );
+    assert.equal(freshCalls, 1);
     clearPartnerSubscriptionCacheForTests();
   });
 });

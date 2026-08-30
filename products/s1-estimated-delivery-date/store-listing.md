@@ -172,10 +172,10 @@ No. The date is an estimate generated from merchant-configured rules.
 | Branded privacy URL | **MISSING live** — listing links to an older Telegraph page | Deploy and verify `/privacy`, then update the listing |
 | Public support page | **MISSING live** — Fly `/support` returns 404 | Deploy and verify `/support` |
 | Public support contact | **MISSING/UNAVAILABLE** on listing | Darren selects the support inbox; listing edit needs approval |
-| OAuth/install | **UNAVAILABLE** without a controlled store | Complete a fresh-install test |
-| Settings → storefront rules | Fixed and locally tested on this branch; **UNAVAILABLE live** | Save settings and verify the real theme block |
+| OAuth/install | Existing controlled-store install is verified; fresh install remains **UNAVAILABLE** | Complete an approval-gated uninstall/reinstall test on the dev store |
+| Settings → storefront rules | The current production block was staged unsaved and rendered fallback dates that did not match the app preview; branch fix is local | Approval-gated settings and theme save, then verify the real block |
 | Store-timezone cutoff | Locally tested; **UNAVAILABLE live** | Cross-timezone dev-store QA |
-| Shopify App Pricing | Public price/trial visible; subscription lifecycle **UNAVAILABLE** | Test no-charge dev-store plan and provider events |
+| Shopify App Pricing | Standard is current on the dev store at $0; Partner API and history verify its no-charge trial contract; a transient null exposed and drove a bounded post-approval reread fix | Recheck the branch after release and fresh install; never count the test contract as paid |
 | Uninstall/compliance webhooks | Routes and HMAC authentication code present; delivery **UNAVAILABLE** | Verify signed deliveries in provider logs |
 
 ## Install CTA
