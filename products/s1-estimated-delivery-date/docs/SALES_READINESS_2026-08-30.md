@@ -1,8 +1,9 @@
 # SupaDatewise paid-install readiness — evidence and launch packet
 
 Evidence window: 2026-08-30 10:02–10:10 UTC for public checks, through
-10:39 UTC for local verification, and through 15:30 UTC for authenticated
-Shopify/Fly reconciliation and controlled development-store billing checks.
+10:39 UTC for local verification, through 15:30 UTC for authenticated
+Shopify/Fly reconciliation and controlled development-store billing checks,
+and refreshed 2026-08-31 for the staged-secret and release preflight.
 
 Commercial target: the first real processed, non-refunded Shopify app
 subscription.
@@ -37,10 +38,12 @@ Companion packets:
 | Shopify Partner organization ID | `4774175` | Authenticated Partner Dashboard URL and successful Partner API endpoint; Dev Dashboard organization `208004935` is a different identifier and returns 401 when used as the Partner API organization |
 | Shopify app GraphQL ID | `gid://shopify/App/396333842433` | Authenticated Dev Dashboard plus successful app/shop-filtered Partner API queries |
 | Controlled development shop | `supadesign-8073.myshopify.com`; `gid://shopify/Shop/79690203390` | Authenticated Dev Dashboard current-install view and Partner API query |
-| Partner API client/token | Client `35086`, `SupaDatewise subscription status`; **Manage apps only** | Created after exact approval. Token is held only in the authenticated browser session, hidden again in the dashboard, and is not printed or committed |
+| Partner API client/token | Client `35086`, `SupaDatewise subscription status`; **Manage apps only** | Existing least-privilege client reconciled after exact approval. Its existing token was revealed only long enough to stage the Fly secret, hidden again, and never printed or committed |
 | Shopify listing | [SupaDatewise: Delivery Date](https://apps.shopify.com/estimated-delivery-date-6) | Public, HTTP 200, active Install control |
 | Fly app/domain | `edd-supadesign` / `https://edd-supadesign.fly.dev` | DNS, TLS, Fly headers, local config, matching App Bridge key |
 | Fly production release | Release `v6`; image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H`; machine `812e3dc95e2728` in `lhr` | Authenticated Fly dashboard, released 2026-07-18 11:10 UTC. Exact source commit remains **UNAVAILABLE** because the release exposes no commit receipt |
+| Reviewed release candidate | `af0aa574ebcb8a718def2f7451ea92a363fc5e57` | Pushed to draft PR #17 after the original approved commit failed its pre-production image build |
+| Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Remote build-only proof on 2026-08-31; image pushed but not released, so it has not run migrations or received traffic |
 | Active Shopify app version | `supadatewise-delivery-date-10`; version `1056076529665` | Authenticated Dev Dashboard; active since 2026-07-18 11:13 UTC |
 | Shopify Partner/Dev Dashboard | Organization/account `4774175`; Dev Dashboard organization `208004935`; app `396333842433` | Authenticated browser reconciliation |
 
@@ -85,9 +88,11 @@ live release proof exist.
 
 ### Authenticated production reconciliation
 
-- Fly release `v6` runs one `shared-cpu-1x`/512 MB machine in `lhr`; Fly lists
-  no secrets. Current environment values are only `DATABASE_URL`, `NODE_ENV`
-  and `PORT`.
+- Fly release `v6` runs one machine in `lhr`. `SCOPES` is deployed. Seven
+  required Shopify/Partner secret names are staged but not deployed:
+  `SHOPIFY_API_KEY`, `SHOPIFY_API_SECRET`, `SHOPIFY_APP_URL`,
+  `SHOPIFY_APP_HANDLE`, `SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_APP_GID` and
+  `SHOPIFY_PARTNER_API_ACCESS_TOKEN`. Values are not recorded in this packet.
 - The active Shopify app version has `/auth/callback`,
   `/auth/shopify/callback`, and `/api/auth/callback` configured; the third path
   returns 404 in production. It registers uninstall, scope-update, and privacy
@@ -263,16 +268,17 @@ rollback all pass. Until then: no traffic campaign and no merchant outreach.
 4. **Merchant validation:** run the five-person test above one at a time so a
    broken funnel is not amplified.
 
-No message, listing edit, submission, deploy, spend, or form has been sent or
-performed.
+No merchant message, listing edit, App Store submission, production release,
+spend, or form has been sent or performed. The only new remote artifact is a
+non-running Fly build-only image.
 
 ## 8. Release QA and rollback gate
 
-Local gate before draft PR (verified 2026-08-30):
+Local and image gate (refreshed 2026-08-31):
 
 - clean isolated branch based on `4e7c2ae`; original dirty checkout preserved;
 - fresh `npm ci` succeeds from the tracked lockfile;
-- `npm run check` succeeds: 57 tests, lint, route type generation, TypeScript,
+- `npm run check` succeeds: 58 tests, lint, route type generation, TypeScript,
   client build and server build;
 - `shopify app build` succeeds, including Shopify Theme Check and bundling the
   `delivery-date` theme app extension;
@@ -288,14 +294,14 @@ Local gate before draft PR (verified 2026-08-30):
   fails closed with 410 and `/auth/login` returns 200;
 - no secrets are present; the local branch adds the single `write_app_proxy`
   scope and proxy configuration, but neither has been applied to Shopify;
-- Docker is not installed on this host, so a clean Docker build is
-  **UNAVAILABLE**. Prisma's native migration engine is also blocked by Windows
-  Application Control locally; the preview database was created from the
-  checked-in migration through Prisma Client without bypassing that policy.
-  Linux container startup and migration remain release-gate checks, not proven
-  production facts.
+- Docker is not installed on this host. The exact `af0aa574` candidate instead
+  passed Fly's remote Docker build, including `npm ci`, the production React
+  Router build and `npm prune --omit=dev`; the pruned image reports zero known
+  dependency vulnerabilities. Its manifest is retained above. Container
+  startup, Prisma migration and runtime health remain unproven because the
+  build-only image has not been released.
 
-Controlled-store gate before deployment approval:
+Controlled-store gate after a separately approved production release:
 
 1. In the authenticated Dev Dashboard, confirm the App Home handle, Partner
    organization ID and app GraphQL ID. Reuse or create a Partner API client
@@ -319,11 +325,14 @@ Controlled-store gate before deployment approval:
 8. Trigger signed compliance and uninstall paths; session is removed.
 9. Confirm the live privacy/support pages and the rollback procedure.
 
-Rollback: do not deploy from the dirty checkout. Deploy only the reviewed PR
-commit; retain its Fly release ID and Shopify app-version ID. On regression,
+Rollback: do not deploy from the dirty checkout. Deploy only the exact approved
+reviewed PR commit; retain its Fly release ID and Shopify app-version ID. The
+currently preserved Fly rollback is release `v6` / image
+`deployment-01KXTEPGG9RBKJNYBM2664B08H`, and the preserved Shopify rollback is
+`supadatewise-delivery-date-10` / version `1056076529665`. On regression,
 roll Fly back to the immediately previous release and reactivate the previous
 Shopify app version, then verify `/`, `/app`, signed webhooks, and one controlled
-storefront render. Those provider IDs are **MISSING** until an approved release.
+storefront render. New release IDs remain **MISSING** until an approved release.
 
 ## 9. Material-step ledger (30 maximum)
 
@@ -389,8 +398,8 @@ created.
    environment names and zero-secret state without changing production.
 2. Authenticated and reconciled Shopify organization, app, listing, active
    version, current installs, event history and earnings.
-3. Created the least-privilege Partner API client after exact approval; kept its
-   token out of source, logs and this document.
+3. Reconciled the existing least-privilege Partner API client after exact
+   approval; kept its token out of source, logs and this document.
 4. Activated the Standard plan as a $0 development-store test contract after
    exact approval; verified the hosted-plan state and `SUBSCRIPTION_CREATED`
    event without claiming revenue.
@@ -410,3 +419,18 @@ created.
 10. Passed the fresh independent review after adding a five-second Partner API
     timeout, completion-time cache expiry and per-shop retry cooldown. Reviewer
     verdict: `ship`; production/provider actions remain separately gated.
+11. Staged the seven required Shopify/Partner secret values on the existing Fly
+    app after exact approval; retained the existing deployed `SCOPES` value.
+12. Attempted the approved deployment of exact commit `30243bdf`; the Docker
+    build failed before any production update because its Node 20 image could
+    not satisfy locked Shopify CLI 4.7.0's Node `>=22.12.0` engine. Fly release
+    `v6` and all live data remained unchanged; no rollback was required.
+13. Aligned build and runtime images on Node 22, added a regression test, passed
+    the 58-test/lint/type/build/app-build/runtime-audit gate, received a second
+    independent `ship` verdict, and pushed exact commit
+    `af0aa574ebcb8a718def2f7451ea92a363fc5e57` to draft PR #17.
+14. Built and pushed the exact candidate as a Fly build-only image. The prior
+    prune failure is fixed; the image manifest is retained above. Rechecking
+    Fly proved there is still no release after `v6` and all seven new secrets
+    remain staged. A production deployment of this new commit requires a new
+    exact action-time approval.
