@@ -46,8 +46,9 @@ Companion packets:
 | Fly app/domain | `edd-supadesign` / `https://edd-supadesign.fly.dev` | DNS, TLS, Fly headers, local config, matching App Bridge key |
 | Fly production release | Release `v6`; image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H`; machine `812e3dc95e2728` in `lhr` | Authenticated Fly dashboard, released 2026-07-18 11:10 UTC. Exact source commit remains **UNAVAILABLE** because the release exposes no commit receipt |
 | Rejected prior candidate | `af0aa574ebcb8a718def2f7451ea92a363fc5e57` | Its image was never released and is rejected after the 2026-09-08 dependency advisory refresh |
-| Replacement release candidate | **PENDING — security-fix commit SHA not yet created** | Record the immutable source SHA after committing the reviewed four-file batch; build-only proof and production approval must target that new SHA |
+| Replacement release candidate | `5fbbef8e248d0215da02e8d7f8765929ffb2149c` | Reviewed four-file security batch; committed locally and used as the exact source identity for the build-only proof below. It has not been released |
 | Rejected Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Built but never released. Rejected on 2026-09-08 after new `qs` advisories made its prior zero-runtime-vulnerability result stale; do not deploy this image |
+| Replacement Fly preflight image | `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`; 110 MB | Fly remote build-only completed successfully from the clean replacement commit. The runtime dependency prune reported zero known vulnerabilities. The image is stored but has not been released or started |
 | Active Shopify app version | `supadatewise-delivery-date-10`; version `1056076529665` | Authenticated Dev Dashboard; active since 2026-07-18 11:13 UTC |
 | Shopify Partner/Dev Dashboard | Organization/account `4774175`; Dev Dashboard organization `208004935`; app `396333842433` | Authenticated browser reconciliation |
 
@@ -290,8 +291,9 @@ rollback all pass. Until then: no traffic campaign and no merchant outreach.
    broken funnel is not amplified.
 
 No merchant message, listing edit, App Store submission, production release,
-spend, or form has been sent or performed. The only new remote artifact is a
-non-running Fly build-only image.
+spend, or form has been sent or performed. The only new remote artifacts are
+non-running Fly build-only images; the earlier image is rejected and the
+replacement remains approval-gated.
 
 ## 8. Release QA and rollback gate
 
@@ -316,13 +318,15 @@ Local and image gate (refreshed 2026-09-08):
   fails closed with 410 and `/auth/login` returns 200;
 - no secrets are present; the local branch adds the single `write_app_proxy`
   scope and proxy configuration, but neither has been applied to Shopify;
-- Docker is not installed on this host. The exact `af0aa574` candidate instead
-  passed Fly's remote Docker build, but that old preflight image is rejected
+- Docker is not installed on this host. The exact `af0aa574` candidate passed
+  Fly's remote Docker build, but that old preflight image is rejected
   because two `qs` denial-of-service advisories published after the build made
   its audit result stale. The reviewed replacement pins `qs 6.16.0`, passes the
-  published advisory reproductions, and has zero current runtime audit findings.
-  A fresh immutable remote image is still required. Container startup, Prisma
-  migration and runtime health remain unproven until an approved release.
+  published advisory reproductions and has zero current runtime audit findings.
+  Fly then built and pushed the exact clean replacement commit as the immutable
+  110 MB build-only image and manifest recorded above; its production prune also
+  reported zero known vulnerabilities. Container startup, Prisma migration and
+  runtime health remain unproven until an approved release.
 
 Controlled-store gate after a separately approved production release:
 
@@ -472,3 +476,10 @@ created.
     free subscription, and $0.00 total earnings, recurring charges and payouts.
     Recorded the exact D0-to-D+14 paid-conversion and D0-to-D+60 cleared-cash
     measurement window before preparing another release candidate.
+18. Built and pushed replacement commit
+    `5fbbef8e248d0215da02e8d7f8765929ffb2149c` as the non-running Fly build-only
+    image `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`,
+    manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`,
+    size 110 MB. Rechecked Fly afterward: production remains release `v6`, the
+    seven required secret values remain staged, and the five missing public
+    trust/discovery routes still return 404. No deployment occurred.
