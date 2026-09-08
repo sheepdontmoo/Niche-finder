@@ -3,7 +3,8 @@
 Evidence window: 2026-08-30 10:02–10:10 UTC for public checks, through
 10:39 UTC for local verification, through 15:30 UTC for authenticated
 Shopify/Fly reconciliation and controlled development-store billing checks,
-and refreshed 2026-08-31 for the staged-secret and release preflight.
+refreshed 2026-08-31 for the staged-secret and release preflight, and refreshed
+again 2026-09-08 for Shopify commercial evidence and dependency security.
 
 Commercial target: the first real processed, non-refunded Shopify app
 subscription.
@@ -12,8 +13,10 @@ Current verified paid installs: **0**. Shopify's authenticated app history and
 current-install view show no real paid recurring subscription. The sole current
 install is Darren's controlled development store.
 
-Current cleared subscription revenue: **USD $0.00**. Shopify Partner Dashboard
-shows total earnings of $0.00 and no recurring earning event.
+Current cleared subscription revenue: **USD $0.00**, reverified 2026-09-08.
+Shopify Partner Dashboard shows total earnings, recurring charges and last-30-
+day payouts of $0.00, with no paid event after the August 30 controlled-store
+free subscription.
 
 Traffic, listing visibility, public reviews, draft code, test charges, installs
 without provider-confirmed payment, and pipeline are not revenue.
@@ -42,8 +45,9 @@ Companion packets:
 | Shopify listing | [SupaDatewise: Delivery Date](https://apps.shopify.com/estimated-delivery-date-6) | Public, HTTP 200, active Install control |
 | Fly app/domain | `edd-supadesign` / `https://edd-supadesign.fly.dev` | DNS, TLS, Fly headers, local config, matching App Bridge key |
 | Fly production release | Release `v6`; image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H`; machine `812e3dc95e2728` in `lhr` | Authenticated Fly dashboard, released 2026-07-18 11:10 UTC. Exact source commit remains **UNAVAILABLE** because the release exposes no commit receipt |
-| Reviewed release candidate | `af0aa574ebcb8a718def2f7451ea92a363fc5e57` | Pushed to draft PR #17 after the original approved commit failed its pre-production image build |
-| Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Remote build-only proof on 2026-08-31; image pushed but not released, so it has not run migrations or received traffic |
+| Rejected prior candidate | `af0aa574ebcb8a718def2f7451ea92a363fc5e57` | Its image was never released and is rejected after the 2026-09-08 dependency advisory refresh |
+| Replacement release candidate | **PENDING — security-fix commit SHA not yet created** | Record the immutable source SHA after committing the reviewed four-file batch; build-only proof and production approval must target that new SHA |
+| Rejected Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Built but never released. Rejected on 2026-09-08 after new `qs` advisories made its prior zero-runtime-vulnerability result stale; do not deploy this image |
 | Active Shopify app version | `supadatewise-delivery-date-10`; version `1056076529665` | Authenticated Dev Dashboard; active since 2026-07-18 11:13 UTC |
 | Shopify Partner/Dev Dashboard | Organization/account `4774175`; Dev Dashboard organization `208004935`; app `396333842433` | Authenticated browser reconciliation |
 
@@ -78,6 +82,23 @@ new extension, but it is not an immutable live-release receipt.
 | Current installs/trials | Authenticated current-install view shows only `supadesign`, installed 2026-07-11; hosted selector and Partner API show its no-charge Standard trial | **1 controlled dev-store install; 1 $0 test contract**. Neither is a paid merchant |
 | Paid subscriptions/churn/refunds | Authenticated history shows only free/test subscriptions; the one external store seen historically later closed | **0 verified paid subscriptions**; paid churn/refunds are not established because no paid subscription exists |
 | Cleared revenue | Partner Dashboard total earnings and event history | **USD $0.00**; no recurring earning event |
+
+### Growth-only shipping case — refreshed 2026-09-08
+
+| Required evidence | Current proof |
+|---|---|
+| Concrete baseline | Shopify Partner Dashboard: 1 merchant with the app, 0 installs and 1 uninstall in the last 30 days, $0.00 total earnings, $0.00 recurring charges and $0.00 payouts. App history has no event after the August 30 controlled-store free subscription. Public Fly v6 still returns 404 for support, privacy, robots, sitemap and llms routes |
+| Exact target metric | At least 1 `verified_paid_install`, followed by `cleared_revenue > $0` for the same non-development merchant |
+| Trusted defect/opportunity signal | The already-public $6.99 listing can send merchants into a live funnel whose old release lacks the reviewed paid entitlement enforcement, accurate saved storefront rules and public trust routes |
+| Causal mechanism | Release the reviewed fail-closed billing/entitlement, store-timezone rendering, onboarding/theme activation and support/privacy surfaces; then release the matching Shopify proxy/scope version and validate it before acquisition |
+| Measurement source | Shopify Partner app history, subscription evidence, earnings/charge records and payouts; live endpoint and controlled-store checks are readiness evidence only |
+| Bounded observation window | D0 begins only when both Fly and Shopify versions pass controlled-store QA. Measure activation and paid choice through D+14; reconcile the same merchant's processed, non-refunded earnings through D+60 |
+
+This is a direct conversion and recurring-revenue repair, not a cold generic
+SEO experiment. Do not start merchant acquisition until both provider releases
+and controlled-store QA pass. If the live paid path or storefront render fails,
+roll back immediately; if no merchant remains paid after the bounded validation,
+stop and revise the value proposition before another release.
 
 **Biggest leak:** the current production version still opens without an active
 plan, has no configured app proxy, and can render a theme-block fallback that
@@ -274,15 +295,16 @@ non-running Fly build-only image.
 
 ## 8. Release QA and rollback gate
 
-Local and image gate (refreshed 2026-08-31):
+Local and image gate (refreshed 2026-09-08):
 
 - clean isolated branch based on `4e7c2ae`; original dirty checkout preserved;
 - fresh `npm ci` succeeds from the tracked lockfile;
-- `npm run check` succeeds: 58 tests, lint, route type generation, TypeScript,
+- `npm run check` succeeds: 59 tests, lint, route type generation, TypeScript,
   client build and server build;
 - `shopify app build` succeeds, including Shopify Theme Check and bundling the
   `delivery-date` theme app extension;
-- `npm audit --omit=dev` reports zero known runtime vulnerabilities;
+- `npm audit --omit=dev` reports zero known runtime vulnerabilities after
+  overriding the sole transitive `qs` parser to patched version `6.16.0`;
 - the complete audit still reports 15 high-severity advisories confined to
   development/build tooling (`@shopify/api-codegen-preset`, GraphQL codegen,
   TypeScript ESLint, `lodash` and `minimatch`). The offered fixes are major or
@@ -295,11 +317,12 @@ Local and image gate (refreshed 2026-08-31):
 - no secrets are present; the local branch adds the single `write_app_proxy`
   scope and proxy configuration, but neither has been applied to Shopify;
 - Docker is not installed on this host. The exact `af0aa574` candidate instead
-  passed Fly's remote Docker build, including `npm ci`, the production React
-  Router build and `npm prune --omit=dev`; the pruned image reports zero known
-  dependency vulnerabilities. Its manifest is retained above. Container
-  startup, Prisma migration and runtime health remain unproven because the
-  build-only image has not been released.
+  passed Fly's remote Docker build, but that old preflight image is rejected
+  because two `qs` denial-of-service advisories published after the build made
+  its audit result stale. The reviewed replacement pins `qs 6.16.0`, passes the
+  published advisory reproductions, and has zero current runtime audit findings.
+  A fresh immutable remote image is still required. Container startup, Prisma
+  migration and runtime health remain unproven until an approved release.
 
 Controlled-store gate after a separately approved production release:
 
@@ -434,3 +457,18 @@ created.
     Fly proved there is still no release after `v6` and all seven new secrets
     remain staged. A production deployment of this new commit requires a new
     exact action-time approval.
+15. Revalidated the production gate on 2026-09-08 and rejected the prior image
+    before deployment when newly published `qs` advisories produced three
+    moderate runtime audit findings. Fly remained on `v6`; staged secrets were
+    not activated.
+16. Overrode the sole Express/body-parser query parser to patched `qs 6.16.0`,
+    updated the lockfile, and added a regression covering every locked `qs`
+    copy. Fresh install, 59 tests, lint, typecheck, production build, Shopify app
+    build, normal Express parsing, both published advisory reproductions and
+    `npm audit --omit=dev` all pass. Independent review verdict: ship for commit
+    and build-only preflight; production remains separately gated.
+17. Refreshed Shopify Partner evidence on 2026-09-08: 1 merchant, 0 installs and
+    1 uninstall in the last 30 days, no paid event after the controlled-store
+    free subscription, and $0.00 total earnings, recurring charges and payouts.
+    Recorded the exact D0-to-D+14 paid-conversion and D0-to-D+60 cleared-cash
+    measurement window before preparing another release candidate.
