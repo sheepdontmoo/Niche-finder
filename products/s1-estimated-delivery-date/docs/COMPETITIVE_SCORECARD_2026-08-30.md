@@ -55,7 +55,7 @@ scope audits.
 | C-EDD | Privacy policy is linked, but no Data access section was displayed. Permissions are **UNAVAILABLE**, not “none.” |
 | Estimated Delivery Date & ETA | Privacy policy is linked, but no Data access section was displayed. Permissions are **UNAVAILABLE**. |
 | ArrivesBy | Customer address/geolocation/device data; store-owner details; editable products, last 60 days of order history, theme/app-controlled pages, locations and Markets. |
-| SupaDatewise Fly v7 | Listing discloses store-owner contact data associated with the app session. The reviewed server requests no order/customer-record access and is live; active Shopify version 10 still has no app proxy. |
+| SupaDatewise Fly v8 | Listing discloses store-owner contact data associated with the app session. The reviewed server requests no order/customer-record access, is live, and has verified path-only access logging; active Shopify version 10 still has no app proxy. |
 | SupaDatewise pending Shopify version | Adds only `write_app_proxy` for an HMAC-authenticated entitlement check; no order/customer-record scope. Scope/config release and reauthorization impact remain **UNAVAILABLE** until controlled QA. |
 
 ## First-party review themes to design against
@@ -101,12 +101,12 @@ above weaken its trust signal; they do not prove misconduct.
 | Visible rating/reviews | **VERIFIED:** 0 reviews; no rating |
 | Discoverability | **VERIFIED LOW:** page 18, intra-position 8 in a 454-app product-content category; absent from page one of Delivery and pickup |
 | Public support | **LIVE:** branded `/support` returns 200; listing still needs a separately approved URL/contact update |
-| Public privacy | **LIVE ROUTE; OPERATIONAL PROOF BLOCKED:** branded `/privacy` returns 200, but v7 access logs contain authenticated query strings. Redaction deployment and live-log verification are required; the listing still points to the older policy |
+| Public privacy | **LIVE; NEW LOGGING VERIFIED:** branded `/privacy` returns 200. Across 41 new v8 records there were zero query strings, credential parameter names or synthetic sentinel values. Historical v7 log retention was not changed; the listing still points to the older policy |
 | Live install start | **VERIFIED:** public Install control reaches Shopify login/store selection |
-| Install completion, OAuth and reauthorization | **PARTIAL:** current controlled development-store install is verified; fresh uninstall/reinstall and branch reauthorization remain approval-gated and paused until path-only logging is live |
+| Install completion, OAuth and reauthorization | **PARTIAL:** the current controlled development-store session opens and reloads on v8 with path-only logging; fresh uninstall/reinstall and branch reauthorization remain approval-gated |
 | Active theme block / first widget rendered | **PARTIAL:** Savor editor found the block and an unsaved preview rendered fallback dates; no saved published render or trusted event exists |
-| Billing enforcement in Fly v7 | **FUNCTIONAL CONTROLLED SESSION; PRIVACY BLOCKED:** the $0 development-store contract opens both embedded routes; unauthenticated `/app` fails closed with 410. V7 access logging must be remediated; a non-development paid path remains **UNAVAILABLE** |
-| Shopify storefront entitlement | **BLOCKED BY PRIVACY AND SPLIT VERSION:** v7 needs the path-only logging release, and active Shopify version 10 has no app proxy or `write_app_proxy`; the signed storefront path cannot yet pass end to end |
+| Billing enforcement in Fly v8 | **FUNCTIONAL CONTROLLED SESSION; NEW LOGGING VERIFIED:** the $0 development-store contract opens both embedded routes with path-only logs; unauthenticated `/app` fails closed with 410. A non-development paid path remains **UNAVAILABLE** |
+| Shopify storefront entitlement | **BLOCKED BY SPLIT VERSION:** active Shopify version 10 has no app proxy or `write_app_proxy`; the signed storefront path cannot yet pass end to end |
 | Delivery correctness | **PARTIAL LIVE:** the embedded app loaded saved rules and Shopify's `America/New_York` timezone; the matching updated theme extension and signed storefront render remain unreleased |
 | Current installs/trials/paid subscriptions/churn/refunds | **VERIFIED BASELINE:** one current controlled dev-store install and one $0 Standard test contract; no real paid recurring subscription; paid churn/refunds not established |
 | Verified processed, non-refunded paid installs | **0** |

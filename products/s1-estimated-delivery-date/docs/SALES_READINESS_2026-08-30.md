@@ -5,8 +5,8 @@ Evidence window: 2026-08-30 10:02–10:10 UTC for public checks, through
 Shopify/Fly reconciliation and controlled development-store billing checks,
 refreshed 2026-08-31 for the staged-secret and release preflight, and refreshed
 again 2026-09-08 for Shopify commercial evidence, dependency security, the
-approved Fly v7 release, controlled-store embedded-app verification, and the
-access-log privacy remediation gate.
+approved Fly v7 and v8 releases, controlled-store embedded-app verification,
+and the access-log privacy remediation gate.
 
 Commercial target: the first real processed, non-refunded Shopify app
 subscription.
@@ -46,13 +46,13 @@ Companion packets:
 | Partner API client/token | Client `35086`, `SupaDatewise subscription status`; **Manage apps only** | Existing least-privilege client reconciled after exact approval. Its existing token was revealed only long enough to stage the Fly secret, hidden again, and never printed or committed |
 | Shopify listing | [SupaDatewise: Delivery Date](https://apps.shopify.com/estimated-delivery-date-6) | Public, HTTP 200, active Install control |
 | Fly app/domain | `edd-supadesign` / `https://edd-supadesign.fly.dev` | DNS, TLS, Fly headers, local config, matching App Bridge key |
-| Fly production release | Release `v7`; image `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`; machine `812e3dc95e2728` in `lhr` | Released 2026-09-08 11:53 UTC after exact approval. Prisma found no pending migrations; the server listened on port 3000 and live smoke checks passed |
-| Preserved Fly rollback | Release `v6`; image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H` | Last known production release before the approved v7 change; retained for immediate rollback |
+| Fly production release | Release `v8`; image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`; manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; machine `812e3dc95e2728` in `lhr` | Released 2026-09-08 13:17 UTC after exact approval. Prisma found no pending migrations; the server listened on port 3000 and the 15-minute release gate passed |
+| Preserved Fly rollback | Release `v7`; image `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; older release `v6` / image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H` | Both retained for availability rollback. Both use the old full-target logger, so either rollback would reopen the access-log privacy defect |
 | Rejected prior candidate | `af0aa574ebcb8a718def2f7451ea92a363fc5e57` | Its image was never released and is rejected after the 2026-09-08 dependency advisory refresh |
-| Deployed release source | `5fbbef8e248d0215da02e8d7f8765929ffb2149c` | Reviewed four-file security batch and exact source identity of Fly release v7; the following `b17c26f` commit changes documentation only |
+| Deployed release source | `5548e96343092082ac460ded003846eb316f2684` | Reviewed redaction/security batch and exact source identity of Fly release v8; later commits change documentation only |
 | Rejected Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Built but never released. Rejected on 2026-09-08 after new `qs` advisories made its prior zero-runtime-vulnerability result stale; do not deploy this image |
 | Released Fly image | `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`; 110 MB | Built remotely from the clean replacement commit, then released unchanged as v7. The production dependency prune reported zero known vulnerabilities |
-| Redaction release candidate | Commit `5548e96343092082ac460ded003846eb316f2684`; image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`; manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; 110 MB | Built and pushed remotely with `--build-only`; runtime prune reported zero known vulnerabilities. It is not running and requires exact deployment approval |
+| Redaction production image | Commit `5548e96343092082ac460ded003846eb316f2684`; image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`; manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; 110 MB | Deployed unchanged as v8 after exact approval; runtime prune reported zero known vulnerabilities. New access logs passed path-only verification |
 | Active Shopify app version | `supadatewise-delivery-date-10`; version `1056076529665` | Authenticated Dev Dashboard; active since 2026-07-18 11:13 UTC |
 | Shopify Partner/Dev Dashboard | Organization/account `4774175`; Dev Dashboard organization `208004935`; app `396333842433` | Authenticated browser reconciliation |
 
@@ -71,18 +71,18 @@ new extension, but it is not an immutable live-release receipt.
 | Discoverability | Product content category has 454 apps; SupaDatewise is page 18, Shopify intra-position 8; absent from page one of Delivery and pickup | **LOW** visibility |
 | Listing view | Shopify page is reachable | Counts/conversion **UNAVAILABLE** |
 | Install start | Public Install control opens Shopify's login/store-selection flow | Store-specific start count **UNAVAILABLE** |
-| Install completion/OAuth | Public `/auth/login` responds; the existing controlled store opens the v7 embedded app through Shopify Admin without an iframe or authentication loop | Existing-session path functions, but the stock server logs authenticated query strings; privacy readiness is **BLOCKED** until a redacting server release is deployed and verified. Fresh install/reauthorization remains gated |
-| Scopes/permissions | Fly v7 requests only `write_app_proxy` for an HMAC-authenticated storefront entitlement request; listing discloses store-owner contact data associated with the app session | Active Shopify version 10 still lacks the matching scope/proxy configuration, so reauthorization impact remains **UNAVAILABLE** |
+| Install completion/OAuth | Public `/auth/login` responds; the existing controlled store opens the v8 embedded app through Shopify Admin without an iframe or authentication loop | Existing-session path and path-only logging **PASS**; fresh install/reauthorization remains gated |
+| Scopes/permissions | Fly v8 requests only `write_app_proxy` for an HMAC-authenticated storefront entitlement request; listing discloses store-owner contact data associated with the app session | Active Shopify version 10 still lacks the matching scope/proxy configuration, so reauthorization impact remains **UNAVAILABLE** |
 | Shopify App Pricing | Public Standard plan is $6.99/30 days with a seven-day trial; controlled dev store can test it for $0 | Shopify hosted selector says `Current`; Partner API reports `EVERY_30_DAYS` with trial end `2026-09-06T15:25:55Z`; history records `SUBSCRIPTION_CREATED`. This is a no-charge development contract, not revenue. One isolated null response recovered to active; the branch now rereads one null only on a signed-in `plan_handle` return and still requires Partner API activation |
-| Onboarding | Fly v7 embedded Settings and Setup guide routes opened successfully on the controlled development store | **LIVE** for the existing session; activation-status verification is not yet implemented |
-| Settings save | V7 reads the existing app-owned settings and authoritative `America/New_York` timezone | Existing values **VERIFIED READ-ONLY**; a post-release save was not performed and remains controlled-store mutation work |
+| Onboarding | Fly v8 embedded Settings and Setup guide routes opened successfully on the controlled development store | **LIVE** for the existing session; activation-status verification is not yet implemented |
+| Settings save | V8 reads the existing app-owned settings and authoritative `America/New_York` timezone | Existing values **VERIFIED READ-ONLY**; a post-release save was not performed and remains controlled-store mutation work |
 | Rules reach storefront | Pre-batch Liquid used `shop.metafields.app.settings`, not Shopify's `$app` reserved-namespace syntax | **BROKEN in reviewed source**; fixed locally, with the unentitled fallback removed |
 | Cutoff accuracy | Pre-batch renderer used the shopper device timezone despite UI promising shop time | **BROKEN cross-timezone**; fixed locally with Shopify `ianaTimezone` |
 | Theme loading | Script declared in schema and loaded again with a manual tag | Duplicate load; fixed locally |
-| Theme activation | Published Savor theme initially had no app block | Theme editor successfully found and staged `Estimated Delivery Date`; the unsaved preview rendered a date window. Fly v7 now serves the setup/deep-link UI, but the updated Shopify theme-extension version and any theme save remain separately gated |
+| Theme activation | Published Savor theme initially had no app block | Theme editor successfully found and staged `Estimated Delivery Date`; the unsaved preview rendered a date window. Fly v8 serves the setup/deep-link UI, but the updated Shopify theme-extension version and any theme save remain separately gated |
 | First widget rendered | No trustworthy event exists | **MISSING** measurement and live proof |
 | Public support | `https://edd-supadesign.fly.dev/support` returns 200 with the reviewed support content | **LIVE**; listing still needs a separately approved URL update |
-| Public privacy | `https://edd-supadesign.fly.dev/privacy` returns 200 with the reviewed data-lifecycle disclosure | Page is **LIVE**, but clean privacy proof is **BLOCKED** because v7 access logs include authenticated query strings. The listing still points to the older policy until a separately approved edit |
+| Public privacy | `https://edd-supadesign.fly.dev/privacy` returns 200 with the reviewed data-lifecycle disclosure | **LIVE; NEW LOGGING VERIFIED:** v8 recorded 41 post-release requests, including authenticated embedded routes, with zero query strings, credential parameter names or synthetic sentinel values. Historical v7 log retention was not changed. The listing still points to the older policy until a separately approved edit |
 | Webhooks | Pre-batch uninstall deletion depended on a session and `shop/redact` only acknowledged; unsigned probes fail closed | Unconditional idempotent shop deletion fixed locally; signed provider delivery **UNAVAILABLE** |
 | Current installs/trials | Authenticated current-install view shows only `supadesign`, installed 2026-07-11; hosted selector and Partner API show its no-charge Standard trial | **1 controlled dev-store install; 1 $0 test contract**. Neither is a paid merchant |
 | Paid subscriptions/churn/refunds | Authenticated history shows only free/test subscriptions; the one external store seen historically later closed | **0 verified paid subscriptions**; paid churn/refunds are not established because no paid subscription exists |
@@ -92,9 +92,9 @@ new extension, but it is not an immutable live-release receipt.
 
 | Required evidence | Current proof |
 |---|---|
-| Concrete baseline | Shopify Partner Dashboard: 1 merchant with the app, 0 installs and 1 uninstall in the last 30 days, $0.00 total earnings, $0.00 recurring charges and $0.00 payouts. App history has no event after the August 30 controlled-store free subscription. Fly v7 now serves support, privacy, robots, sitemap and llms routes, and the existing controlled-store session opens both embedded app routes. Active Shopify version 10 still has no app proxy or `write_app_proxy` scope |
+| Concrete baseline | Shopify Partner Dashboard: 1 merchant with the app, 0 installs and 1 uninstall in the last 30 days, $0.00 total earnings, $0.00 recurring charges and $0.00 payouts. App history has no event after the August 30 controlled-store free subscription. Fly v8 serves support, privacy, robots, sitemap and llms routes, and the existing controlled-store session opens both embedded app routes with path-only logging. Active Shopify version 10 still has no app proxy or `write_app_proxy` scope |
 | Exact target metric | At least 1 `verified_paid_install`, followed by `cleared_revenue > $0` for the same non-development merchant |
-| Trusted defect/opportunity signal | The already-public $6.99 listing now reaches the reviewed v7 server, but Shopify version 10 cannot issue a signed app-proxy entitlement request and the updated theme extension has not been released. A merchant can configure rules without a verified path to the paid storefront render |
+| Trusted defect/opportunity signal | The already-public $6.99 listing now reaches the reviewed v8 server, but Shopify version 10 cannot issue a signed app-proxy entitlement request and the updated theme extension has not been released. A merchant can configure rules without a verified path to the paid storefront render |
 | Causal mechanism | Release the matching single-scope Shopify proxy/theme version, reauthorize only the controlled development store, then verify save, signed entitlement, store-timezone rendering and preview-before-publish before acquisition |
 | Measurement source | Shopify Partner app history, subscription evidence, earnings/charge records and payouts; live endpoint and controlled-store checks are readiness evidence only |
 | Bounded observation window | D0 begins only when both Fly and Shopify versions pass controlled-store QA. Measure activation and paid choice through D+14; reconcile the same merchant's processed, non-refunded earnings through D+60 |
@@ -105,7 +105,7 @@ and controlled-store QA pass. If the live paid path or storefront render fails,
 roll back immediately; if no merchant remains paid after the bounded validation,
 stop and revise the value proposition before another release.
 
-**Biggest leak:** Fly v7 now enforces the active-plan gate and serves the reviewed
+**Biggest leak:** Fly v8 now enforces the active-plan gate and serves the reviewed
 settings, onboarding and trust surfaces, but active Shopify version 10 has no
 configured app proxy and still owns the previous theme-extension bundle. The
 storefront entitlement-to-render path therefore cannot pass end to end.
@@ -114,7 +114,7 @@ controlled-store proof exist.
 
 ### Authenticated production reconciliation
 
-- Fly release `v7` runs one started machine in `lhr`. `SCOPES` and all seven
+- Fly release `v8` runs one started machine in `lhr`. `SCOPES` and all seven
   required Shopify/Partner secret names are deployed:
   `SHOPIFY_API_KEY`, `SHOPIFY_API_SECRET`, `SHOPIFY_APP_URL`,
   `SHOPIFY_APP_HANDLE`, `SHOPIFY_PARTNER_ORG_ID`, `SHOPIFY_APP_GID` and
@@ -128,12 +128,13 @@ controlled-store proof exist.
 - The active Shopify version has no app proxy. The branch's storefront
   entitlement check therefore cannot be verified against Shopify until the
   scope/proxy configuration is separately approved and released.
-- Fly v7's stock React Router access logger records full request targets. An
-  authenticated embedded-app request therefore put short-lived Shopify session
-  material in provider logs. Values are intentionally omitted here. Shopify
-  configuration and acquisition are blocked until a path-only logger is
-  released and verified. Fly v6 used the same stock logger, so rollback is not
-  a remediation for this finding.
+- Fly v7's stock logger previously recorded full authenticated request targets.
+  Values are intentionally omitted here. V8 preserves the real request for
+  Shopify authentication but records only the path: 41 new request records over
+  the 15-minute release window contained zero query strings, credential parameter
+  names or synthetic sentinel values and zero errors. Historical log retention
+  was not changed. V7 and v6 both use the old logger and are availability-only
+  rollback references, not privacy remediation.
 - Last-30-day Partner evidence shows 0 installs, 1 uninstall, net -1, and
   payouts/earnings of $0.00. Historical installs include Darren's test stores
   and one external store that later closed; none has a verified paid recurring
@@ -193,12 +194,12 @@ controlled-store proof exist.
     as defense in depth against a later environment or dependency change.
 
 This branch intentionally adds only `write_app_proxy` and its reviewed proxy
-configuration to close the storefront billing bypass. Fly v7 now runs the prior
-reviewed server after exact approval, but its stock access logger fails the new
-privacy gate. The path-only remediation passes 62 local tests, lint, typecheck,
-production build, Shopify app/theme build, a secret-pattern scan and a zero-
-runtime-vulnerability audit. It is not live. No plan, price, trial, live listing,
-Shopify app version or merchant-store setting has changed; every provider action
+configuration to close the storefront billing bypass. Fly v8 now runs the
+reviewed path-only logger after exact approval. The remediation passes 62 local
+tests, lint, typecheck, production build, Shopify app/theme build, a secret-
+pattern scan, a zero-runtime-vulnerability audit, controlled embedded-route QA
+and the 15-minute live gate. No plan, price, trial, live listing, Shopify app
+version or merchant-store setting has changed; every later provider action
 remains separately approval-gated.
 
 ## 4. Competitive scorecard
@@ -216,7 +217,7 @@ hands-on correctness proof. Five is strongest.
 | [C-EDD](https://apps.shopify.com/estimated-delivery-date-plus) | Product/collection/vendor/country rules, holidays, local timezone | Free; $4.98/$8.98 | 4.9 / 382 | No badge visible | 3 | 2 | 2 | 2 | 4 | 1 | 3 |
 | [CodeRagon ETA](https://apps.shopify.com/order-delivery-estimated) | Product/variant/vendor/tag/shipping/country/ZIP rules, analytics | Free; $4.99/$8.99, seven-day trials | 4.7 / 84 | Yes | 4 | 5 | 4 | 5 | 5 | 3 | 5 |
 | [ArrivesBy](https://apps.shopify.com/arrives-by) | Variant/location/inventory-aware ETA, preorder, promised-vs-actual tracking | Free; $4.99/$19.99, seven-day trials | 4.6 / 46 | Yes | 5 | 5 | 4 | 4 | 3 | 4 | 5 |
-| SupaDatewise current split release | Fly v7 settings/billing/trust live; Shopify v10 still owns the old proxy/theme configuration | $6.99, seven-day trial | 0 / 0 | No | 4 | 3 | 4 | 3 | 2 | 4 | 3 |
+| SupaDatewise current split release | Fly v8 settings/billing/trust and path-only access logging live; Shopify v10 still owns the old proxy/theme configuration | $6.99, seven-day trial | 0 / 0 | No | 4 | 3 | 4 | 3 | 2 | 4 | 3 |
 | SupaDatewise after controlled Shopify QA | Store-timezone rule, saved-settings fix, signed proxy, preview deep link and tested lightweight block | Same; unchanged | Still 0 / 0 | No | 4 | 3 | 4 | 4 | 2 | 4 | 4 conditional |
 
 ### First-party review themes to design against
@@ -229,10 +230,11 @@ hands-on correctness proof. Five is strongest.
 - Price complaints where advanced surfaces sit behind expensive plans.
 
 These are competitor review themes, not proof that SupaDatewise has solved
-every issue. Fly v7 directly addresses store-timezone math, saved-rule delivery,
-duplicate loading and safe preview, but the matching Shopify proxy/theme version
-is not released. Variant changes, catalog-scale rules and multiple fulfillment
-locations remain outside current capability.
+every issue. Fly v8 directly addresses store-timezone math, saved-rule delivery,
+duplicate loading and safe preview, and its path-only logging is verified, but
+the matching Shopify proxy/theme version is not released. Variant changes,
+catalog-scale rules and multiple fulfillment locations remain outside current
+capability.
 
 ## 5. Smallest defensible wedge
 
@@ -318,9 +320,9 @@ rollback all pass. Until then: no traffic campaign and no merchant outreach.
    broken funnel is not amplified.
 
 No merchant message, listing edit, App Store submission, Shopify app-version
-release, theme save, spend, or form has been sent or performed. Fly release v7
-was performed only after exact approval; its prior v6 image remains available
-for rollback.
+release, theme save, spend, or form has been sent or performed. Fly releases v7
+and v8 were each performed only after exact action-time approval; v7 and v6
+remain available as availability rollbacks, with the documented privacy caveat.
 
 ## 8. Release QA and rollback gate
 
@@ -328,7 +330,7 @@ Local and image gate (refreshed 2026-09-08):
 
 - clean isolated branch based on `4e7c2ae`; original dirty checkout preserved;
 - fresh `npm ci` succeeds from the tracked lockfile;
-- `npm run check` succeeds: 59 tests, lint, route type generation, TypeScript,
+- `npm run check` succeeds: 62 tests, lint, route type generation, TypeScript,
   client build and server build;
 - `shopify app build` succeeds, including Shopify Theme Check and bundling the
   `delivery-date` theme app extension;
@@ -343,7 +345,7 @@ Local and image gate (refreshed 2026-09-08):
   `/robots.txt`, `/sitemap.xml` and `/llms.txt`; unsigned uninstall and
   compliance webhook probes return 400; an unauthenticated `/app` request
   fails closed with 410 and `/auth/login` returns 200;
-- all seven required secret values are deployed to Fly v7; the local branch adds
+- all seven required secret values are deployed to Fly v8; the local branch adds
   the single `write_app_proxy` scope and proxy configuration, but neither has
   been applied to Shopify;
 - Docker is not installed on this host. The exact `af0aa574` candidate passed
@@ -357,9 +359,16 @@ Local and image gate (refreshed 2026-09-08):
   no pending migration; port 3000 opened; `/`, `/support`, `/privacy`,
   `/robots.txt`, `/sitemap.xml`, `/llms.txt` and `/auth/login` returned 200;
   unauthenticated `/app` returned 410; and both embedded routes opened through
-  Shopify Admin on the existing controlled-store session.
+  Shopify Admin on the existing controlled-store session. A later reviewed
+  redaction commit, `5548e96343092082ac460ded003846eb316f2684`, was built as
+  the exact image/manifest recorded above and released unchanged as Fly v8.
+  Migrations completed, port 3000 opened, the same routes passed, and a
+  15-minute watch completed 13 of 13 successful probes. The existing controlled
+  store reloaded both Settings and Setup guide without a save or other mutation.
+  Forty-one new access records contained zero query strings, credential
+  parameter names or synthetic sentinel values and zero errors.
 
-Controlled-store gate after a separately approved production release:
+Controlled-store gate after the verified Fly v8 release:
 
 1. In the authenticated Dev Dashboard, confirm the App Home handle, Partner
    organization ID and app GraphQL ID. Reuse or create a Partner API client
@@ -385,13 +394,16 @@ Controlled-store gate after a separately approved production release:
 
 Rollback: do not deploy from the dirty checkout. Deploy only the exact approved
 reviewed PR commit; retain its Fly release ID and Shopify app-version ID. Current
-Fly production is release `v7`; its preserved rollback is release `v6` / image
-`deployment-01KXTEPGG9RBKJNYBM2664B08H`, and the preserved Shopify rollback is
-`supadatewise-delivery-date-10` / version `1056076529665`. On regression,
-roll Fly back to the immediately previous release and reactivate the previous
-Shopify app version, then verify `/`, `/app`, signed webhooks, and one controlled
-storefront render. A replacement Shopify app-version ID remains **MISSING** until
-that separate release is approved.
+Fly production is release `v8`; its immediate rollback is release `v7` / image
+`5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`, with older release `v6` /
+image `deployment-01KXTEPGG9RBKJNYBM2664B08H` also retained. Both old Fly
+releases use the full-target logger, so they are emergency availability
+rollbacks that reopen the privacy defect. The preserved Shopify rollback is
+`supadatewise-delivery-date-10` / version `1056076529665`. On regression, roll
+Fly back only for availability, reactivate the previous Shopify app version if
+required, then verify `/`, `/app`, signed webhooks, and one controlled storefront
+render. A replacement Shopify app-version ID remains **MISSING** until that
+separate release is approved.
 
 ## 9. Material-step ledger (30 maximum)
 
@@ -560,3 +572,15 @@ created.
 28. Rechecked Fly after the build-only action: release `v7`, image `5fbbef8e...`,
     machine `812e3dc95e2728` and the v6 rollback remain unchanged. The redaction
     candidate is not deployed.
+29. After Darren's exact action-time approval, deployed only the immutable
+    redaction image and manifest recorded above to `edd-supadesign` with a
+    rolling update. Fly created release `v8` on the existing `lhr` machine;
+    releases v7 and v6 remain retained and no Shopify configuration, listing,
+    theme, pricing, outreach, merge or spend changed.
+30. Accepted v8 only after migrations completed, port 3000 opened, all public
+    routes passed, raw unauthenticated `/app` stayed fail-closed at 410, and the
+    controlled Shopify installation reloaded Settings and Setup guide without a
+    save. A 15-minute watch passed 13 of 13 probes; 41 new access records had
+    zero query strings, credential parameter names, sentinel values or errors.
+    This continuation cap is exhausted; the Shopify release remains a separate
+    exact gate.

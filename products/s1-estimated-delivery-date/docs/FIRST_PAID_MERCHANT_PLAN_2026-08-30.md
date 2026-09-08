@@ -32,8 +32,8 @@ provider evidence supplied for this plan.
 | High-intent category visibility | Absent from page one of Delivery and pickup | Direct Shopify category response |
 | Listing views and install starts | **UNAVAILABLE** | No authenticated App Store analytics export in the evidence packet |
 | Public support | **LIVE branded route** | Fly `/support` returns 200; listing still needs a separately approved support URL/contact edit |
-| Public privacy | **LIVE route; operational proof blocked** | Fly `/privacy` returns 200, but v7 access logs contain authenticated query strings and the listing still points to the older Telegraph policy |
-| Production release identity | Fly `v7`, image `5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`, manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`; active Shopify version `1056076529665` | Exact Fly source/image is live with v6 retained, but fails the new access-log privacy gate. The Shopify proxy/theme version remains unreleased |
+| Public privacy | **LIVE; new logging verified** | Fly `/privacy` returns 200. Across 41 new v8 request records, including authenticated embedded routes, there were zero query strings, credential parameter names or synthetic sentinel values. Historical v7 log retention was not changed, and the listing still points to the older Telegraph policy |
+| Production release identity | Fly `v8`, image `5548e96343092082ac460ded003846eb316f2684-preflight`, manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; active Shopify version `1056076529665` | Exact Fly source/image is live after a 13-of-13, 15-minute stability gate. V7 and v6 are retained as availability rollbacks with a privacy caveat. The Shopify proxy/theme version remains unreleased |
 
 Traffic, listing position, permissions, replies, calls, installs, development-
 store plans, $0/test subscriptions, trial starts, screenshots, drafts, forecasts,
@@ -92,10 +92,10 @@ passing in local code does not prove it passed in Shopify or production.
 | Gate | Evidence required | Authority boundary | Current state |
 |---|---|---|---|
 | G0 — source | Reviewed commit, clean branch, passing tests/build/security checks, rollback notes | Local work only | **PASS:** commit `5548e96343092082ac460ded003846eb316f2684` passes fresh install, 62 tests, lint, typecheck, production build, Shopify app/theme build, secret scan, zero-runtime-vulnerability audit and independent review; exact build-only image and manifest are recorded in G3 |
-| G1 — provider identity | Authenticated App Home handle, Partner organization ID, app GID, pricing/subscription source, and exact current app identity | Approval immediately before any token, secret, permission, or setting change | **PASS FOR FLY:** handle `estimated-delivery-date-34`, Partner organization `4774175`, app `gid://shopify/App/396333842433`; least-privilege provider values are deployed to Fly v7. Shopify scope/proxy release remains gated |
-| G2 — controlled store | Fresh development-store install/reauthorization; hosted plan selection; settings save; store-timezone calculation; Dawn plus one other compatible theme; first render; cancellation/fail-closed; signed uninstall/privacy webhooks | Approval immediately before provider configuration or any controlled-store mutation | **BLOCKED ON G3:** existing dev install and $0 Standard contract open Fly v7; saved rules, `America/New_York` timezone, Settings and Setup guide render. Do not reauthorize or continue lifecycle QA until path-only access logging is live and verified |
-| G3 — release | Reviewed PR commit, Fly release ID, Shopify app-version ID, live smoke test, previous release/version retained | Exact approval immediately before deployment or app-version release | **AWAITING EXACT FLY GATE:** v7 functions but its stock logger records authenticated query strings; v6 used the same logger. Reviewed image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`, manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`, is build-only and not running. Shopify version 10 remains active |
-| G4 — public trust | Live `/support` and `/privacy` return 200; support owner/inbox selected; policy matches actual data lifecycle; old Telegraph link replacement ready | Exact approval immediately before listing edit/publication | **BLOCKED:** branded support/privacy routes return 200, but provider access logs are not yet clean privacy evidence. Listing URL/contact edits and final support-owner decision remain gated |
+| G1 — provider identity | Authenticated App Home handle, Partner organization ID, app GID, pricing/subscription source, and exact current app identity | Approval immediately before any token, secret, permission, or setting change | **PASS FOR FLY:** handle `estimated-delivery-date-34`, Partner organization `4774175`, app `gid://shopify/App/396333842433`; least-privilege provider values are deployed to Fly v8. Shopify scope/proxy release remains gated |
+| G2 — controlled store | Fresh development-store install/reauthorization; hosted plan selection; settings save; store-timezone calculation; Dawn plus one other compatible theme; first render; cancellation/fail-closed; signed uninstall/privacy webhooks | Approval immediately before provider configuration or any controlled-store mutation | **IN PROGRESS:** the existing dev install and $0 Standard contract open Fly v8; saved rules, `America/New_York` timezone, Settings and Setup guide render, and authenticated path-only logs pass. Reauthorization, a controlled settings save, signed proxy render, two-theme checks, cancellation/fail-closed and signed webhook delivery remain gated |
+| G3 — release | Reviewed PR commit, Fly release ID, Shopify app-version ID, live smoke test, previous release/version retained | Exact approval immediately before deployment or app-version release | **PARTIAL PASS:** exact Fly release v8 is live after a 13-of-13, 15-minute gate and path-only log verification; v7/v6 remain retained. Shopify version 10 is still active and the reviewed proxy/theme version remains a separate exact gate |
+| G4 — public trust | Live `/support` and `/privacy` return 200; support owner/inbox selected; policy matches actual data lifecycle; old Telegraph link replacement ready | Exact approval immediately before listing edit/publication | **PARTIAL PASS:** branded support/privacy routes and new v8 access logging pass. Historical v7 log retention was not changed; listing URL/contact edits and final support-owner decision remain gated |
 | G5 — measurement | Event definitions below implemented only as approved, privacy reviewed, test events excluded, provider sources readable | Approval before adding or enabling new live collection | **PARTLY MISSING** |
 | G6 — validation cohort | Maximum-five qualification rules, exact named recipients, permission source, final message, sender, and send time | Exact action-time approval immediately before each merchant message or batch | **NO TARGETS; NO SEND AUTHORITY** |
 | G7 — channel expansion | One verified paid merchant, cleared earnings evidence, activation/accuracy/support review, and a written continue/iterate/stop decision | Separate approval for any larger cohort, partner programme, review request, or automation | **NOT ELIGIBLE** |
@@ -274,11 +274,11 @@ must follow Shopify policy.
 
 | Phase | Activity | Owner | Due relative to launch | Status |
 |---|---|---|---|---|
-| Product | Finish independent review and preserve the tested source/release rollback reference | SupaDatewise engineering | Before G1 | In progress outside this document |
-| Provider | Release only the reviewed single scope, proxy and theme-extension configuration after the verified identity baseline | Darren | G1 | Fly secret deployment complete; Shopify version release and controlled-store reauthorization are blocked until redacting access logs are live |
-| QA | Complete the development-store lifecycle and two-theme test | Darren with SupaDatewise engineering | G2 | Existing install, $0 plan, embedded v7 settings/setup and prior unsaved Savor preview verified; remaining steps paused on the logging fix |
-| Release | Deploy only the reviewed commit and retain Fly/Shopify rollback IDs | Darren | G3 | Fly v7 is live but fails the access-log privacy gate; a reviewed replacement image requires exact approval. Shopify version 10 remains active |
-| Support/privacy | Select support owner/inbox; verify branded pages; reconcile policy | Darren | G4 | Branded pages are live; access-log remediation, support owner and listing edit remain **MISSING** |
+| Product | Finish independent review and preserve the tested source/release rollback reference | SupaDatewise engineering | Before G1 | **PASS for Fly v8 batch:** immutable source/image/manifest and retained v7/v6 references recorded; Shopify version remains separate |
+| Provider | Release only the reviewed single scope, proxy and theme-extension configuration after the verified identity baseline | Darren | G1 | Fly secret deployment and privacy remediation pass; Shopify version release and controlled-store reauthorization are the next exact gate |
+| QA | Complete the development-store lifecycle and two-theme test | Darren with SupaDatewise engineering | G2 | Existing install, $0 plan, embedded v8 settings/setup and prior unsaved Savor preview verified; reauthorization, signed proxy, save, two themes, fail-closed and webhooks remain |
+| Release | Deploy only the reviewed commit and retain Fly/Shopify rollback IDs | Darren | G3 | Fly v8 is live and passed its 15-minute gate; v7/v6 retained. Shopify version 10 remains active pending separate approval |
+| Support/privacy | Select support owner/inbox; verify branded pages; reconcile policy | Darren | G4 | Branded pages and v8 path-only logs pass; historical logs remain, while support owner and listing edit are **MISSING** |
 | Listing | Apply one reviewed factual listing batch | Darren | After G4 | Approval required |
 | Measurement | Enable only approved events and validate test exclusion/deduplication | SupaDatewise engineering | G5 | Partly missing |
 | Merchant test | Approve exact recipient and copy, then invite sequentially up to five | Darren | `D0`–`D+14` | No targets; no sends |
@@ -320,16 +320,12 @@ five-merchant feasibility cohort.
 
 ## 9. Next approval boundary
 
-**Merchant acquisition is not yet eligible for approval.** Fly v7, the branded
-trust pages, provider identities and the $0 development contract function, but
-v7's stock access logger records authenticated Shopify query strings. The next
-external gate is therefore only deployment of the exact reviewed path-only
-logging image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`,
-manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`,
-to the existing `edd-supadesign` app while retaining v7 and v6 rollback
-references. That gate does not include the Shopify configuration release. After live log verification,
-the separately approved Shopify/development-store action can release only
-`write_app_proxy`, `/apps/supadatewise` and the reviewed theme extension,
-reauthorize only the controlled store, and prove the signed entitlement-to-render
-lifecycle without saving the live theme. Theme save, listing edit, measurement
-and merchant contact remain later separate gates.
+**Merchant acquisition is not yet eligible for approval.** Fly v8, the branded
+trust pages, provider identities, path-only access logs and the $0 development
+contract are verified. The next external gate is the Shopify/development-store
+action: release only scope `write_app_proxy`, app-proxy path
+`/apps/supadatewise`, and the existing reviewed `delivery-date` theme extension;
+then reauthorize only controlled development store `supadesign-8073` and prove
+the signed entitlement-to-render lifecycle with controlled QA. Do not save a
+live theme under this gate. A theme save, listing edit, measurement change,
+merchant contact, pricing change, merge or spend remains a later separate gate.
