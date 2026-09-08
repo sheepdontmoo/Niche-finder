@@ -4,13 +4,42 @@ import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
+import { requireActiveAppPayment } from "../lib/billing";
+import {
+  getAuthenticatedShopId,
+  hasActivePartnerSubscription,
+  hasActivePartnerSubscriptionAfterPlanSelection,
+  readPartnerBillingConfig,
+  rememberPartnerSubscription,
+} from "../lib/partner-subscription.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  // Billing is handled entirely by Shopify Managed Pricing (configured in the
-  // dashboard: $6.99/mo, 7-day trial). Managed Pricing apps are NOT allowed to
-  // call the Billing API to create charges — Shopify shows its own plan
-  // selection page on install and manages the subscription lifecycle.
-  await authenticate.admin(request);
+  const { admin, redirect, session } = await authenticate.admin(request);
+  const billingConfig = readPartnerBillingConfig(process.env);
+  const shopId = await getAuthenticatedShopId(admin.graphql);
+  const returnedFromPlanSelection = new URL(request.url).searchParams.has(
+    "plan_handle",
+  );
+  const subscriptionCheckStartedAt = Date.now();
+  const hasActivePayment = returnedFromPlanSelection
+    ? await hasActivePartnerSubscriptionAfterPlanSelection(
+        billingConfig,
+        shopId,
+      )
+    : await hasActivePartnerSubscription(billingConfig, shopId);
+  rememberPartnerSubscription(
+    billingConfig,
+    shopId,
+    hasActivePayment,
+    subscriptionCheckStartedAt,
+  );
+  const paymentRedirect = await requireActiveAppPayment(
+    hasActivePayment,
+    redirect,
+    session.shop,
+    billingConfig.appHandle,
+  );
+  if (paymentRedirect) return paymentRedirect;
 
   // eslint-disable-next-line no-undef
   return { apiKey: process.env.SHOPIFY_API_KEY || "" };

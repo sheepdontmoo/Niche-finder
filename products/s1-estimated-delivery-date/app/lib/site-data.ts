@@ -3,7 +3,7 @@ export const SHOPIFY_LISTING_URL =
   "https://apps.shopify.com/estimated-delivery-date-6";
 export const SHOPIFY_METAFIELD_LIFECYCLE_URL =
   "https://shopify.dev/docs/apps/build/metafields/definitions";
-export const LAST_VERIFIED = "2026-08-24";
+export const LAST_VERIFIED = "2026-08-30";
 
 export const supportFaqs = [
   {
@@ -14,7 +14,7 @@ export const supportFaqs = [
   {
     question: "How does SupaDatewise calculate an estimated delivery date?",
     answer:
-      "SupaDatewise combines the delivery rules you choose: processing time, a daily order cutoff, a minimum and maximum shipping window, and working days. An order placed after the cutoff rolls into the next processing window. The storefront block then formats that result as a clear delivery estimate on product and cart pages. Merchants remain responsible for configuring rules that match their fulfilment operation.",
+      "SupaDatewise combines the delivery rules you choose: processing time, a daily order cutoff in your Shopify store timezone, a minimum and maximum shipping window, and working days. An order placed after the cutoff rolls into the next processing window. The storefront block then formats that result as a clear delivery estimate on compatible product and cart sections. Merchants remain responsible for configuring rules that match their fulfilment operation.",
   },
   {
     question: "Can I add the delivery estimate without editing theme code?",
@@ -32,12 +32,12 @@ export const privacyFaqs = [
   {
     question: "Does SupaDatewise collect customer personal data?",
     answer:
-      "No customer names, email addresses, shipping addresses, or order contents are collected, stored, or processed by SupaDatewise for its delivery estimate. The estimate displayed to a shopper is calculated in that shopper's browser from merchant-configured delivery rules. The app does store merchant delivery settings and a standard Shopify app session so the merchant can configure and operate the app while it remains installed.",
+      "SupaDatewise does not request or store shopper names, email addresses, shipping addresses, or order contents. Its theme block makes a Shopify-signed app-proxy request to confirm the merchant's active subscription. Shopify may include a logged-in customer identifier in that proxy request; SupaDatewise ignores it and does not persist it. The estimate is calculated in the browser from merchant settings. The app stores merchant delivery settings and a Shopify app session.",
   },
   {
     question: "What happens to SupaDatewise data when a merchant uninstalls?",
     answer:
-      "On uninstall, SupaDatewise deletes its stored Shopify app session. Delivery settings are app-owned Shopify metafields, so Shopify—not SupaDatewise—controls their post-uninstall lifecycle. Shopify deletes the app-owned definitions but may temporarily retain metafields and their values without definitions; a quick reinstall can reassociate retained values. Because SupaDatewise does not hold customer personal data, customer data-request and customer-redaction requests have no customer records to return or erase. Shopify's metafield documentation is the source for the platform lifecycle.",
+      "On uninstall, SupaDatewise deletes its stored Shopify app session. Delivery settings are app-owned Shopify metafields, so Shopify—not SupaDatewise—controls their post-uninstall lifecycle. Shopify deletes the app-owned definitions but may temporarily retain metafields and their values without definitions; a quick reinstall can reassociate retained values. Because SupaDatewise does not persist customer records, customer data-request and customer-redaction requests have no stored customer records to return or erase. Shopify's metafield documentation is the source for the platform lifecycle.",
   },
 ] as const;
 

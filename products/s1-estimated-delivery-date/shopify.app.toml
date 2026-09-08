@@ -9,9 +9,14 @@ embedded = true
 automatically_update_urls_on_dev = false
 
 [access_scopes]
-# No scopes needed: settings are stored as app-owned metafields ($app namespace),
-# and the storefront block is a theme app extension.
-scopes = ""
+# The proxy is the only scope. It lets the theme block obtain an HMAC-verified,
+# provider-backed subscription decision without order or customer-record data.
+scopes = "write_app_proxy"
+
+[app_proxy]
+url = "/apps/supadatewise"
+prefix = "apps"
+subpath = "supadatewise"
 
 [auth]
 redirect_urls = [

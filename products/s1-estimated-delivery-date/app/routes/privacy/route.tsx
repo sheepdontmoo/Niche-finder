@@ -30,7 +30,11 @@ export default function Privacy() {
           and locale—plus a standard Shopify app session needed to operate the
           app. It does not collect or store shopper names, emails, addresses,
           or order contents. The delivery estimate is calculated in the
-          shopper’s browser from the merchant’s selected rules.
+          shopper’s browser from the merchant’s selected rules. Before the
+          hidden block is revealed, it makes a Shopify-signed app-proxy request
+          to confirm the merchant’s active subscription. Shopify may append a
+          logged-in customer identifier; SupaDatewise ignores it and does not
+          persist it.
         </p>
         <p>
           The public SupaDatewise marketing, support, and privacy pages use

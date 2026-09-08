@@ -1,18 +1,27 @@
-FROM node:20-alpine
-RUN apk add --no-cache openssl
-
-EXPOSE 3000
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
-ENV NODE_ENV=production
-
-COPY package.json package-lock.json* ./
-
-RUN npm ci --omit=dev && npm cache clean --force
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
+RUN npm run build && npm prune --omit=dev
 
-RUN npm run build
+FROM node:22-alpine AS runtime
+
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
+
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/build ./build
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/request-log-redaction.mjs ./request-log-redaction.mjs
+
+EXPOSE 3000
 
 CMD ["npm", "run", "docker-start"]

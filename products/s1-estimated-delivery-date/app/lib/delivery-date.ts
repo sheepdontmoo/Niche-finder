@@ -27,7 +27,11 @@ export interface DeliverySettings {
   dateStyle: "full" | "long" | "medium" | "short";
   /** BCP-47 locale for formatting, e.g. "en-IE". */
   locale: string;
+  /** IANA timezone used for the merchant's daily cutoff, e.g. "Europe/Dublin". */
+  timeZone: string;
 }
+
+const FALLBACK_TIME_ZONE = "UTC";
 
 export const DEFAULT_SETTINGS: DeliverySettings = {
   enabled: true,
@@ -39,7 +43,19 @@ export const DEFAULT_SETTINGS: DeliverySettings = {
   template: "Order today to get it by {date}",
   dateStyle: "medium",
   locale: "en-IE",
+  timeZone: FALLBACK_TIME_ZONE,
 };
+
+function normalizeTimeZone(value: unknown): string {
+  if (typeof value !== "string" || !value.trim()) return FALLBACK_TIME_ZONE;
+  const timeZone = value.trim();
+  try {
+    new Intl.DateTimeFormat("en", { timeZone }).format(new Date(0));
+    return timeZone;
+  } catch {
+    return FALLBACK_TIME_ZONE;
+  }
+}
 
 /** Clamp/validate an untrusted settings object into a safe DeliverySettings. */
 export function normalizeSettings(
@@ -83,11 +99,12 @@ export function normalizeSettings(
       typeof s.locale === "string" && s.locale.trim()
         ? s.locale
         : DEFAULT_SETTINGS.locale,
+    timeZone: normalizeTimeZone(s.timeZone),
   };
 }
 
 function isWorkingDay(date: Date, workingDays: number[]): boolean {
-  return workingDays.includes(date.getDay());
+  return workingDays.includes(date.getUTCDay());
 }
 
 /** Advance to the next working day (no-op if already a working day). */
@@ -97,7 +114,7 @@ function toWorkingDay(date: Date, workingDays: number[]): Date {
   if (workingDays.length === 0) return d;
   let guard = 0;
   while (!isWorkingDay(d, workingDays) && guard < 14) {
-    d.setDate(d.getDate() + 1);
+    d.setUTCDate(d.getUTCDate() + 1);
     guard++;
   }
   return d;
@@ -109,11 +126,30 @@ function addBusinessDays(date: Date, days: number, workingDays: number[]): Date 
   let remaining = Math.max(0, days);
   let guard = 0;
   while (remaining > 0 && guard < 3650) {
-    d.setDate(d.getDate() + 1);
+    d.setUTCDate(d.getUTCDate() + 1);
     if (isWorkingDay(d, workingDays)) remaining--;
     guard++;
   }
   return d;
+}
+
+function zonedDateTimeParts(now: Date, timeZone: string) {
+  const parts = new Intl.DateTimeFormat("en-US-u-ca-gregory-nu-latn", {
+    timeZone,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    hourCycle: "h23",
+  }).formatToParts(now);
+  const value = (type: Intl.DateTimeFormatPartTypes) =>
+    Number(parts.find((part) => part.type === type)?.value);
+  return {
+    year: value("year"),
+    month: value("month"),
+    day: value("day"),
+    hour: value("hour"),
+  };
 }
 
 export interface DeliveryEstimate {
@@ -129,20 +165,23 @@ export interface DeliveryEstimate {
  * Estimate the delivery window for an order placed at `now`.
  *
  * Model: order → (cutoff bump) → processing business days → ship date →
- * transit business days → arrival. Dates are computed from local calendar
- * parts; the caller decides the timezone by choosing `now`.
+ * transit business days → arrival. The order's calendar day and hour are
+ * resolved in the merchant's configured IANA timezone, never the shopper's
+ * browser timezone or the server timezone.
  */
 export function estimateDelivery(
   now: Date,
   settings: DeliverySettings,
 ): DeliveryEstimate {
   const s = normalizeSettings(settings);
+  const parts = zonedDateTimeParts(now, s.timeZone);
 
-  // Start from the order's calendar day at local midnight.
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // UTC is used as a stable carrier for merchant-local calendar dates. This
+  // prevents the runtime's own timezone from shifting the resulting day.
+  const start = new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
   // Past the cutoff hour → treat as the next day.
-  if (now.getHours() >= s.cutoffHour) {
-    start.setDate(start.getDate() + 1);
+  if (parts.hour >= s.cutoffHour) {
+    start.setUTCDate(start.getUTCDate() + 1);
   }
 
   // Ship date = start rolled to a working day + processing business days.
@@ -164,8 +203,19 @@ export function formatEstimate(
   settings: DeliverySettings,
 ): string {
   const s = normalizeSettings(settings);
-  const fmt = (d: Date) =>
-    new Intl.DateTimeFormat(s.locale, { dateStyle: s.dateStyle }).format(d);
+  const fmt = (d: Date) => {
+    try {
+      return new Intl.DateTimeFormat(s.locale, {
+        dateStyle: s.dateStyle,
+        timeZone: "UTC",
+      }).format(d);
+    } catch {
+      return new Intl.DateTimeFormat(undefined, {
+        dateStyle: s.dateStyle,
+        timeZone: "UTC",
+      }).format(d);
+    }
+  };
 
   const minStr = fmt(estimate.min);
   const maxStr = fmt(estimate.max);

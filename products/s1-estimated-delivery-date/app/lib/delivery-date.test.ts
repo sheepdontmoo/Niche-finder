@@ -8,12 +8,11 @@ import {
   type DeliverySettings,
 } from "./delivery-date.ts";
 
-// A fixed reference: Monday 2026-01-05, 09:00 local (before the 14:00 cutoff).
-const MON_9AM = new Date(2026, 0, 5, 9, 0, 0);
-// Same Monday but 16:00 — after the default cutoff.
-const MON_4PM = new Date(2026, 0, 5, 16, 0, 0);
-// Friday 2026-01-09, 09:00 — used to prove weekend skipping.
-const FRI_9AM = new Date(2026, 0, 9, 9, 0, 0);
+// Fixed UTC references. The base settings use UTC, so these are independent
+// of the machine timezone running the test suite.
+const MON_9AM = new Date("2026-01-05T09:00:00Z");
+const MON_4PM = new Date("2026-01-05T16:00:00Z");
+const FRI_9AM = new Date("2026-01-09T09:00:00Z");
 
 const base: DeliverySettings = {
   ...DEFAULT_SETTINGS,
@@ -25,8 +24,8 @@ const base: DeliverySettings = {
 };
 
 const ymd = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
-    d.getDate(),
+  `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(
+    d.getUTCDate(),
   ).padStart(2, "0")}`;
 
 describe("estimateDelivery", () => {
@@ -68,7 +67,7 @@ describe("estimateDelivery", () => {
 
   it("rolls a start that lands on a non-working day forward", () => {
     // Ship only on Mondays; order Tue → next working day is next Mon.
-    const e = estimateDelivery(new Date(2026, 0, 6, 9, 0, 0), {
+    const e = estimateDelivery(new Date("2026-01-06T09:00:00Z"), {
       ...base,
       workingDays: [1],
       processingDays: 0,
@@ -76,6 +75,19 @@ describe("estimateDelivery", () => {
       transitDaysMax: 0,
     });
     assert.equal(ymd(e.min), "2026-01-12"); // the following Monday
+  });
+
+  it("uses the merchant timezone rather than the shopper or server timezone", () => {
+    const instant = new Date("2026-01-05T14:30:00Z");
+    const newYork = estimateDelivery(instant, {
+      ...base,
+      timeZone: "America/New_York",
+    });
+    const utc = estimateDelivery(instant, { ...base, timeZone: "UTC" });
+
+    // 14:30Z is 09:30 in New York (before cutoff) but 14:30 in UTC (after).
+    assert.equal(ymd(newYork.min), "2026-01-09");
+    assert.equal(ymd(utc.min), "2026-01-12");
   });
 });
 
@@ -107,6 +119,11 @@ describe("normalizeSettings", () => {
     assert.equal(normalizeSettings({ template: "  " }).template, DEFAULT_SETTINGS.template);
     assert.equal(normalizeSettings({ template: "Arrives {min}" }).template, "Arrives {min}");
   });
+
+  it("keeps valid IANA timezones and rejects invalid values", () => {
+    assert.equal(normalizeSettings({ timeZone: "Europe/Dublin" }).timeZone, "Europe/Dublin");
+    assert.equal(normalizeSettings({ timeZone: "Not/A_Zone" }).timeZone, "UTC");
+  });
 });
 
 describe("formatEstimate", () => {
@@ -125,5 +142,12 @@ describe("formatEstimate", () => {
     const e = estimateDelivery(MON_9AM, base);
     const out = formatEstimate(e, { ...base, template: "{min} to {max}" });
     assert.match(out, / to /);
+  });
+
+  it("falls back safely when a merchant saved an invalid locale", () => {
+    const e = estimateDelivery(MON_9AM, base);
+    assert.doesNotThrow(() =>
+      formatEstimate(e, { ...base, locale: "not_a_locale" }),
+    );
   });
 });

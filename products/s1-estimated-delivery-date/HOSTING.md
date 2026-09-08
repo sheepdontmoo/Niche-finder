@@ -1,11 +1,12 @@
 # Production hosting runbook (Fly.io)
 
-The storefront block is hosted by Shopify, but the **admin app (settings +
-billing) needs a permanent host**. The dev tunnel only exists while
-`npm run dev` runs. This deploys the backend to Fly.io with a persistent
-SQLite volume, always-on.
+The storefront block is hosted by Shopify, while the **admin app (settings +
+billing) needs a permanent host**. Public evidence confirms the existing Fly
+app `edd-supadesign`; do not create another app or volume.
 
-Do this after recording the screencast. Run one command at a time.
+This is an approval-gated runbook. Do not change Fly secrets/settings or deploy
+until the controlled-store gate passes and Darren gives exact action-time
+approval. Run one command at a time only after that approval.
 
 ## 1. Install the Fly CLI (PowerShell)
 ```
@@ -16,63 +17,90 @@ Close and reopen PowerShell, then `cd` back to the app folder. Verify:
 fly version
 ```
 
-## 2. Sign in / sign up
+## 2. Sign in
 ```
-fly auth signup      # or: fly auth login
+fly auth login
 ```
-(A card is required by Fly, but this app is a tiny always-on machine — a few
-dollars a month.)
+Do not sign up for or purchase a new Fly account. Current authenticated app,
+release and cost evidence is **UNAVAILABLE** until access is restored.
 
-## 3. Get your two Shopify credentials
-In the Dev Dashboard → your app → **API credentials** (a.k.a. Client
-credentials): copy the **Client ID** (this is `SHOPIFY_API_KEY`) and the
-**Client secret** (this is `SHOPIFY_API_SECRET`).
+## 3. Confirm provider configuration
+Authenticated reconciliation on 2026-08-30 confirmed Client ID
+`26c0cd1cd1992a8d9114c826f47e3e5b` and App Home handle
+`estimated-delivery-date-34`. The public listing slug
+`estimated-delivery-date-6` is different and must never be substituted for the
+App Home handle. Retrieve the client secret only at the approved Fly-secret
+action; never print or commit it.
 
-## 4. Create the app + volume, set secrets, deploy
-`fly.toml` is already in the repo. `app` is set to `edd-supadesign` — if that
-name is taken, change it in `fly.toml` first (must be globally unique). Then:
+The app root verifies active Shopify App Pricing subscriptions with Shopify's
+Partner API. Authenticated reconciliation confirmed
+`SHOPIFY_PARTNER_ORG_ID=4774175` and
+`SHOPIFY_APP_GID=gid://shopify/App/396333842433`. Do not use Dev Dashboard
+organization ID `208004935` for the Partner endpoint; it returned 401. Partner
+API client `35086` (`SupaDatewise subscription status`) was created with
+**Manage apps only** after approval. Its access token is
+`SHOPIFY_PARTNER_API_ACCESS_TOKEN`. Treat the token like a password: store it
+only as a provider secret and never print or commit it.
+
+## 4. Reconcile the existing app, then set configuration
+First verify `fly status`, current releases, the persistent `data` volume and
+the current secret names. Do not print secret values. Only if the reviewed
+release requires a missing or changed value, request the exact settings-change
+gate and then set the required values:
 ```
-fly launch --copy-config --no-deploy
+fly secrets set SHOPIFY_API_KEY=<Client ID> SHOPIFY_API_SECRET=<Client secret> SHOPIFY_APP_HANDLE=<App Home handle> SHOPIFY_PARTNER_ORG_ID=<Organization ID> SHOPIFY_APP_GID=<App GraphQL ID> SHOPIFY_PARTNER_API_ACCESS_TOKEN=<Partner API token> SHOPIFY_APP_URL=https://edd-supadesign.fly.dev
 ```
-Accept the detected settings (it reads fly.toml + the Dockerfile). If it didn't
-create the volume, make it:
-```
-fly volumes create data --region lhr --size 1
-```
-Set the secrets (replace the two values, and the app name if you changed it):
-```
-fly secrets set SHOPIFY_API_KEY=<Client ID> SHOPIFY_API_SECRET=<Client secret> SHOPIFY_APP_URL=https://edd-supadesign.fly.dev SCOPES=write_metafields
-```
-Deploy:
+After the separate deployment gate, deploy the reviewed commit only:
 ```
 fly deploy
 ```
-When it finishes, your app is live at `https://edd-supadesign.fly.dev`.
+Record the immutable Fly release ID and retain the immediately previous release
+for rollback.
 
 ## 5. Point Shopify at the permanent URL
 Edit `shopify.app.toml`:
 - `application_url = "https://edd-supadesign.fly.dev"`
 - under `[auth]`, set every redirect URL to that domain, e.g.
   `redirect_urls = ["https://edd-supadesign.fly.dev/auth/callback", "https://edd-supadesign.fly.dev/auth/shopify/callback", "https://edd-supadesign.fly.dev/api/auth/callback"]`
+- keep the reviewed `write_app_proxy` scope and `/apps/supadatewise` proxy
+  configuration together; this is the storefront subscription gate.
 
-Then push the config to Shopify:
+Only if authenticated reconciliation proves the checked-in URLs differ, update
+the file and request the Shopify scope/configuration-deploy gate. Existing
+installs may require reauthorization; do not expose merchants to that change
+until it passes on a controlled store. Then:
 ```
 npm run deploy
 ```
 
 ## 6. Verify
-- Reinstall/open the app in the admin — it should load from the Fly URL (no
-  `npm run dev` needed).
-- Save settings, confirm the storefront block still shows.
+- Start from an unpaid controlled development-store install and verify the root
+  route redirects to Shopify's hosted plan selector.
+- Select the no-charge development-store plan and confirm the app opens.
+- Confirm the Partner API check returns an active subscription for that store
+  and no subscription for an unpaid controlled store.
+- Save settings, activate the block, and confirm store-timezone rendering.
+- Seed a legacy metafield without `timeZone`; confirm the block stays hidden,
+  then open the app, save once, and confirm Shopify's IANA timezone is persisted
+  before the block can render.
+- Confirm `/apps/supadatewise/entitlement` is HMAC-authenticated through Shopify,
+  an unpaid/frozen/provider-error state keeps the block hidden, and an active
+  plan reveals it. Cancellation can remain cached for no more than one minute.
+- Verify signed uninstall and `shop/redact` deliveries delete all shop sessions.
 
 ## Local dev after this change
 `schema.prisma` now uses `env("DATABASE_URL")`. For local `npm run dev`, add
-this line to your `.env`:
+the values below to the untracked `.env`. Shopify CLI can inject its own app URL
+and client credentials; never commit or print any real secret:
 ```
 DATABASE_URL="file:dev.sqlite"
+SHOPIFY_APP_HANDLE="<provider-confirmed App Home handle>"
+SHOPIFY_PARTNER_ORG_ID="<provider-confirmed organization ID>"
+SHOPIFY_APP_GID="gid://shopify/App/<provider-confirmed numeric ID>"
+SHOPIFY_PARTNER_API_ACCESS_TOKEN="<Partner API client token>"
 ```
 
 ## Note on cost
-A single shared-cpu-1x/512MB always-on machine + a 1GB volume is a few dollars
-a month — the price of the app being reliably up for the reviewer and
-merchants. (Per the venture rules this is the product's own cost to carry.)
+Authenticated release/runtime evidence does not prove the current Fly bill, so
+cost remains **UNAVAILABLE**. Do not create infrastructure, resize machines or
+incur spend without a separate exact cap and approval.
