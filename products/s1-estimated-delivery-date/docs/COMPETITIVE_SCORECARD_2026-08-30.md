@@ -1,6 +1,6 @@
-# SupaDatewise competitive scorecard — 2026-08-30
+# SupaDatewise competitive scorecard — refreshed 2026-09-08
 
-Evidence date: **2026-08-30**. Competitor facts use only public Shopify App
+Evidence date: **2026-09-08**. Competitor facts use only public Shopify App
 Store listing pages and first-party reviews on those pages. Ratings and review
 counts are point-in-time. Private installs, activation, paid subscriptions,
 churn, refunds and revenue are **UNAVAILABLE** for every competitor and are not
@@ -14,17 +14,20 @@ strongest.
 ## Executive finding
 
 A generic product-page ETA widget is commoditized: Essent is free, Built for
-Shopify and has 914 reviews. SupaDatewise should not position itself as simply
+Shopify and has 980 reviews. SupaDatewise should not position itself as simply
 another estimated-delivery-date app.
 
-The smallest currently defensible wedge is:
+The recommended next wedge, only after implementation and controlled-store QA,
+is:
 
-> Store-timezone delivery windows for small DTC stores with one clear dispatch
-> schedule, safe theme preview and no order or customer-record access.
+> Preview-first Delivery Promise QA for small DTC stores: test exact cutoff,
+> weekend and holiday boundaries in the store timezone, verify theme placement,
+> and show an explicit unpublished/ready/live state before the merchant publishes.
 
-The next wedge should only be claimed after it exists and passes live tests:
-made-to-order and preorder catalogs with variant, inventory, location or
-metafield lead times, bulk rule management, and promised-versus-actual accuracy.
+The intended visual expression is a restrained `Order → Dispatch → Arrives`
+timeline that inherits the theme. It should only be claimed and pictured after
+the real controlled-store block reproduces it. Broad variant, inventory,
+location and warehouse-rule parity is not the next batch.
 
 ## Current public competitor signals
 
@@ -32,12 +35,12 @@ All prices are USD.
 
 | App | Public positioning and visible capabilities | Exact visible pricing | Rating / reviews | Trust and activity signals |
 |---|---|---|---:|---|
-| [Essent Estimated Delivery Date](https://apps.shopify.com/essential-estimated-delivery) | Simple ETA, processing-time and timer widgets; cutoffs, holidays, geolocation and multilingual customization; product-page emphasis | Free; no trial required | 5.0 / 914 | Built for Shopify; launched 2025-06-06; demo and privacy policy; visible developer reply 2026-08-28 |
-| [S Estimated Delivery Date Plus](https://apps.shopify.com/omega-estimated-shipping-date) | Product, cart, checkout, order-status and email surfaces; country, ZIP, shipping-method, variant and metafield rules; analytics, translations and shipping protection | Free; Standard $4.99/month or $53.88/year; Pro $9.99/month or $107.88/year; Plus $29.99/month or $287.90/year; 3-day trials on paid plans | 4.9 / 404 | Built for Shopify; launched 2018-06-22; demo, privacy, docs and changelog; visible developer reply 2026-08-21 |
-| [Estimated Delivery Date - ETA](https://apps.shopify.com/estimated-delivery-days) | Inventory, warehouse, vendor, tag, location, ZIP and shipping rules; product through checkout/email; pickup, analytics and multiple templates | Free, capped at 300 ETA views; $6.99/month or $75.50/year; $14.99/month or $149.99/year; $19.99/month or $199.99/year; 7-day trials on paid plans | 4.9 / 466 | Built for Shopify badge **not visible on the direct page**; launched 2020-08-04; demo, privacy, FAQ, docs and changelog; latest visible review 2026-08-11 |
-| [C-EDD: Estimated Delivery Date](https://apps.shopify.com/estimated-delivery-date-plus) | Product, collection, vendor and country rules; cutoffs, holidays, local timezone, product/cart/checkout claims | Free; Basic $4.98/month; Pro $8.98/month; no trial displayed | 4.9 / 337 | Built for Shopify badge **not visible**; launched 2022-07-22; demo and privacy policy; no FAQ, docs or changelog displayed; latest visible review 2026-01-08 |
-| [Estimated Delivery Date & ETA](https://apps.shopify.com/order-delivery-estimated) | Product, variant, collection, vendor, tag, shipping-method, country/state and ZIP rules; multi-page display and analytics | Free with unlimited views and five rules; Professional $4.99/month or $56.89/year; Growth $8.99/month or $97.09/year; 7-day trials on paid plans | 5.0 / 78 | Built for Shopify; launched 2022-04-20; demo and privacy policy; featured in a Shopify guide; latest visible review 2026-07-24 |
-| [ArrivesBy - Delivery Date ETA](https://apps.shopify.com/arrives-by) | Variant, location and inventory-aware ETAs; preorder/backorder support; comparison of promised versus actual delivery dates; product through checkout/order status | Free; Grow $4.99/month or $49/year; Scale $19.99/month or $199/year; 7-day trials on paid plans | 4.5 / 45 | Built for Shopify; launched 2021-09-15; demo, privacy, FAQ, docs and changelog; latest visible review 2026-07-15 |
+| [Essent Estimated Delivery Date](https://apps.shopify.com/essential-estimated-delivery) | Simple ETA, processing-time and timer widgets; cutoffs, holidays, geolocation and multilingual customization; product-page emphasis | Free; no trial required | 5.0 / 980 | Built for Shopify; launched 2025-06-06; demo, six gallery images and recent public support replies |
+| [S Estimated Delivery Date Plus](https://apps.shopify.com/omega-estimated-shipping-date) | Product, cart, checkout, order-status and email surfaces; country, ZIP, shipping-method, variant and metafield rules; analytics, translations and shipping protection | Free; Standard $4.99/month or $53.88/year; Pro $9.99/month or $107.88/year; Plus $29.99/month or $287.90/year; 3-day trials on paid plans | 4.9 / 441 | Built for Shopify; launched 2018-06-22; demo, eight gallery images, privacy, docs and changelog |
+| [Estimated Delivery Date - ETA](https://apps.shopify.com/estimated-delivery-days) | Inventory, warehouse, vendor, tag, location, ZIP and shipping rules; product through checkout/email; pickup, analytics and 50+ template claims | Free, capped at 100 ETA views; $6.99/month or $75.50/year; $14.99/month or $149.99/year; $19.99/month or $199.99/year; 7-day trials on paid plans | 4.9 / 493 | Built for Shopify badge **not visible on the direct page**; launched 2020-08-04; demo, 12 gallery images, privacy, FAQ, docs and changelog |
+| [C-EDD: Estimated Delivery Date](https://apps.shopify.com/estimated-delivery-date-plus) | Product, collection, vendor and country rules; cutoffs, holidays, local timezone, product/cart/checkout claims | Free; Basic $4.98/month; Pro $8.98/month; no trial displayed | 4.9 / 382 | Built for Shopify badge **not visible**; launched 2022-07-22; demo and eight gallery images; no FAQ, docs or changelog displayed |
+| [Estimated Delivery Date & ETA](https://apps.shopify.com/order-delivery-estimated) | Product, variant, collection, vendor, tag, shipping-method, country/state and ZIP rules; multi-page display and analytics | Free with unlimited views and five rules; Professional $4.99/month or $56.89/year; Growth $8.99/month or $97.09/year; 7-day trials on paid plans | 4.7 / 84 | Built for Shopify; launched 2022-04-20; demo, seven gallery images and a Shopify-guide feature; a 2026-09-05 reply notes a new version and manual migration |
+| [ArrivesBy - Delivery Date ETA](https://apps.shopify.com/arrives-by) | Variant, location and inventory-aware ETAs; preorder/backorder support; comparison of promised versus actual delivery dates; product through checkout/order status | Free; Grow $4.99/month or $49/year; Scale $19.99/month or $199/year; 7-day trials on paid plans | 4.6 / 46 | Built for Shopify; launched 2021-09-15; demo, seven gallery images, privacy, FAQ, docs and changelog |
 
 ## Permissions and privacy signals
 
@@ -52,8 +55,8 @@ scope audits.
 | C-EDD | Privacy policy is linked, but no Data access section was displayed. Permissions are **UNAVAILABLE**, not “none.” |
 | Estimated Delivery Date & ETA | Privacy policy is linked, but no Data access section was displayed. Permissions are **UNAVAILABLE**. |
 | ArrivesBy | Customer address/geolocation/device data; store-owner details; editable products, last 60 days of order history, theme/app-controlled pages, locations and Markets. |
-| SupaDatewise live | Listing discloses store-owner contact data associated with the app session. The authenticated active app version has no app proxy and the reviewed live source declares no order/customer-record scope. |
-| SupaDatewise branch | Adds only `write_app_proxy` for an HMAC-authenticated entitlement check; no order/customer-record scope. Scope/config deployment and reauthorization impact remain **UNAVAILABLE** until controlled install. |
+| SupaDatewise Fly v7 | Listing discloses store-owner contact data associated with the app session. The reviewed server requests no order/customer-record access and is live; active Shopify version 10 still has no app proxy. |
+| SupaDatewise pending Shopify version | Adds only `write_app_proxy` for an HMAC-authenticated entitlement check; no order/customer-record scope. Scope/config release and reauthorization impact remain **UNAVAILABLE** until controlled QA. |
 
 ## First-party review themes to design against
 
@@ -81,28 +84,30 @@ compatibility and review evidence. Private funnel and cleared revenue are
 | C-EDD | 3 | 2 | 2 | 2 | 4 | 1 | 4* | 3 |
 | Estimated Delivery Date & ETA | 4 | 5 | 4 | 5 | 5 | 3 | 3 | 5 |
 | ArrivesBy | 5 | 5 | 4 | 4 | 3 | 4 | 2 | 5 |
-| SupaDatewise live | 2 | 2 | 2 | 2 | 2 | 2 | 1 | 3 |
-| SupaDatewise branch, local evidence only | 4 | 4 | 4 | 4 | 2 | 3 | 1 | 3 |
+| SupaDatewise current split release | 4 | 3 | 4 | 3 | 2 | 4 | 1 | 3 |
+| SupaDatewise after controlled Shopify QA | 5* | 3 | 4 | 4 | 2 | 4 | 1 | 4* |
 
-`*` C-EDD review volume is visible, but the review-incentive allegations above
-weaken its trust signal. They do not prove misconduct.
+`*` The proposed SupaDatewise Promise QA positioning and improved listing score
+remain conditional on implementation, controlled-store proof and real product
+screenshots. C-EDD review volume is visible, but the review-incentive allegations
+above weaken its trust signal; they do not prove misconduct.
 
 ## SupaDatewise evidence state
 
-| Field | State on 2026-08-30 |
+| Field | State on 2026-09-08 |
 |---|---|
 | Public listing | **VERIFIED:** [SupaDatewise: Delivery Date](https://apps.shopify.com/estimated-delivery-date-6), public with active Install control |
 | Visible price/trial | **VERIFIED:** $6.99/month, 7-day trial |
 | Visible rating/reviews | **VERIFIED:** 0 reviews; no rating |
 | Discoverability | **VERIFIED LOW:** page 18, intra-position 8 in a 454-app product-content category; absent from page one of Delivery and pickup |
-| Public support | **MISSING:** live `/support` returns 404 and listing exposes no support URL/mail link |
-| Public privacy | **MISSING:** live `/privacy` returns 404; listing points to an older Telegraph policy |
+| Public support | **LIVE:** branded `/support` returns 200; listing still needs a separately approved URL/contact update |
+| Public privacy | **LIVE ROUTE; OPERATIONAL PROOF BLOCKED:** branded `/privacy` returns 200, but v7 access logs contain authenticated query strings. Redaction deployment and live-log verification are required; the listing still points to the older policy |
 | Live install start | **VERIFIED:** public Install control reaches Shopify login/store selection |
-| Install completion, OAuth and reauthorization | **PARTIAL:** current controlled development-store install is verified; fresh uninstall/reinstall and branch reauthorization remain approval-gated |
+| Install completion, OAuth and reauthorization | **PARTIAL:** current controlled development-store install is verified; fresh uninstall/reinstall and branch reauthorization remain approval-gated and paused until path-only logging is live |
 | Active theme block / first widget rendered | **PARTIAL:** Savor editor found the block and an unsaved preview rendered fallback dates; no saved published render or trusted event exists |
-| Billing enforcement in reviewed live source | **BROKEN:** app use was not gated by an active Shopify App Pricing subscription |
-| Branch billing and storefront entitlement | **VERIFIED LOCALLY:** app/settings/storefront paths fail closed without provider-confirmed active subscription; live/provider proof **UNAVAILABLE** |
-| Delivery correctness | **VERIFIED LOCALLY:** `$app.settings`, store-IANA-timezone cutoff math, duplicate-load removal and preview deep link pass local regression/build checks; live proof **UNAVAILABLE** |
+| Billing enforcement in Fly v7 | **FUNCTIONAL CONTROLLED SESSION; PRIVACY BLOCKED:** the $0 development-store contract opens both embedded routes; unauthenticated `/app` fails closed with 410. V7 access logging must be remediated; a non-development paid path remains **UNAVAILABLE** |
+| Shopify storefront entitlement | **BLOCKED BY PRIVACY AND SPLIT VERSION:** v7 needs the path-only logging release, and active Shopify version 10 has no app proxy or `write_app_proxy`; the signed storefront path cannot yet pass end to end |
+| Delivery correctness | **PARTIAL LIVE:** the embedded app loaded saved rules and Shopify's `America/New_York` timezone; the matching updated theme extension and signed storefront render remain unreleased |
 | Current installs/trials/paid subscriptions/churn/refunds | **VERIFIED BASELINE:** one current controlled dev-store install and one $0 Standard test contract; no real paid recurring subscription; paid churn/refunds not established |
 | Verified processed, non-refunded paid installs | **0** |
 | Cleared subscription revenue | **USD $0.00** in Shopify Partner evidence |
@@ -114,17 +119,22 @@ pipeline are not sales or cleared revenue.
 
 1. **Do not sell breadth before proof.** Incumbents already claim extensive
    country, ZIP, warehouse, inventory, variant and checkout rule engines.
-2. **Lead with correctness and safety.** Store-timezone math, saved-rule
-   delivery, one-load rendering and preview-before-activation directly counter
-   visible competitor complaints and are locally testable.
+2. **Lead with verifiable correctness and safety.** Store-timezone boundary
+   testing, explicit unpublished/ready/live status and preview-before-publish
+   directly counter visible competitor complaints and can be proven on a
+   controlled store.
 3. **Make the narrow scope a trust benefit.** A single-schedule merchant does
    not need the broad order/customer access disclosed by several alternatives.
 4. **Do not compete on “free basic ETA.”** Essent owns that value anchor. The
    $6.99 offer needs verified setup speed, accuracy and support, not feature-list
    parity claims.
-5. **Suppress acquisition until readiness is live.** Controlled install,
+5. **Suppress acquisition until the split release is closed.** Controlled install,
    hosted plan selection, settings save, theme activation, widget render,
    privacy/support, uninstall and rollback must pass before outreach.
+6. **Make the real block screenshot-worthy.** The current Liquid block is plain
+   text while checked-in draft imagery shows a richer card. Add backward-compatible
+   Inline and Card presets plus a theme-editor-safe reload handler, then recapture
+   only the real controlled-store UI.
 
 ## Official Shopify constraints
 
@@ -147,8 +157,8 @@ pipeline are not sales or cleared revenue.
 
 ## Decision gate
 
-Before any listing edit or merchant validation, obtain controlled-store and
-provider evidence that the branch can complete install, hosted plan selection,
-settings save, Dawn plus one non-native theme activation, first render,
-uninstall, privacy/support access and rollback. Until then, the competitive
-wedge is a tested local claim, not a live commercial promise.
+Before any listing edit or merchant validation, release the reviewed Shopify
+proxy/theme version under an exact gate and obtain controlled-store evidence for
+reauthorization, settings save, Dawn plus one non-native theme activation,
+signed entitlement, first render, uninstall and rollback. Until then, Delivery
+Promise QA and the visual timeline are roadmap recommendations, not live claims.

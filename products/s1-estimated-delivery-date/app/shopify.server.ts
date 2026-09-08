@@ -2,6 +2,7 @@ import "@shopify/shopify-app-react-router/adapters/node";
 import {
   ApiVersion,
   AppDistribution,
+  LogSeverity,
   shopifyApp,
 } from "@shopify/shopify-app-react-router/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
@@ -24,6 +25,12 @@ const shopify = shopifyApp({
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
+  // Keep SDK request logging off so authenticated Shopify URLs cannot be
+  // exposed if a future environment or dependency changes logging defaults.
+  logger: {
+    level: LogSeverity.Info,
+    httpRequests: false,
+  },
   future: {
     expiringOfflineAccessTokens: true,
   },
