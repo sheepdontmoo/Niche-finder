@@ -91,10 +91,10 @@ passing in local code does not prove it passed in Shopify or production.
 
 | Gate | Evidence required | Authority boundary | Current state |
 |---|---|---|---|
-| G0 — source | Reviewed commit, clean branch, passing tests/build/security checks, rollback notes | Local work only | **PASS FOR CANDIDATE BUILD:** path-only logging fix passes fresh install, 62 tests, lint, typecheck, production build, Shopify app/theme build, secret scan, zero-runtime-vulnerability audit and independent review. It is not live and still needs an immutable commit/image |
+| G0 — source | Reviewed commit, clean branch, passing tests/build/security checks, rollback notes | Local work only | **PASS:** commit `5548e96343092082ac460ded003846eb316f2684` passes fresh install, 62 tests, lint, typecheck, production build, Shopify app/theme build, secret scan, zero-runtime-vulnerability audit and independent review; exact build-only image and manifest are recorded in G3 |
 | G1 — provider identity | Authenticated App Home handle, Partner organization ID, app GID, pricing/subscription source, and exact current app identity | Approval immediately before any token, secret, permission, or setting change | **PASS FOR FLY:** handle `estimated-delivery-date-34`, Partner organization `4774175`, app `gid://shopify/App/396333842433`; least-privilege provider values are deployed to Fly v7. Shopify scope/proxy release remains gated |
 | G2 — controlled store | Fresh development-store install/reauthorization; hosted plan selection; settings save; store-timezone calculation; Dawn plus one other compatible theme; first render; cancellation/fail-closed; signed uninstall/privacy webhooks | Approval immediately before provider configuration or any controlled-store mutation | **BLOCKED ON G3:** existing dev install and $0 Standard contract open Fly v7; saved rules, `America/New_York` timezone, Settings and Setup guide render. Do not reauthorize or continue lifecycle QA until path-only access logging is live and verified |
-| G3 — release | Reviewed PR commit, Fly release ID, Shopify app-version ID, live smoke test, previous release/version retained | Exact approval immediately before deployment or app-version release | **PRIVACY BLOCKER:** Fly v7 functions and smoke checks pass, but its stock logger records authenticated query strings. V6 used the same logger and is not a remediation. A reviewed redacting image requires a new exact deployment approval; Shopify version 10 remains active |
+| G3 — release | Reviewed PR commit, Fly release ID, Shopify app-version ID, live smoke test, previous release/version retained | Exact approval immediately before deployment or app-version release | **AWAITING EXACT FLY GATE:** v7 functions but its stock logger records authenticated query strings; v6 used the same logger. Reviewed image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`, manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`, is build-only and not running. Shopify version 10 remains active |
 | G4 — public trust | Live `/support` and `/privacy` return 200; support owner/inbox selected; policy matches actual data lifecycle; old Telegraph link replacement ready | Exact approval immediately before listing edit/publication | **BLOCKED:** branded support/privacy routes return 200, but provider access logs are not yet clean privacy evidence. Listing URL/contact edits and final support-owner decision remain gated |
 | G5 — measurement | Event definitions below implemented only as approved, privacy reviewed, test events excluded, provider sources readable | Approval before adding or enabling new live collection | **PARTLY MISSING** |
 | G6 — validation cohort | Maximum-five qualification rules, exact named recipients, permission source, final message, sender, and send time | Exact action-time approval immediately before each merchant message or batch | **NO TARGETS; NO SEND AUTHORITY** |
@@ -324,8 +324,10 @@ five-merchant feasibility cohort.
 trust pages, provider identities and the $0 development contract function, but
 v7's stock access logger records authenticated Shopify query strings. The next
 external gate is therefore only deployment of the exact reviewed path-only
-logging image, once its immutable identity and checks are recorded. That gate
-does not include the Shopify configuration release. After live log verification,
+logging image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`,
+manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`,
+to the existing `edd-supadesign` app while retaining v7 and v6 rollback
+references. That gate does not include the Shopify configuration release. After live log verification,
 the separately approved Shopify/development-store action can release only
 `write_app_proxy`, `/apps/supadatewise` and the reviewed theme extension,
 reauthorize only the controlled store, and prove the signed entitlement-to-render

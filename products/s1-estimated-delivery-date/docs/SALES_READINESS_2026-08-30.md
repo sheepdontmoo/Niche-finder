@@ -52,6 +52,7 @@ Companion packets:
 | Deployed release source | `5fbbef8e248d0215da02e8d7f8765929ffb2149c` | Reviewed four-file security batch and exact source identity of Fly release v7; the following `b17c26f` commit changes documentation only |
 | Rejected Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Built but never released. Rejected on 2026-09-08 after new `qs` advisories made its prior zero-runtime-vulnerability result stale; do not deploy this image |
 | Released Fly image | `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`; 110 MB | Built remotely from the clean replacement commit, then released unchanged as v7. The production dependency prune reported zero known vulnerabilities |
+| Redaction release candidate | Commit `5548e96343092082ac460ded003846eb316f2684`; image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`; manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; 110 MB | Built and pushed remotely with `--build-only`; runtime prune reported zero known vulnerabilities. It is not running and requires exact deployment approval |
 | Active Shopify app version | `supadatewise-delivery-date-10`; version `1056076529665` | Authenticated Dev Dashboard; active since 2026-07-18 11:13 UTC |
 | Shopify Partner/Dev Dashboard | Organization/account `4774175`; Dev Dashboard organization `208004935`; app `396333842433` | Authenticated browser reconciliation |
 
@@ -550,3 +551,12 @@ created.
     full local route probe stopped on an unmigrated disposable SQLite fixture,
     not on the logging change. Live route/log proof remains a post-deployment
     requirement.
+26. Committed the reviewed redaction and evidence batch as immutable source
+    `5548e96343092082ac460ded003846eb316f2684`.
+27. Built and pushed that exact commit as non-running Fly image
+    `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`,
+    manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`,
+    size 110 MB. The image build and production dependency prune passed.
+28. Rechecked Fly after the build-only action: release `v7`, image `5fbbef8e...`,
+    machine `812e3dc95e2728` and the v6 rollback remain unchanged. The redaction
+    candidate is not deployed.
