@@ -52,11 +52,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // app-root payment gate and write usable storefront settings for free.
   const billingConfig = readPartnerBillingConfig(process.env);
   const shopId = await getAuthenticatedShopId(admin.graphql);
+  const subscriptionCheckStartedAt = Date.now();
   const hasActivePayment = await hasActivePartnerSubscription(
     billingConfig,
     shopId,
   );
-  rememberPartnerSubscription(billingConfig, shopId, hasActivePayment);
+  rememberPartnerSubscription(
+    billingConfig,
+    shopId,
+    hasActivePayment,
+    subscriptionCheckStartedAt,
+  );
   const paymentRedirect = await requireActiveAppPayment(
     hasActivePayment,
     redirect,
@@ -202,7 +208,11 @@ export default function Index() {
               label="Locale (e.g. en-IE, en-US, de-DE)"
               value={settings.locale}
             />
-            <s-select name="dateStyle" label="Date format" value={settings.dateStyle}>
+            <s-select
+              name="dateStyle"
+              label="Date format"
+              value={settings.dateStyle}
+            >
               <s-option value="full">Full (Monday, 5 January 2026)</s-option>
               <s-option value="long">Long (5 January 2026)</s-option>
               <s-option value="medium">Medium (5 Jan 2026)</s-option>

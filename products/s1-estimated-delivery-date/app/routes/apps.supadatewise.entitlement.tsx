@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "react-router";
 import { authenticate } from "../shopify.server";
 import {
   getAuthenticatedShopId,
-  hasCachedActivePartnerSubscription,
+  getStorefrontEntitlement,
   readPartnerBillingConfig,
 } from "../lib/partner-subscription.server";
 
@@ -11,8 +11,12 @@ const RESPONSE_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
 };
 
-function entitlementResponse(active: boolean, status = 200): Response {
-  return new Response(JSON.stringify({ active }), {
+function entitlementResponse(
+  active: boolean,
+  status = 200,
+  validForMs = 0,
+): Response {
+  return new Response(JSON.stringify({ active, validForMs }), {
     status,
     headers: RESPONSE_HEADERS,
   });
@@ -30,11 +34,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     const billingConfig = readPartnerBillingConfig(process.env);
     const shopId = await getAuthenticatedShopId(admin.graphql);
-    const active = await hasCachedActivePartnerSubscription(
-      billingConfig,
-      shopId,
-    );
-    return entitlementResponse(active);
+    const entitlement = await getStorefrontEntitlement(billingConfig, shopId);
+    return entitlementResponse(entitlement.active, 200, entitlement.validForMs);
   } catch {
     // Keep provider details and credentials out of the public response. The
     // storefront stays hidden until an authoritative check succeeds.

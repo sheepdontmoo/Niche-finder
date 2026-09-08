@@ -1,5 +1,14 @@
 # SupaDatewise paid-install readiness — evidence and launch packet
 
+**Next gate superseded, 2026-09-08:** the subsequent entitlement-lifecycle
+review found that the theme cached access for the lifetime of an open page.
+The approved source fix now requires a replacement server response with a
+bounded remaining lifetime, followed by the matching theme extension. See
+[`ENTITLEMENT_RELEASE_GATE_2026-09-08.md`](./ENTITLEMENT_RELEASE_GATE_2026-09-08.md)
+for current validation limits and the server-first release gate. Fly v8 and
+Shopify v10 below are retained historical provider receipts; neither was
+changed or independently reverified during this source remediation.
+
 Evidence window: 2026-08-30 10:02–10:10 UTC for public checks, through
 10:39 UTC for local verification, through 15:30 UTC for authenticated
 Shopify/Fly reconciliation and controlled development-store billing checks,
@@ -49,7 +58,7 @@ Companion packets:
 | Fly production release | Release `v8`; image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`; manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; machine `812e3dc95e2728` in `lhr` | Released 2026-09-08 13:17 UTC after exact approval. Prisma found no pending migrations; the server listened on port 3000 and the 15-minute release gate passed |
 | Preserved Fly rollback | Release `v7`; image `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; older release `v6` / image `registry.fly.io/edd-supadesign:deployment-01KXTEPGG9RBKJNYBM2664B08H` | Both retained for availability rollback. Both use the old full-target logger, so either rollback would reopen the access-log privacy defect |
 | Rejected prior candidate | `af0aa574ebcb8a718def2f7451ea92a363fc5e57` | Its image was never released and is rejected after the 2026-09-08 dependency advisory refresh |
-| Deployed release source | `5548e96343092082ac460ded003846eb316f2684` | Reviewed redaction/security batch and exact source identity of Fly release v8; later commits change documentation only |
+| Deployed release source | `5548e96343092082ac460ded003846eb316f2684` | Exact source identity of the recorded Fly v8 release; the subsequent entitlement-expiry source fix is unreleased and requires the replacement gate linked above |
 | Rejected Fly preflight image | `registry.fly.io/edd-supadesign:af0aa574ebcb8a718def2f7451ea92a363fc5e57-preflight`; manifest `sha256:9d6a34339698009b1f421a7a81326e02dfe6303c946a3cf5c2fc2b54d0a0f220` | Built but never released. Rejected on 2026-09-08 after new `qs` advisories made its prior zero-runtime-vulnerability result stale; do not deploy this image |
 | Released Fly image | `registry.fly.io/edd-supadesign:5fbbef8e248d0215da02e8d7f8765929ffb2149c-preflight`; manifest `sha256:f51f123fda499ce1141d74d9f1e95f7ddcc9a3ad2c1e1c94285a20ef3dfd48af`; 110 MB | Built remotely from the clean replacement commit, then released unchanged as v7. The production dependency prune reported zero known vulnerabilities |
 | Redaction production image | Commit `5548e96343092082ac460ded003846eb316f2684`; image `registry.fly.io/edd-supadesign:5548e96343092082ac460ded003846eb316f2684-preflight`; manifest `sha256:07d8f34b4b0265ce8a131e7eeed0fb3a3515a68b07599397b02d24b541e0aa1c`; 110 MB | Deployed unchanged as v8 after exact approval; runtime prune reported zero known vulnerabilities. New access logs passed path-only verification |

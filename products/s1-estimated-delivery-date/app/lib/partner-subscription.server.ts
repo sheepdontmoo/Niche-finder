@@ -42,7 +42,9 @@ function hasGraphQLErrors(body: unknown): boolean {
   return Array.isArray(errors) && errors.length > 0;
 }
 
-export function readPartnerBillingConfig(env: Environment): PartnerBillingConfig {
+export function readPartnerBillingConfig(
+  env: Environment,
+): PartnerBillingConfig {
   const organizationId = requireValue(
     env.SHOPIFY_PARTNER_ORG_ID,
     "SHOPIFY_PARTNER_ORG_ID",
@@ -70,9 +72,12 @@ export function readPartnerBillingConfig(env: Environment): PartnerBillingConfig
 export async function getAuthenticatedShopId(
   graphql: AdminGraphql,
 ): Promise<string> {
-  const response = await graphql(`#graphql
+  const response = await graphql(`
+    #graphql
     query BillingShopId {
-      shop { id }
+      shop {
+        id
+      }
     }
   `);
   const body = await response.json();
@@ -231,6 +236,36 @@ export async function hasCachedActivePartnerSubscription(
     .finally(() => subscriptionRequests.delete(key));
   subscriptionRequests.set(key, request);
   return request;
+}
+
+/**
+ * Carry the remaining server-cache lifetime to the browser. Returning a fresh
+ * sixty-second client TTL for a cached answer would extend stale access beyond
+ * the server's one-minute limit. Unknown, expired and negative answers grant
+ * no display time. The existing boolean API remains available to older callers.
+ */
+export async function getStorefrontEntitlement(
+  config: PartnerBillingConfig,
+  shopId: string,
+  fetcher: Fetcher = fetch,
+  clock: () => number = Date.now,
+): Promise<{ active: boolean; validForMs: number }> {
+  const active = await hasCachedActivePartnerSubscription(
+    config,
+    shopId,
+    fetcher,
+    clock(),
+    clock,
+  );
+  const cached = subscriptionCache.get(subscriptionCacheKey(config, shopId));
+  const remaining = cached ? cached.expiresAt - clock() : 0;
+  if (!active || !cached?.active || remaining <= 0) {
+    return { active: false, validForMs: 0 };
+  }
+  return {
+    active: true,
+    validForMs: Math.min(remaining, STOREFRONT_CACHE_MS),
+  };
 }
 
 export function clearPartnerSubscriptionCacheForTests(): void {

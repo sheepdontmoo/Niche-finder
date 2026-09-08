@@ -4,9 +4,7 @@ import { boundary } from "@shopify/shopify-app-react-router/server";
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
 
 import { authenticate } from "../shopify.server";
-import {
-  requireActiveAppPayment,
-} from "../lib/billing";
+import { requireActiveAppPayment } from "../lib/billing";
 import {
   getAuthenticatedShopId,
   hasActivePartnerSubscription,
@@ -22,13 +20,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const returnedFromPlanSelection = new URL(request.url).searchParams.has(
     "plan_handle",
   );
+  const subscriptionCheckStartedAt = Date.now();
   const hasActivePayment = returnedFromPlanSelection
     ? await hasActivePartnerSubscriptionAfterPlanSelection(
         billingConfig,
         shopId,
       )
     : await hasActivePartnerSubscription(billingConfig, shopId);
-  rememberPartnerSubscription(billingConfig, shopId, hasActivePayment);
+  rememberPartnerSubscription(
+    billingConfig,
+    shopId,
+    hasActivePayment,
+    subscriptionCheckStartedAt,
+  );
   const paymentRedirect = await requireActiveAppPayment(
     hasActivePayment,
     redirect,

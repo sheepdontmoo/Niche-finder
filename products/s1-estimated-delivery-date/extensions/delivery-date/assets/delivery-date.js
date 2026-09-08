@@ -8,7 +8,18 @@
 (function () {
   "use strict";
 
-  var entitlementRequest;
+  var REFRESH_MS = 15000;
+  var REQUEST_TIMEOUT_MS = 5000;
+  var MAX_ENTITLEMENT_MS = 60000;
+  var entitlementUntil = 0;
+  var entitlementUrl;
+  var refreshTimer;
+  var expiryTimer;
+  var requestTimer;
+  var requestController;
+  var requestPending = false;
+  var requestGeneration = 0;
+  var suspended = false;
 
   var DEFAULTS = {
     enabled: true,
@@ -67,7 +78,12 @@
 
     return {
       enabled: Boolean(s.enabled),
-      processingDays: clampInt(s.processingDays, 0, 365, DEFAULTS.processingDays),
+      processingDays: clampInt(
+        s.processingDays,
+        0,
+        365,
+        DEFAULTS.processingDays,
+      ),
       cutoffHour: clampInt(s.cutoffHour, 0, 23, DEFAULTS.cutoffHour),
       transitDaysMin: Math.min(min, max),
       transitDaysMax: Math.max(min, max),
@@ -77,7 +93,9 @@
           ? s.template
           : DEFAULTS.template,
       dateStyle:
-        validStyles.indexOf(s.dateStyle) !== -1 ? s.dateStyle : DEFAULTS.dateStyle,
+        validStyles.indexOf(s.dateStyle) !== -1
+          ? s.dateStyle
+          : DEFAULTS.dateStyle,
       locale:
         typeof s.locale === "string" && s.locale.trim()
           ? s.locale
@@ -171,28 +189,99 @@
       .replace(/\{max\}/g, maxStr);
   }
 
-  function hasActiveSubscription(url) {
-    if (!entitlementRequest) {
-      if (typeof fetch !== "function") return Promise.resolve(false);
-      entitlementRequest = fetch(url, {
-        credentials: "same-origin",
-        headers: { Accept: "application/json" },
-      })
-        .then(function (response) {
-          if (!response.ok) return { active: false };
-          return response.json();
-        })
-        .then(function (body) {
-          return Boolean(body && body.active === true);
-        })
-        .catch(function () {
-          return false;
-        });
+  function clock() {
+    return performance.now();
+  }
+
+  function revokeEntitlement() {
+    entitlementUntil = 0;
+    clearTimeout(expiryTimer);
+    var blocks = document.querySelectorAll("[data-edd]");
+    for (var i = 0; i < blocks.length; i++) blocks[i].hidden = true;
+  }
+
+  function finishRequest(generation, requestedAt, body) {
+    // A late response from a timeout or a suspended page must never resurrect
+    // an expired grant or overwrite a newer decision.
+    if (generation !== requestGeneration) return;
+    requestGeneration++;
+    requestPending = false;
+    clearTimeout(requestTimer);
+    var validForMs = body && body.validForMs;
+    var until = requestedAt + validForMs;
+    if (
+      !suspended &&
+      !document.hidden &&
+      body &&
+      body.active === true &&
+      typeof validForMs === "number" &&
+      isFinite(validForMs) &&
+      validForMs > 0 &&
+      validForMs <= MAX_ENTITLEMENT_MS &&
+      until > clock()
+    ) {
+      entitlementUntil = until;
+      clearTimeout(expiryTimer);
+      expiryTimer = setTimeout(revokeEntitlement, until - clock());
+    } else {
+      revokeEntitlement();
     }
-    return entitlementRequest;
+    renderAll();
+    if (!suspended && !document.hidden) {
+      // Share one bounded request across every block. The independent expiry
+      // timer hides them even if this refresh hangs or the network is offline.
+      var remaining = entitlementUntil - clock();
+      refreshTimer = setTimeout(
+        refreshEntitlement,
+        remaining > 0
+          ? Math.max(1000, Math.min(REFRESH_MS, remaining))
+          : REFRESH_MS,
+      );
+    }
+  }
+
+  function refreshEntitlement() {
+    clearTimeout(refreshTimer);
+    if (suspended || document.hidden) return;
+    var url = renderAll();
+    if (!url || requestPending || typeof fetch !== "function") return;
+    if (url !== entitlementUrl) revokeEntitlement();
+    entitlementUrl = url;
+    requestPending = true;
+    var generation = ++requestGeneration;
+    var requestedAt = clock();
+    var controller = new AbortController();
+    requestController = controller;
+    requestTimer = setTimeout(function () {
+      controller.abort();
+      finishRequest(generation, requestedAt, null);
+    }, REQUEST_TIMEOUT_MS);
+    // Count the entire round trip against the server's remaining lifetime.
+    // Cached responses therefore cannot reset the browser's expiry clock.
+    Promise.resolve()
+      .then(function () {
+        if (generation !== requestGeneration) return { ok: false };
+        return fetch(url, {
+          credentials: "same-origin",
+          cache: "no-store",
+          signal: controller.signal,
+          headers: { Accept: "application/json" },
+        });
+      })
+      .then(function (response) {
+        if (!response.ok) return null;
+        return response.json();
+      })
+      .then(function (body) {
+        finishRequest(generation, requestedAt, body);
+      })
+      .catch(function () {
+        finishRequest(generation, requestedAt, null);
+      });
   }
 
   function render(block) {
+    block.hidden = true;
     var configEl = block.querySelector("[data-edd-config]");
     var output = block.querySelector("[data-edd-output]");
     if (!configEl || !output) return;
@@ -215,24 +304,54 @@
       return;
     }
 
-    var entitlementUrl = block.getAttribute("data-edd-entitlement-url");
-    if (!entitlementUrl) return;
-
-    hasActiveSubscription(entitlementUrl).then(function (active) {
-      if (!active) return;
+    var url = block.getAttribute("data-edd-entitlement-url");
+    if (!url) return;
+    if (
+      !suspended &&
+      !document.hidden &&
+      url === entitlementUrl &&
+      entitlementUntil > clock()
+    ) {
       output.textContent = format(estimate(new Date(), s), s);
       block.hidden = false;
-    });
+    }
+    return url;
   }
 
-  function init() {
+  function renderAll() {
     var blocks = document.querySelectorAll("[data-edd]");
-    for (var i = 0; i < blocks.length; i++) render(blocks[i]);
+    var url;
+    for (var i = 0; i < blocks.length; i++) url = render(blocks[i]) || url;
+    return url;
   }
 
+  function suspend() {
+    suspended = true;
+    requestGeneration++;
+    requestPending = false;
+    clearTimeout(refreshTimer);
+    clearTimeout(requestTimer);
+    if (requestController) requestController.abort();
+    revokeEntitlement();
+  }
+
+  function resume() {
+    suspend();
+    suspended = false;
+    refreshEntitlement();
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) suspend();
+    else resume();
+  });
+  window.addEventListener("pagehide", suspend);
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) resume();
+  });
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", refreshEntitlement);
   } else {
-    init();
+    refreshEntitlement();
   }
 })();

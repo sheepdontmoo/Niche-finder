@@ -56,9 +56,17 @@ async function renderStorefront(
 
   vm.runInNewContext(source, {
     document,
+    window: { addEventListener: () => undefined },
+    performance: { now: () => 0 },
+    AbortController,
+    setTimeout: () => 1,
+    clearTimeout: () => undefined,
     fetch: async (url: string) => {
       requests.push(url);
-      return { ok: true, json: async () => ({ active }) };
+      return {
+        ok: true,
+        json: async () => ({ active, validForMs: active ? 60_000 : 0 }),
+      };
     },
     Date: FixedDate,
     Intl,
